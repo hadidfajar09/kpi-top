@@ -53,7 +53,7 @@ border-bottom-right-radius: .3rem;
                       <form action="{{ isset($guard) ? url($guard.'/login') : route('login') }}" method="post">
                         @csrf
                         <p>Please login to your account</p>
-                        <x-jet-validation-errors class="mb-4" style="color: white;" />
+                        <x-jet-validation-errors class="mb-4" style="color: rgb(252, 64, 64);" />
 
 
                         <div class="form-outline mb-4">

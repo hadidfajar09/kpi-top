@@ -116,7 +116,7 @@ a:link {
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h5 class="card-title">Grafik Masuk - Keluar LPG 3 kg {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
+                <h5 class="card-title">Grafik Input - Output Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
 
                
               </div>

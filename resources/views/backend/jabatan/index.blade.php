@@ -1,7 +1,7 @@
 @extends('layouts.backend_master')
 
 @section('title')
-Daftar Agent
+Daftar Jabatan
 @endsection
 
 @section('content')
@@ -11,12 +11,12 @@ Daftar Agent
     <div class="container-fluid">
       <div class="row mb -2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Agent</h1>
+          <h1 class="m-0">Daftar Jabatan</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Agent</li>
+            <li class="breadcrumb-item active">Jabatan</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -35,7 +35,7 @@ Daftar Agent
           <div class="card">
             <div class="card-header">
               @if (auth()->user()->level == 0 || auth()->user()->level == 3)
-              <button class="btn btn-outline-warning btn-sm" onclick="addForm('{{ route('agent.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('agent.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
               @endif
              
 
@@ -56,8 +56,8 @@ Daftar Agent
                             >
                             <thead>
                               <th width="5%">No</th>
-                              <th>Kode Agent</th>
-                              <th>Nama Agent</th>
+                              <th>Jabatan</th>
+                              <th>Deskripsi</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
@@ -91,7 +91,7 @@ Daftar Agent
   <!-- /.content -->
 </div>
 
-@include('backend.agent.form')
+@include('backend.jabatan.form')
 @endsection
 
 
@@ -172,7 +172,7 @@ Daftar Agent
         }
 
         function deleteData(url) {
-          if(confirm('Yakin Ingin Hapus Agent Ini?')){
+          if(confirm('Yakin Ingin Hapus Jabatan Ini?')){
             
           $.post(url, {
             '_token': $('[name=csrf-token]').attr('content'),
