@@ -89,7 +89,8 @@ class JabatanController extends Controller
      */
     public function show($id)
     {
-        //
+        $jabatan = Jabatan::find($id);
+        return response()->json($jabatan);
     }
 
     /**

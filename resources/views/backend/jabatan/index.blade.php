@@ -56,7 +56,7 @@ Daftar Jabatan
                             >
                             <thead>
                               <th width="5%">No</th>
-                              <th>Jabatan</th>
+                              <th width="15%">Jabatan</th>
                               <th>Deskripsi</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
