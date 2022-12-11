@@ -35,7 +35,7 @@ Daftar Jabatan
           <div class="card">
             <div class="card-header">
               @if (auth()->user()->level == 0 || auth()->user()->level == 3)
-              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('agent.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('jabatan.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
               @endif
              
 
@@ -104,12 +104,12 @@ Daftar Jabatan
               processing: true,
               autoWidth: false,
                 ajax: {
-                    url: '{{ route('agent.data') }}'
+                    url: '{{ route('jabatan.data') }}'
                 },
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
-                        {data: 'kode_user'},
-                        {data: 'name'},
+                        {data: 'jabatan'},
+                        {data: 'deskripsi'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ]
             });
@@ -137,14 +137,12 @@ Daftar Jabatan
 
           function addForm(url){
             $('#modal-agent').modal('show');
-            $('#modal-agent .modal-title').text('Tambah Agent');
+            $('#modal-agent .modal-title').text('Tambah Jabatan');
 
             $('#modal-agent form')[0].reset();
             $('#modal-agent form').attr('action',url);
             $('#modal-agent [name=_method]').val('post');
-            $('#modal-agent [name=name]').focus();
-
-            $('#password, #password_confirmation').attr('required',true);
+            $('#modal-agent [name=jabatan]').focus();
         }
 
         function editForm(url){

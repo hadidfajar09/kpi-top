@@ -30,7 +30,7 @@
 
   <!-- Preloader -->
   <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__wobble" src="{{ asset('backend_pemda/dist/img/morowali.png') }}" alt="SIMOJI" height="60" width="60">
+    <img class="animation__wobble" src="{{ asset('img/logo-2022-12-10145132.png') }}" alt="SIMOJI" height="60" width="60">
   </div>
 
   <!-- Navbar -->

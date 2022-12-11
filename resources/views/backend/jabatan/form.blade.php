@@ -18,43 +18,22 @@
         <div class="modal-body">
            
             <div class="form-group row">
-                <label for="name" class="col-md-4 col-md-offset-1 control-label">Nama Agent</label>
+                <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Nama Jabatan</label>
                 <div class="col-md-8">
-                    <input class="form-control" type="text" name="name" id="name" required autofocus>
+                    <input class="form-control" type="text" name="jabatan" id="jabatan" required autofocus>
                     <span class="help-block with-errors text-danger"></span>
 
                 </div>
             </div>
 
             <div class="form-group row">
-              <label for="email" class="col-md-4 col-md-offset-1 control-label">Email</label>
+              <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Deskripsi</label>
               <div class="col-md-8">
-                  <input class="form-control" type="text" name="email" id="email" required>
+                  <textarea class="form-control" name="deskripsi" id="" cols="30" rows="5"></textarea>
                   <span class="help-block with-errors text-danger"></span>
   
               </div>
           </div>
-
-            
-          <div class="form-group row">
-            <label for="password" class="col-md-4 col-md-offset-1 control-label">Password</label>
-            <div class="col-md-8">
-                <input class="form-control" type="password" name="password" id="password" required>
-                <span class="help-block with-errors text-danger"></span>
-  
-            </div>
-          </div>     
-  
-          <div class="form-group row">
-            <label for="password_confirmation" class="col-md-4 col-md-offset-1 control-label">Password Konfirmasi</label>
-            <div class="col-md-8">
-                <input class="form-control" type="password" name="password_confirmation" id="password_confirmation" required data-match="#password">
-                <span class="help-block with-errors text-danger"></span>
-  
-            </div>
-          </div>    
-
-
          
         </div>
         <div class="modal-footer">

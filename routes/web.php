@@ -4,6 +4,7 @@ use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthAgentController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\DistribusiController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PangkalanController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SliderController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\WebcamController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +31,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', fn () => redirect()->route('login'));
+
+Route::get('webcam', [WebcamController::class, 'index']);
+Route::post('webcam', [WebcamController::class, 'store'])->name('webcam.capture');
 
 Route::match(["GET", "POST"], "/register", function () { //untuk disable button route register
     return redirect('/login'); //route kembali ke form login
@@ -95,6 +100,10 @@ Route::group(['middleware' => 'auth'], function () {
       // //pangkalan
       Route::get('/agent/data', [AgentController::class, 'data'])->name('agent.data');
       Route::resource('/agent', AgentController::class);
+
+         // //jabatan
+         Route::get('/jabatan/data', [JabatanController::class, 'data'])->name('jabatan.data');
+         Route::resource('/jabatan', JabatanController::class);
 
       //account
       Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
