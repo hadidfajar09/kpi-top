@@ -113,7 +113,13 @@ class JabatanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $jabatan = Jabatan::find($id);
+        $jabatan->jabatan = $request->jabatan;
+        $jabatan->deskripsi = $request->deskripsi;
+
+        $jabatan->update();
+
+        return response()->json('Jabatan Berhasil Disimpan', 200);
     }
 
     /**
@@ -124,6 +130,23 @@ class JabatanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $jabatan = Jabatan::find($id);
+
+        // $pangkalan = User::where('id_agent', $agent->id)->get();
+        // $distribusi = Distribusi::where('id_agent',$id)->get();
+
+        
+        // foreach ($pangkalan as $row) {
+        //     $row->delete();
+        // }
+
+        // foreach ($distribusi as $row) {
+        //     $row->delete();
+        // }
+
+
+        $jabatan->delete();
+
+        return response()->json('data berhasil dihapus');
     }
 }

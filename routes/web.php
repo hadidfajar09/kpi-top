@@ -6,6 +6,7 @@ use App\Http\Controllers\DesaController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KecamatanController;
+use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PangkalanController;
 use App\Http\Controllers\PekerjaanController;
@@ -104,6 +105,10 @@ Route::group(['middleware' => 'auth'], function () {
          // //jabatan
          Route::get('/jabatan/data', [JabatanController::class, 'data'])->name('jabatan.data');
          Route::resource('/jabatan', JabatanController::class);
+
+         // //jabatan
+         Route::get('/kontrak/data', [KontrakController::class, 'data'])->name('kontrak.data');
+         Route::resource('/kontrak', KontrakController::class);
 
       //account
       Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');

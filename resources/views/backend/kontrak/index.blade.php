@@ -1,7 +1,7 @@
 @extends('layouts.backend_master')
 
 @section('title')
-Daftar Jabatan
+Daftar Kontrak Kerja
 @endsection
 
 @section('content')
@@ -11,12 +11,12 @@ Daftar Jabatan
     <div class="container-fluid">
       <div class="row mb -2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Jabatan</h1>
+          <h1 class="m-0">Daftar Kontrak Kerja</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Jabatan</li>
+            <li class="breadcrumb-item active">Kontrak</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -35,7 +35,7 @@ Daftar Jabatan
           <div class="card">
             <div class="card-header">
               @if (auth()->user()->level == 0 || auth()->user()->level == 3)
-              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('jabatan.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('kontrak.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
               @endif
              
 
@@ -56,7 +56,7 @@ Daftar Jabatan
                             >
                             <thead>
                               <th width="5%">No</th>
-                              <th width="15%">Jabatan</th>
+                              <th width="15%">Masa Kontrak</th>
                               <th>Deskripsi</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>

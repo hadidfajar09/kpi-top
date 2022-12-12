@@ -65,15 +65,9 @@
                   <p>Jabatan</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ route('pangkalan.index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Kelengkapan Berkas</p>
-                </a>
-              </li>
 
               <li class="nav-item">
-                <a href="{{ route('pangkalan.index') }}" class="nav-link">
+                <a href="{{ route('kontrak.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Kontrak Kerja</p>
                 </a>
