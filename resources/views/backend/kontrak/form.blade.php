@@ -1,7 +1,7 @@
 
   
   <!-- Modal -->
-  <div class="modal fade" id="modal-agent" tabindex="-1" role="dialog" aria-labelledby="modal-agent">
+  <div class="modal fade" id="modal-kontrak" tabindex="-1" role="dialog" aria-labelledby="modal-kontrak">
     <div class="modal-dialog" role="document">
 
         <form action="" role="form" method="post" class="form-horizontal" data-toggle="validator">
@@ -18,9 +18,10 @@
         <div class="modal-body">
            
             <div class="form-group row">
-                <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Nama Jabatan</label>
+                <label for="kontrak" class="col-md-4 col-md-offset-1 control-label">Masa Kontrak</label>
                 <div class="col-md-8">
-                    <input class="form-control" type="text" name="jabatan" id="jabatan" required autofocus>
+                    <input class="form-control" type="text" name="kontrak" id="kontrak" required autofocus>
+                    <span class="text-danger">*Contoh : 1 bulan, 2 bulan</span>
                     <span class="help-block with-errors text-danger"></span>
 
                 </div>

@@ -28,7 +28,7 @@ class KontrakController extends Controller
         ->of($kontrak)//source
         ->addIndexColumn() //untuk nomer
         ->addColumn('kontrak', function($kontrak){
-            return '<h1 class="badge badge-info">'.$kontrak->kontrak.'</h1>';
+            return '<h1 class="badge badge-success">'.$kontrak->kontrak.'</h1>';
         })
         ->addColumn('aksi', function($kontrak){ //untuk aksi
             $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('kontrak.update', $kontrak->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('kontrak.destroy', $kontrak->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> </div>';
@@ -42,7 +42,7 @@ class KontrakController extends Controller
     ->of($kontrak)//source
     ->addIndexColumn() //untuk nomer
     ->addColumn('kontrak', function($kontrak){
-        return '<h1 class="badge badge-info">'.$kontrak->kontrak.'</h1>';
+        return '<h1 class="badge badge-success">'.$kontrak->kontrak.'</h1>';
     })
     ->addColumn('aksi', function($kontrak){ //untuk aksi
         $button = '-';
@@ -72,7 +72,13 @@ class KontrakController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $kontrak = kontrak::latest()->first() ?? new kontrak();
+        $kontrak = new kontrak();
+        $kontrak->kontrak = $request->kontrak;
+        $kontrak->deskripsi = $request->deskripsi;
+        $kontrak->save();
+
+        return response()->json('Data berhasil disimpan', 200);
     }
 
     /**
@@ -81,9 +87,10 @@ class KontrakController extends Controller
      * @param  \App\Models\kontrak  $kontrak
      * @return \Illuminate\Http\Response
      */
-    public function show(kontrak $kontrak)
+    public function show($id)
     {
-        //
+        $kontrak = kontrak::find($id);
+        return response()->json($kontrak);
     }
 
     /**
@@ -104,9 +111,15 @@ class KontrakController extends Controller
      * @param  \App\Models\kontrak  $kontrak
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, kontrak $kontrak)
+    public function update(Request $request, $id)
     {
-        //
+        $kontrak = Kontrak::find($id);
+        $kontrak->kontrak = $request->kontrak;
+        $kontrak->deskripsi = $request->deskripsi;
+
+        $kontrak->update();
+
+        return response()->json('Masa Kontrak Berhasil Disimpan', 200);
     }
 
     /**
@@ -115,8 +128,25 @@ class KontrakController extends Controller
      * @param  \App\Models\kontrak  $kontrak
      * @return \Illuminate\Http\Response
      */
-    public function destroy(kontrak $kontrak)
+    public function destroy($id)
     {
-        //
+        $kontrak = kontrak::find($id);
+
+        // $pangkalan = User::where('id_agent', $agent->id)->get();
+        // $distribusi = Distribusi::where('id_agent',$id)->get();
+
+        
+        // foreach ($pangkalan as $row) {
+        //     $row->delete();
+        // }
+
+        // foreach ($distribusi as $row) {
+        //     $row->delete();
+        // }
+
+
+        $kontrak->delete();
+
+        return response()->json('data berhasil dihapus');
     }
 }

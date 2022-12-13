@@ -11,7 +11,7 @@ Daftar Kontrak Kerja
     <div class="container-fluid">
       <div class="row mb -2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Kontrak Kerja</h1>
+          <h1 class="m-0">Daftar Masa Kontrak Kerja</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -52,7 +52,7 @@ Daftar Kontrak Kerja
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12">
-                          <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
+                          <table  class="table table-bordered table-striped dataTable dtr-inline table-kontrak"
                             >
                             <thead>
                               <th width="5%">No</th>
@@ -91,7 +91,7 @@ Daftar Kontrak Kerja
   <!-- /.content -->
 </div>
 
-@include('backend.jabatan.form')
+@include('backend.kontrak.form')
 @endsection
 
 
@@ -100,29 +100,29 @@ Daftar Kontrak Kerja
 
       let table;
         $(function(){
-            table = $('.table-agent').DataTable({
+            table = $('.table-kontrak').DataTable({
               processing: true,
               autoWidth: false,
                 ajax: {
-                    url: '{{ route('jabatan.data') }}'
+                    url: '{{ route('kontrak.data') }}'
                 },
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
-                        {data: 'jabatan'},
+                        {data: 'kontrak'},
                         {data: 'deskripsi'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ]
             });
 
-            $('#modal-agent').validator().on('submit', function(e){
+            $('#modal-kontrak').validator().on('submit', function(e){
                 if (! e.preventDefault()) {
                     $.ajax({
-                        url: $('#modal-agent form').attr('action'),
+                        url: $('#modal-kontrak form').attr('action'),
                         type: 'post',
-                        data: $('#modal-agent form').serialize()
+                        data: $('#modal-kontrak form').serialize()
                     })
                     .done((response) => {
-                        $('#modal-agent').modal('hide');
+                        $('#modal-kontrak').modal('hide');
                         table.ajax.reload();
                         Swal.fire('Berhasil Menyimpan Data')
                     })
@@ -136,28 +136,28 @@ Daftar Kontrak Kerja
           });
 
           function addForm(url){
-            $('#modal-agent').modal('show');
-            $('#modal-agent .modal-title').text('Tambah Jabatan');
+            $('#modal-kontrak').modal('show');
+            $('#modal-kontrak .modal-title').text('Tambah Masa Kontrak');
 
-            $('#modal-agent form')[0].reset();
-            $('#modal-agent form').attr('action',url);
-            $('#modal-agent [name=_method]').val('post');
-            $('#modal-agent [name=jabatan]').focus();
+            $('#modal-kontrak form')[0].reset();
+            $('#modal-kontrak form').attr('action',url);
+            $('#modal-kontrak [name=_method]').val('post');
+            $('#modal-kontrak [name=kontrak]').focus();
         }
 
         function editForm(url){
-            $('#modal-agent').modal('show');
-            $('#modal-agent .modal-title').text('Ubah Jabatan');
+            $('#modal-kontrak').modal('show');
+            $('#modal-kontrak .modal-title').text('Ubah Kontrak');
 
-            $('#modal-agent form')[0].reset();
-            $('#modal-agent form').attr('action',url);
-            $('#modal-agent [name=_method]').val('put');
-            $('#modal-agent [name=jabatan]').focus();
+            $('#modal-kontrak form')[0].reset();
+            $('#modal-kontrak form').attr('action',url);
+            $('#modal-kontrak [name=_method]').val('put');
+            $('#modal-kontrak [name=kontrak]').focus();
 
             $.get(url)
               .done((response) => {
-                $('#modal-agent [name=jabatan]').val(response.jabatan);
-                $('#modal-agent [name=deskripsi]').val(response.deskripsi);
+                $('#modal-kontrak [name=kontrak]').val(response.kontrak);
+                $('#modal-kontrak [name=deskripsi]').val(response.deskripsi);
 
               })
 
@@ -168,7 +168,7 @@ Daftar Kontrak Kerja
         }
 
         function deleteData(url) {
-          if(confirm('Yakin Ingin Hapus Jabatan Ini?')){
+          if(confirm('Yakin Ingin Hapus Masa Kontrak Ini?')){
             
           $.post(url, {
             '_token': $('[name=csrf-token]').attr('content'),

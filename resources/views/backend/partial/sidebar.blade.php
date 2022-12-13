@@ -75,35 +75,12 @@
              
             </ul>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-chart-pie"></i>
-              <p>
-                Data Wilayah
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('kecamatan.index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Kecamatan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('desa.index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Desa/Kelurahan</p>
-                </a>
-              </li>
-            
-            </ul>
-          </li>
+          
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-id-card"></i>
               <p>
-                Data Pengguna
+                Data Karyawan
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
@@ -111,19 +88,13 @@
               <li class="nav-item">
                 <a href="{{ route('pelanggan.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pengguna</p>
+                  <p>Tambah Data Karyawan</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ route('pekerjaan.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Pekerjaan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ route('penghasilan.index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Penghasilan</p>
+                  <p>List Data Karyawan</p>
                 </a>
               </li>
              

@@ -15,6 +15,8 @@ class CreateKontraksTable extends Migration
     {
         Schema::create('kontraks', function (Blueprint $table) {
             $table->id();
+            $table->string('kontrak');
+            $table->string('deskripsi');
             $table->timestamps();
         });
     }
