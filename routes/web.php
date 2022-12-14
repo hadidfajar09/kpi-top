@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthAgentController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\LaporanController;
@@ -102,6 +103,7 @@ Route::group(['middleware' => 'auth'], function () {
       Route::get('/agent/data', [AgentController::class, 'data'])->name('agent.data');
       Route::resource('/agent', AgentController::class);
 
+      //KPI
          // //jabatan
          Route::get('/jabatan/data', [JabatanController::class, 'data'])->name('jabatan.data');
          Route::resource('/jabatan', JabatanController::class);
@@ -110,6 +112,16 @@ Route::group(['middleware' => 'auth'], function () {
          Route::get('/kontrak/data', [KontrakController::class, 'data'])->name('kontrak.data');
          Route::resource('/kontrak', KontrakController::class);
 
+            //karyawan
+      Route::get('/karyawan/data', [KaryawanController::class, 'data'])->name('karyawan.data');
+      Route::resource('/karyawan',KaryawanController::class);
+    //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
+    //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');
+    //   Route::post('/pelanggan/reset', [PelangganController::class, 'resetBulanan'])->name('pelanggan.reset');
+
+    //   Route::post('/pelanggan/import', [PelangganController::class, 'importExcel'])->name('pelanggan.import');
+
+         //END KPI
       //account
       Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');
       Route::post('/user/profile/update', [UserController::class, 'updateProfile'])->name('user.profile.update');

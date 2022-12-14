@@ -86,15 +86,15 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ route('pelanggan.index') }}" class="nav-link">
+                <a href="{{ route('karyawan.create') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Tambah Data Karyawan</p>
+                  <p>Tambah Karyawan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ route('pekerjaan.index') }}" class="nav-link">
+                <a href="{{ route('karyawan.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>List Data Karyawan</p>
+                  <p>List Karyawan</p>
                 </a>
               </li>
              
