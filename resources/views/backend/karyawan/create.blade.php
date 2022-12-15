@@ -9,6 +9,16 @@ Tambah Karyawan
 @endpush
 
 @section('content')
+<style type="text/css">
+  .bootstrap-tagsinput .tag{
+      margin-right: 2px;
+      padding: 3px;
+      background-color: rgba(88, 202, 139, 0.637);
+      color: #000000;
+      font-weight: 700px;
+      border-radius: 10px;
+  } 
+</style>
 <div class="content-wrapper">
   <!-- Content Header (Page header) -->
   <div class="content-header">
@@ -20,7 +30,7 @@ Tambah Karyawan
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Account</li>
+            <li class="breadcrumb-item active">Karyawan</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -38,7 +48,7 @@ Tambah Karyawan
         <div class="col-md-12">
           <div class="card card-danger">
             <div class="card-header">
-              <h3 class="card-title">Edit Account</h3>
+              <h3 class="card-title">Data karyawan</h3>
             </div>
             <!-- /.card-header -->
             <!-- form start -->
@@ -89,16 +99,55 @@ Tambah Karyawan
                   </div>
 
                   <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Penempatan</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="penempatan_id" id="penempatan_id" required>
+                            <option value="">Pilih Lokasi Penempatan</option>
+                            {{-- @foreach ($agent as $key => $row)
+                                <option value="{{ $key }}">{{ $row }}</option>
+                            @endforeach
+               --}}
+                          </select>
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Berkas</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" value="agama,web" name="tag" data-role="tagsinput">
+                        <input class="form-control" type="text" value="KTP,IJAZAH,AKTE" name="tag" data-role="tagsinput">
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Upload Berkas</label>
+                    <div class="col-sm-4">
+                      <input class="form-control" type="file" name="berkas">
+                      <span class="text-danger">"Gabungkan menjadi 1 file pdf"</span>
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Alamat</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" name="alamat" id="alamat" cols="30" rows="3" required></textarea>
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Nomer HP</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="number" name="nomer">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
 
 
                 <div class="form-group row">
-                  <label for="profile_photo_path" class="col-md-2 control-label col-lg-offset-1">Foto Profile</label>
+                  <label for="profile_photo_path" class="col-md-2 control-label col-lg-offset-1">Pas Poto</label>
                   <div class="col-lg-6">
 
                       <input type="file" class="form-control" name="profile_photo_path" id="profile_photo_path" onchange="preview('.tampil-logo',this.files[0])">
@@ -138,7 +187,7 @@ Tambah Karyawan
 
 
 @push('scripts')
-   
+<script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js" ></script>
 <script>
   $(function(){
   

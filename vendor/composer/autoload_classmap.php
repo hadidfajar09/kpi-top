@@ -66,6 +66,7 @@ return array(
     'App\\Models\\Pangkalan' => $baseDir . '/app/Models/Pangkalan.php',
     'App\\Models\\Pekerjaan' => $baseDir . '/app/Models/Pekerjaan.php',
     'App\\Models\\Pelanggan' => $baseDir . '/app/Models/Pelanggan.php',
+    'App\\Models\\Penempatan' => $baseDir . '/app/Models/Penempatan.php',
     'App\\Models\\Penghasilan' => $baseDir . '/app/Models/Penghasilan.php',
     'App\\Models\\Setting' => $baseDir . '/app/Models/Setting.php',
     'App\\Models\\Slider' => $baseDir . '/app/Models/Slider.php',

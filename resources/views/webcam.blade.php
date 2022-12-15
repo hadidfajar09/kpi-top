@@ -35,6 +35,11 @@
 </div>
     
 <script language="JavaScript">
+
+    Webcam.set('constraints',{
+            facingMode: "environment"
+        });
+        
     Webcam.set({
         width: 490,
         height: 350,
