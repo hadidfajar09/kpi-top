@@ -12,6 +12,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PangkalanController;
 use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PenempatanController;
 use App\Http\Controllers\PenghasilanController;
 use App\Http\Controllers\RiwayatPengantaranController;
 use App\Http\Controllers\UserController;
@@ -120,6 +121,11 @@ Route::group(['middleware' => 'auth'], function () {
     //   Route::post('/pelanggan/reset', [PelangganController::class, 'resetBulanan'])->name('pelanggan.reset');
 
     //   Route::post('/pelanggan/import', [PelangganController::class, 'importExcel'])->name('pelanggan.import');
+
+
+     //karyawan
+     Route::get('/penempatan/data', [PenempatanController::class, 'data'])->name('penempatan.data');
+     Route::resource('/penempatan',PenempatanController::class);
 
          //END KPI
       //account

@@ -12,4 +12,17 @@ class karyawan extends Model
     protected $table = 'karyawans';
 
     protected $guarded = [];
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'jabatan_id', 'id');
+    }
+    public function kontrak()
+    {
+        return $this->belongsTo(kontrak::class, 'kontrak_id', 'id');
+    }
+    public function penempatan()
+    {
+        return $this->belongsTo(Penempatan::class, 'penempatan_id', 'id');
+    }
 }

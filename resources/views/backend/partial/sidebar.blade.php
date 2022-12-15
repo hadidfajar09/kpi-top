@@ -54,7 +54,7 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-copy"></i>
               <p>
-                Data Karyawan
+                Data Dasar
                 <i class="fas fa-angle-left right"></i>
               </p>
             </a>
@@ -70,6 +70,13 @@
                 <a href="{{ route('kontrak.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Kontrak Kerja</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="{{ route('penempatan.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Penempatan</p>
                 </a>
               </li>
              

@@ -23,6 +23,8 @@ class CreateKaryawansTable extends Migration
             $table->string('alamat');
             $table->string('nomor');
             $table->string('join_date');
+            $table->string('foto')->nullable();
+            $table->string('path_berkas')->nullable();
             $table->timestamps();
         });
     }

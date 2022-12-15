@@ -52,7 +52,7 @@ Tambah Karyawan
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="{{ route('user.profile.update') }}" class="form-profile" data-toggle="validator" method="post" enctype="multipart/form-data" >
+            <form action="{{ route('karyawan.store') }}" class="form-profile" data-toggle="validator" method="post" enctype="multipart/form-data" >
               @csrf
               <div class="card-body">
                 <div class="form-group row">
@@ -62,23 +62,16 @@ Tambah Karyawan
                     <span class="help-block with-errors text-danger"></span>
                   </div>
                 </div>
-                <div class="form-group row">
-                  <label for="email" class="col-sm-2 col-form-label">Email</label>
-                  <div class="col-sm-4">
-                    <input type="email" class="form-control" name="email" id="email" required autofocus>
-                                <span class="help-block with-errors text-danger"></span>
-                  </div>
-                </div>
 
                 <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Jabatan</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="kontrak_id" id="kontrak_id" required>
+                        <select class="form-control" name="jabatan_id" id="jabatan_id" required>
                             <option value="">Pilih Jabatan</option>
-                            {{-- @foreach ($agent as $key => $row)
+                            @foreach ($jabatan as $key => $row)
                                 <option value="{{ $key }}">{{ $row }}</option>
                             @endforeach
-               --}}
+              
                           </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
@@ -89,10 +82,10 @@ Tambah Karyawan
                     <div class="col-sm-4">
                         <select class="form-control" name="kontrak_id" id="kontrak_id" required>
                             <option value="">Pilih Kontrak</option>
-                            {{-- @foreach ($agent as $key => $row)
+                            @foreach ($kontrak as $key => $row)
                                 <option value="{{ $key }}">{{ $row }}</option>
                             @endforeach
-               --}}
+              
                           </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
@@ -103,10 +96,10 @@ Tambah Karyawan
                     <div class="col-sm-4">
                         <select class="form-control" name="penempatan_id" id="penempatan_id" required>
                             <option value="">Pilih Lokasi Penempatan</option>
-                            {{-- @foreach ($agent as $key => $row)
+                            @foreach ($penempatan as $key => $row)
                                 <option value="{{ $key }}">{{ $row }}</option>
                             @endforeach
-               --}}
+              
                           </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
@@ -115,7 +108,7 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Berkas</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" value="KTP,IJAZAH,AKTE" name="tag" data-role="tagsinput">
+                        <input class="form-control" type="text" value="KTP,IJAZAH,AKTE" name="berkas" data-role="tagsinput">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -123,7 +116,7 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Upload Berkas</label>
                     <div class="col-sm-4">
-                      <input class="form-control" type="file" name="berkas">
+                      <input class="form-control" type="file" name="path_berkas">
                       <span class="text-danger">"Gabungkan menjadi 1 file pdf"</span>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
@@ -140,20 +133,29 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Nomer HP</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="number" name="nomer">
+                        <input class="form-control" type="number" name="nomor">
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Join Date</label>
+                    <div class="col-sm-4">
+                        <input class="form-control" type="date" name="join_date">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
 
 
+
                 <div class="form-group row">
-                  <label for="profile_photo_path" class="col-md-2 control-label col-lg-offset-1">Pas Poto</label>
+                  <label for="foto" class="col-md-2 control-label col-lg-offset-1">Pas Poto</label>
                   <div class="col-lg-6">
 
-                      <input type="file" class="form-control" name="profile_photo_path" id="profile_photo_path" onchange="preview('.tampil-logo',this.files[0])">
+                      <input type="file" class="form-control" name="foto" id="foto" onchange="preview('.tampil-logo',this.files[0])">
                       <span class="help-block with-errors"></span><br>
                       <div class="tampil-logo">
-                        <img src="{{ asset($profile->profile_photo_path ?? '') }}" width="200px">
+                        <img src="" width="200px">
                       </div>
                   </div>
               </div>
@@ -163,7 +165,7 @@ Tambah Karyawan
               <!-- /.card-body -->
               <div class="card-footer">
                 
-                <button type="submit" class="btn btn-warning float-right">Update</button>
+                <button type="submit" class="btn btn-danger float-right">Update</button>
               </div>
               <!-- /.card-footer -->
             </form>
@@ -188,48 +190,5 @@ Tambah Karyawan
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.8.0/bootstrap-tagsinput.min.js" ></script>
-<script>
-  $(function(){
-  
-      $('#old_password').on('keyup', function(){
-           if($(this).val() != "") $('#password').attr('required',true);
-           else $('#password').attr('required',false);
-       });  
 
-      $('.form-profile').validator().on('submit',function(e){
-          if(! e.preventDefault()){
-              $.ajax({
-                  url: $('.form-profile').attr('action'),
-                  type: $('.form-profile').attr('method'),
-                  data: new FormData($('.form-profile')[0]),
-                  async: false,
-                  processData: false,
-                  contentType: false,
-              })
-              .done(response => {
-                    $('#name').val(response.name);
-                    $('#email').val(response.email);
-                                
-                    $('.tampil-logo').html(`<img src="{{ url('/') }}/${response.profile_photo_path}" width="200px">`);
-                   
-                    $('.img-profil').attr('src', `{{ url('/') }}/${response.profile_photo_path}`);
-                    
-                  Swal.fire('Berhasil Update Data')
-              })
-              .fail(errors => {
-                
-
-                  if(errors.status == 422){
-                    Swal.fire(errors.responseJSON)
-                        
-                    }else{
-                      Swal.fire('Gagal Update Data')
-                    }
-                    return;
-              });
-          }
-      });
-  });
-
-</script>
 @endpush
