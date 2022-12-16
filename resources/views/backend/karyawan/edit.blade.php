@@ -1,7 +1,7 @@
 @extends('layouts.backend_master')
 
 @section('title')
-Tambah Karyawan
+Edit Karyawan
 @endsection
 
 @push('css')
@@ -52,13 +52,13 @@ Tambah Karyawan
             </div>
             <!-- /.card-header -->
             <!-- form start -->
-            <form action="{{ route('karyawan.store') }}" class="form-profile" data-toggle="validator" method="post" enctype="multipart/form-data" >
+            <form action="{{ route('karyawan.barui',$karyawan->id) }}" class="form-profile" data-toggle="validator" method="post" enctype="multipart/form-data" >
               @csrf
               <div class="card-body">
                 <div class="form-group row">
                   <label for="name" class="col-sm-2 col-form-label">Nama Karyawan</label>
                   <div class="col-sm-4">
-                    <input type="text" class="form-control" name="name" id="name"  required autofocus>
+                    <input type="text" class="form-control" name="name" value="{{ $karyawan->name }}" id="name"  required autofocus>
                     <span class="help-block with-errors text-danger"></span>
                   </div>
                 </div>
@@ -66,13 +66,11 @@ Tambah Karyawan
                 <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Jabatan</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="jabatan_id" id="jabatan_id" required>
-                            <option value="">Pilih Jabatan</option>
-                            @foreach ($jabatan as $key => $row)
-                                <option value="{{ $key }}">{{ $row }}</option>
-                            @endforeach
-              
-                          </select>
+                      <select class="form-control" name="jabatan_id" id="jabatan_id">
+                        @foreach($jabatan as $row)
+                        <option value="{{ $row->id }}" @if($karyawan->jabatan_id == $row->id) selected @endif>{{ $row->jabatan }}</option>
+                        @endforeach
+                    </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -80,13 +78,11 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Kontrak</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="kontrak_id" id="kontrak_id" required>
-                            <option value="">Pilih Kontrak</option>
-                            @foreach ($kontrak as $key => $row)
-                                <option value="{{ $key }}">{{ $row }}</option>
-                            @endforeach
-              
-                          </select>
+                      <select class="form-control" name="kontrak_id" id="kontrak_id">
+                        @foreach($kontrak as $row)
+                        <option value="{{ $row->id }}" @if($karyawan->kontrak_id == $row->id) selected @endif>{{ $row->kontrak }}</option>
+                        @endforeach
+                    </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -94,13 +90,11 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Penempatan</label>
                     <div class="col-sm-4">
-                        <select class="form-control" name="penempatan_id" id="penempatan_id" required>
-                            <option value="">Pilih Lokasi Penempatan</option>
-                            @foreach ($penempatan as $key => $row)
-                                <option value="{{ $key }}">{{ $row }}</option>
-                            @endforeach
-              
-                          </select>
+                         <select class="form-control" name="penempatan_id" id="penempatan_id">
+                          @foreach($penempatan as $row)
+                          <option value="{{ $row->id }}" @if($karyawan->penempatan_id == $row->id) selected @endif>{{ $row->nama }}</option>
+                          @endforeach
+                      </select>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -108,28 +102,31 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Berkas</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="text" value="KTP,IJAZAH,AKTE" name="berkas" data-role="tagsinput">
+                        <input class="form-control" type="text" value="{{ $karyawan->berkas }}" name="berkas" data-role="tagsinput">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label for="email" class="col-sm-2 col-form-label">Upload Berkas</label>
+                    <label for="email" class="col-sm-2 col-form-label">Upload Baru Berkas</label>
                     <div class="col-sm-4">
                       <input class="form-control" type="file" name="path_berkas">
                       <span class="text-danger">"Gabungkan menjadi 1 file pdf"</span>
                                   <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
 
-                                  @error('path_berkas')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">File Berkas yang ada</label>
+                    <div class="col-sm-4">
+                      <a href="{{ route('file.download', $karyawan->id) }}" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i>Download</a>
                     </div>
                   </div>
 
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Alamat</label>
                     <div class="col-sm-4">
-                        <textarea class="form-control" name="alamat" id="alamat" cols="30" rows="3" required></textarea>
+                        <textarea class="form-control" name="alamat" id="alamat" cols="30" rows="3" required>{{ $karyawan->alamat }}</textarea>
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -137,7 +134,7 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Nomer HP</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="number" name="nomor">
+                        <input class="form-control" value="{{ $karyawan->nomor }}" type="number" name="nomor">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -145,15 +142,15 @@ Tambah Karyawan
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Join Date</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="date" name="join_date">
+                        <input class="form-control" type="date" name="join_date" value="{{ $karyawan->join_date }}">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
 
                   <div class="form-group row">
-                    <label for="email" class="col-sm-2 col-form-label">End Date</label>
+                    <label for="email" class="col-sm-2 col-form-label">End Work</label>
                     <div class="col-sm-4">
-                        <input class="form-control" type="date" name="end_work">
+                        <input class="form-control" type="date" name="end_work" value="{{ $karyawan->end_work }}">
                                   <span class="help-block with-errors text-danger"></span>
                     </div>
                   </div>
@@ -165,12 +162,9 @@ Tambah Karyawan
                   <div class="col-lg-6">
 
                       <input type="file" class="form-control" name="foto" id="foto" onchange="preview('.tampil-logo',this.files[0])">
-                      @error('foto')
-                                            <span class="text-danger">{{ $message }}</span>
-                                            @enderror
                       <span class="help-block with-errors"></span><br>
                       <div class="tampil-logo">
-                        <img src="" width="200px">
+                        <img src="{{ asset($karyawan->foto) }}" width="200px">
                       </div>
                   </div>
               </div>
@@ -180,7 +174,7 @@ Tambah Karyawan
               <!-- /.card-body -->
               <div class="card-footer">
                 
-                <button type="submit" class="btn btn-danger float-right">Tambahkan</button>
+                <button type="submit" class="btn btn-danger float-right">Update</button>
               </div>
               <!-- /.card-footer -->
             </form>

@@ -4,30 +4,33 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateKontraksTable extends Migration
+class CreateOmsetsTable extends Migration
 {
     /**
-      * Run the migrations.
+     * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
-        Schema::create('kontraks', function (Blueprint $table) {
+        Schema::create('omsets', function (Blueprint $table) {
             $table->id();
-            $table->string('kontrak');
-            $table->string('deskripsi');
+            $table->string('tanggal_setor');
+            $table->integer('user_id');
+            $table->integer('karyawan_id');
+            $table->text('catatan')->nullable();
+            $table->string('nominal');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-     *
+     *  
      * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('kontraks');
+        Schema::dropIfExists('omsets');
     }
 }

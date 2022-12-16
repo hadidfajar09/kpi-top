@@ -116,6 +116,8 @@ Route::group(['middleware' => 'auth'], function () {
             //karyawan
       Route::get('/karyawan/data', [KaryawanController::class, 'data'])->name('karyawan.data');
       Route::resource('/karyawan',KaryawanController::class);
+      Route::post('/karyawan/perbarui/{id}', [KaryawanController::class, 'barui'])->name('karyawan.barui');
+      Route::get('file/download/{id}', [KaryawanController::class, 'download'])->name('file.download');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');
     //   Route::post('/pelanggan/reset', [PelangganController::class, 'resetBulanan'])->name('pelanggan.reset');
@@ -126,6 +128,11 @@ Route::group(['middleware' => 'auth'], function () {
      //karyawan
      Route::get('/penempatan/data', [PenempatanController::class, 'data'])->name('penempatan.data');
      Route::resource('/penempatan',PenempatanController::class);
+
+
+          // //omset
+          Route::get('/omset/data', [KontrakController::class, 'data'])->name('kontrak.data');
+          Route::resource('/omset', KontrakController::class);
 
          //END KPI
       //account

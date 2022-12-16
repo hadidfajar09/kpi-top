@@ -9,6 +9,7 @@ use App\Models\Penempatan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\File;
 
 class KaryawanController extends Controller
 {
@@ -39,24 +40,24 @@ class KaryawanController extends Controller
                     return '<img src="'.$karyawan->foto.' " width="100">';
                 })
                 
-                ->addColumn('join_date', function($karyawan){
-                    return formatTanggal($karyawan->join_date);
+                ->addColumn('end_work', function($karyawan){
+                    return formatTanggal($karyawan->end_work);
                 })
 
                 ->addColumn('status', function($karyawan){
-                    if($karyawan->join_date <= now()){
-                        return '<span class="badge badge-danger">Active</span>';
+                    if($karyawan->end_work <= now()){
+                        return '<span class="badge badge-danger">NonAKtif</span>';
       
                     }else{
-                      return '<span class="badge badge-success">InActive</span>';
+                      return '<span class="badge badge-success">Aktif</span>';
                     }
                 })
              
                 ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('karyawan.update', $karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> </div>';
+                    $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','foto','join_date','status'])//biar kebaca html
+                ->rawColumns(['aksi','foto','end_work','status'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -94,6 +95,13 @@ class KaryawanController extends Controller
         return view('backend.karyawan.create', compact('jabatan','kontrak','penempatan'));
     }
 
+    public function download($id)
+    {
+        $karyawan = karyawan::findOrFail($id);
+        $filePath = $karyawan->path_berkas;
+        return response()->download($filePath);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -111,11 +119,12 @@ class KaryawanController extends Controller
             'alamat' => 'required',
             'nomor' => 'required',
             'join_date' => 'required',
+            'end_work' => 'required',
             'path_berkas' => "sometimes|nullable|mimes:pdf|max:4000",
             'foto' => "sometimes|nullable|mimes:jpg,png,jpeg|max:4000"
         ]);
 
-        $karyawan = karyawan::latest()->first() ?? new karyawan();
+        $karyawan = new karyawan();
 
         $karyawan->name = $request->name;
         $karyawan->jabatan_id = $request->jabatan_id;
@@ -125,13 +134,14 @@ class KaryawanController extends Controller
         $karyawan->alamat = $request->alamat;
         $karyawan->nomor = $request->nomor;
         $karyawan->join_date = $request->join_date;
+        $karyawan->end_work = $request->end_work;
 
         if ($request->hasFile('path_berkas')) {
             if ($request->file('path_berkas')->isValid()) {
                 $documentFile = $request->file('path_berkas');
                 $extention = $documentFile->getClientOriginalExtension();
                 $slug = \Str::slug($request->get('name'));
-                $fileName = "berkas/" . date('YmdHis') . "-" . $slug . "." . $extention;
+                $fileName = date('YmdHis') . "-" . $slug . "." . $extention;
                 $request->file('path_berkas')->move(public_path('/berkas/'),$fileName);
 
                 $karyawan->path_berkas = 'berkas/'.$fileName;
@@ -170,7 +180,12 @@ class KaryawanController extends Controller
      */
     public function edit($id)
     {
-        //
+        $karyawan = karyawan::findOrfail($id);
+        $jabatan = Jabatan::all();
+        $kontrak = kontrak::all();
+        $penempatan = Penempatan::all();
+
+        return view('backend.karyawan.edit',compact('jabatan','kontrak','penempatan','karyawan'));
     }
 
     /**
@@ -182,7 +197,62 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->all());
+    }
+
+    public function barui(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|max:255',
+            'jabatan_id' => 'required',
+            'kontrak_id' => 'required',
+            'penempatan_id' => 'required',
+            'berkas' => 'required',
+            'alamat' => 'required',
+            'nomor' => 'required',
+            'join_date' => 'required',
+            'end_work' => 'required',
+            'path_berkas' => "sometimes|nullable|mimes:pdf|max:4000",
+            'foto' => "sometimes|nullable|mimes:jpg,png,jpeg|max:4000"
+        ]);
+
+        $karyawan = karyawan::find($id);
+
+        $karyawan->name = $request->name;
+        $karyawan->jabatan_id = $request->jabatan_id;
+        $karyawan->kontrak_id = $request->kontrak_id;
+        $karyawan->penempatan_id = $request->penempatan_id;
+        $karyawan->berkas = $request->berkas;
+        $karyawan->alamat = $request->alamat;
+        $karyawan->nomor = $request->nomor;
+        $karyawan->join_date = $request->join_date;
+        $karyawan->end_work = $request->end_work;
+
+        if ($request->hasFile('path_berkas')) {
+            if ($request->file('path_berkas')->isValid()) {
+                $documentFile = $request->file('path_berkas');
+                $extention = $documentFile->getClientOriginalExtension();
+                $slug = \Str::slug($request->get('name'));
+                $fileName = date('YmdHis') . "-" . $slug . "." . $extention;
+                $request->file('path_berkas')->move(public_path('/berkas/'),$fileName);
+
+                $karyawan->path_berkas = 'berkas/'.$fileName;
+            }
+        }
+
+        if($request->hasFile('foto')){
+            $old = $karyawan->foto;
+            unlink($old);
+            $image = $request->file('foto');
+            $nama = 'foto-'.date('Y-m-dHis').'.'.$image->getClientOriginalExtension();
+            $image->move(public_path('/foto/'),$nama);
+
+            $karyawan->foto = 'foto/'.$nama;
+        }
+
+        $karyawan->update();
+
+        return redirect()->route('karyawan.index');
     }
 
     /**
@@ -193,6 +263,12 @@ class KaryawanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $karyawan = karyawan::find($id);
+        unlink($karyawan->foto);
+        File::delete($karyawan->path_berkas);
+
+        $karyawan->delete();
+
+        return response()->json('data berhasil dihapus');
     }
 }

@@ -108,12 +108,12 @@
             </ul>
           </li>
         
-          <li class="nav-header">RIWAYAT</li>
+          <li class="nav-header">DAILY ACTIVITY</li>
           <li class="nav-item">
-            <a href="{{ route('transaksi.index') }}" class="nav-link">
+            <a href="{{ route('omset.index') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
-                Transaksi Pengguna
+                Omset Sales
               </p>
             </a>
           </li>
@@ -121,7 +121,7 @@
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>
               <p>
-                Distribusi Agen
+                Grooming
               </p>
             </a>
           </li>
@@ -129,10 +129,37 @@
             <a href="{{ route('laporan.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
-                Laporan Stock
+                Kebersihan
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('laporan.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Aset dan Stok Toko
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('laporan.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Briefing
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('laporan.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Report Closing
+              </p>
+            </a>
+          </li>
+
+
+          
         
           <li class="nav-header">SYSTEM</li>
           <li class="nav-item">
@@ -180,12 +207,12 @@
           </li>
 
 
-          <li class="nav-header">RIWAYAT</li>
+          <li class="nav-header">DAILY ACTIVITY</li>
           <li class="nav-item">
             <a href="{{ route('transaksi.index') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
-                Transaksi Pengguna
+                Omset Sales
               </p>
             </a>
           </li>

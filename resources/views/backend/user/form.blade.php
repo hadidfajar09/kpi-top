@@ -32,9 +32,9 @@
                 <select class="form-control" name="level" id="level" required>
                   <option value="" disabled>=====</option>
                  
-                      <option value="3">OPERATOR</option>
-                      <option value="4">BUPATI</option>
-                      <option value="5">KABAG</option>
+                      <option value="3">HRD</option>
+                      <option value="4">LEADER</option>
+                      <option value="5">SPV</option>
     
                 </select>
                 <span class="help-block with-errors text-danger"></span>

@@ -146,12 +146,12 @@ class UserController extends Controller
             })
             ->addColumn('level', function($user){
                 if($user->level == 4){
-                    return '<span class="badge badge-danger">BUPATI</span>';
+                    return '<span class="badge badge-danger">LEADER</span>';
   
                 }else if($user->level == 3){
-                  return '<span class="badge badge-success">OPERATOR</span>';
+                  return '<span class="badge badge-success">HRD</span>';
                 }else if($user->level == 5){
-                    return '<span class="badge badge-info">KABAG</span>';
+                    return '<span class="badge badge-info">SPV</span>';
                 }else{
                     return '<span class="badge badge-warning">SUPER ADMIN</span>';
                 }

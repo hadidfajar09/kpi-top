@@ -16,7 +16,7 @@
           </button>
         </div>
         <div class="modal-body">
-           
+          <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a>
             <div class="form-group row">
                 <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Banner</label>
                 <div class="col-md-8">
