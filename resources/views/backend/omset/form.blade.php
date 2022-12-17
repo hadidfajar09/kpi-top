@@ -18,18 +18,42 @@
         <div class="modal-body">
            
             <div class="form-group row">
-                <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Nama Jabatan</label>
+                <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Tanggal</label>
                 <div class="col-md-8">
-                    <input class="form-control" type="text" name="jabatan" id="jabatan" required autofocus>
+                    <input class="form-control" type="date" name="tanggal_setor" id="tanggal_setor" required autofocus>
                     <span class="help-block with-errors text-danger"></span>
 
                 </div>
             </div>
 
             <div class="form-group row">
-              <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Deskripsi</label>
+              <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Sales</label>
               <div class="col-md-8">
-                  <textarea class="form-control" name="deskripsi" id="" cols="30" rows="5"></textarea>
+                <select class="form-control" name="karyawan_id" id="karyawan_id" required>
+                  <option value="">Pilih Sales</option>
+                  @foreach ($sales as $key => $row)
+                      <option value="{{ $key }}">{{ $row }}</option>
+                  @endforeach
+    
+                </select>
+                  <span class="help-block with-errors text-danger"></span>
+
+              </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Nominal</label>
+            <div class="col-md-8">
+                <input class="form-control" type="number" name="nominal" id="nominal" required autofocus>
+                <span class="help-block with-errors text-danger"></span>
+
+            </div>
+        </div>
+
+            <div class="form-group row">
+              <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Catatan</label>
+              <div class="col-md-8">
+                  <textarea class="form-control" name="catatan" id="" cols="30" rows="5"></textarea>
                   <span class="help-block with-errors text-danger"></span>
   
               </div>

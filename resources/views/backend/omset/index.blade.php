@@ -1,7 +1,7 @@
 @extends('layouts.backend_master')
 
 @section('title')
-Daftar Jabatan
+Daftar Omset Sales
 @endsection
 
 @section('content')
@@ -11,12 +11,12 @@ Daftar Jabatan
     <div class="container-fluid">
       <div class="row mb -2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Jabatan</h1>
+          <h1 class="m-0">Daftar Omset Sales</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Jabatan</li>
+            <li class="breadcrumb-item active">Omset Sales</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -35,7 +35,7 @@ Daftar Jabatan
           <div class="card">
             <div class="card-header">
               @if (auth()->user()->level == 0 || auth()->user()->level == 3)
-              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('jabatan.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
               @endif
              
 
@@ -56,8 +56,11 @@ Daftar Jabatan
                             >
                             <thead>
                               <th width="5%">No</th>
-                              <th width="15%">Jabatan</th>
-                              <th>Deskripsi</th>
+                              <th width="15%">Tanggal</th>
+                              <th width="10%">Sales</th>
+                              <th width="10%">Leader</th>
+                              <th width="15%">Nominal</th>
+                              <th>Catatan</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
@@ -91,7 +94,7 @@ Daftar Jabatan
   <!-- /.content -->
 </div>
 
-@include('backend.jabatan.form')
+@include('backend.omset.form')
 @endsection
 
 
@@ -104,15 +107,29 @@ Daftar Jabatan
               processing: true,
               autoWidth: false,
                 ajax: {
-                    url: '{{ route('jabatan.data') }}'
+                    url: '{{ route('omset.data') }}'
                 },
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
-                        {data: 'jabatan'},
-                        {data: 'deskripsi'},
+                        {data: 'tanggal_setor'},
+                        {data: 'sales'},
+                        {data: 'user'},
+                        {data: 'nominal'},
+                        {data: 'catatan'},
                         {data: 'aksi', searchable: false, sortable: false},
-                ]
+                ],
+                dom: 'Bfrltip',
+
+buttons: [ 
+'copyHtml5', 'excelHtml5', 'pdfHtml5', 'print', 
+],
             });
+
+                
+            table.button(0).nodes().css('background', '#fd7e14');
+            table.button(1).nodes().css('background', '#fd7e14');
+            table.button(2).nodes().css('background', '#fd7e14');
+            table.button(3).nodes().css('background', '#fd7e14');
 
             $('#modal-agent').validator().on('submit', function(e){
                 if (! e.preventDefault()) {
@@ -137,27 +154,30 @@ Daftar Jabatan
 
           function addForm(url){
             $('#modal-agent').modal('show');
-            $('#modal-agent .modal-title').text('Tambah Jabatan');
+            $('#modal-agent .modal-title').text('Tambah Omset');
 
             $('#modal-agent form')[0].reset();
             $('#modal-agent form').attr('action',url);
             $('#modal-agent [name=_method]').val('post');
-            $('#modal-agent [name=jabatan]').focus();
+            $('#modal-agent [name=tanggal_setor]').focus();
         }
 
         function editForm(url){
             $('#modal-agent').modal('show');
-            $('#modal-agent .modal-title').text('Ubah Jabatan');
+            $('#modal-agent .modal-title').text('Ubah Omset');
 
             $('#modal-agent form')[0].reset();
             $('#modal-agent form').attr('action',url);
             $('#modal-agent [name=_method]').val('put');
-            $('#modal-agent [name=jabatan]').focus();
+            $('#modal-agent [name=tanggal_setor]').focus();
 
             $.get(url)
               .done((response) => {
-                $('#modal-agent [name=jabatan]').val(response.jabatan);
-                $('#modal-agent [name=deskripsi]').val(response.deskripsi);
+                $('#modal-agent [name=tanggal_setor]').val(response.tanggal_setor);
+                $('#modal-agent [name=karyawan_id]').val(response.karyawan_id);
+                $('#modal-agent [name=user_id]').val(response.user_id);
+                $('#modal-agent [name=nominal]').val(response.nominal);
+                $('#modal-agent [name=catatan]').val(response.catatan);
 
               })
 
@@ -168,7 +188,7 @@ Daftar Jabatan
         }
 
         function deleteData(url) {
-          if(confirm('Yakin Ingin Hapus Jabatan Ini?')){
+          if(confirm('Yakin Ingin Hapus Data Omset Ini?')){
             
           $.post(url, {
             '_token': $('[name=csrf-token]').attr('content'),

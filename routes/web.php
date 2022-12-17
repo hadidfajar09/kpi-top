@@ -9,6 +9,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\OmsetController;
 use App\Http\Controllers\PangkalanController;
 use App\Http\Controllers\PekerjaanController;
 use App\Http\Controllers\PelangganController;
@@ -131,8 +132,8 @@ Route::group(['middleware' => 'auth'], function () {
 
 
           // //omset
-          Route::get('/omset/data', [KontrakController::class, 'data'])->name('kontrak.data');
-          Route::resource('/omset', KontrakController::class);
+          Route::get('/omset/data', [OmsetController::class, 'data'])->name('omset.data');
+          Route::resource('/omset', OmsetController::class);
 
          //END KPI
       //account
