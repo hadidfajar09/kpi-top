@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\grooming;
-use App\Models\karyawan;
+use App\Models\Cleaning;
+use App\Models\Penempatan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
-class GroomingController extends Controller
+class CleaningController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,44 +17,49 @@ class GroomingController extends Controller
      */
     public function index()
     {
-        
-        return view('backend.grooming.index');
+        return view('backend.cleaning.index');
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
 
     public function data()
     {
-        $grooming = grooming::
+        $cleaning = Cleaning::
             latest()->get();
 
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
                 return datatables()
-                ->of($grooming)//source
+                ->of($cleaning)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('path_foto', function($grooming){
-                    return '<img src="'.$grooming->path_foto.' " width="150">';
+                ->addColumn('path_foto', function($cleaning){
+                    return '<img src="'.$cleaning->path_foto.' " width="150">';
                 })
                 
-                ->addColumn('karyawan', function($grooming){
-                    return '<h1 class="badge badge-dark">'.$grooming->karyawan->name.'</h1>';
+                ->addColumn('penempatan', function($cleaning){
+                    return '<h1 class="badge badge-dark">'.$cleaning->penempatan->nama.'</h1>';
                 })
-                ->addColumn('user', function($grooming){
-                    return '<h1 class="badge badge-success">'.$grooming->user->name.'</h1>';
+                ->addColumn('user', function($cleaning){
+                    return '<h1 class="badge badge-success">'.$cleaning->user->name.'</h1>';
                 })
 
-                ->addColumn('tanggal', function($grooming){
-                    return formatTanggal($grooming->created_at);
+                ->addColumn('tanggal', function($cleaning){
+                    return formatTanggal($cleaning->created_at);
                 })
              
-                ->addColumn('aksi', function($grooming){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('grooming.edit', $grooming->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('grooming.destroy', $grooming->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
+                ->addColumn('aksi', function($cleaning){ //untuk aksi
+                    $button = '<div class="btn-group"><a href="'.route('cleaning.edit', $cleaning->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('cleaning.destroy', $cleaning->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','karyawan','user','tanggal'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
-                ->of($grooming)//source
+                ->of($cleaning)//source
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('select_all', function($karyawan){
                     return '<input type="checkbox" name="id_pelanggan[]" value="'.$karyawan->id.'">';
@@ -75,16 +80,11 @@ class GroomingController extends Controller
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $karyawan = karyawan::all()->pluck('name','id');
+        $penempatan = Penempatan::all()->pluck('nama','id');
 
-        return view('backend.grooming.create', compact('karyawan'));
+        return view('backend.cleaning.create', compact('penempatan'));
     }
 
     /**
@@ -95,15 +95,15 @@ class GroomingController extends Controller
      */
     public function store(Request $request)
     {
-        $grooming = new grooming();
+        $cleaning = new Cleaning();
 
-        $grooming->karyawan_id = $request->karyawan_id;
-        $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
-        $grooming->user_id = auth()->user()->id;
+        $cleaning->penempatan_id = $request->penempatan_id;
+        $cleaning->catatan = $request->catatan;
+        $cleaning->created_at = now();
+        $cleaning->user_id = auth()->user()->id;
 
             $img = $request->path_foto;
-            $folderPath = "foto/";
+            $folderPath = "foto_clean/";
             
             $image_parts = explode(";base64,", $img);
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -116,23 +116,20 @@ class GroomingController extends Controller
             
             Storage::disk('public_uploads')->put($file, $image_base64);
 
-            $grooming->path_foto = 'uploads/foto/'.$fileName;
+            $cleaning->path_foto = 'uploads/foto_clean/'.$fileName;
 
-        $grooming->save();
+        $cleaning->save();
 
-        return redirect()->route('grooming.index');
-
-
-        
+        return redirect()->route('cleaning.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Cleaning  $cleaning
      * @return \Illuminate\Http\Response
      */
-    public function show(grooming $grooming)
+    public function show(Cleaning $cleaning)
     {
         //
     }
@@ -140,37 +137,37 @@ class GroomingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Cleaning  $cleaning
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $grooming = grooming::findOrfail($id);
-        $karyawan = karyawan::all();
+        $cleaning = Cleaning::findOrfail($id);
+        $penempatan = Penempatan::all();
 
-        return view('backend.grooming.edit',compact('karyawan','grooming'));
+        return view('backend.cleaning.edit',compact('penempatan','cleaning'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Cleaning  $cleaning
      * @return \Illuminate\Http\Response
      */
     public function updated(Request $request, $id)
     {
-        $grooming = grooming::find($id);
+        $cleaning = Cleaning::find($id);
 
-        $grooming->karyawan_id = $request->karyawan_id;
-        $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
-        $grooming->user_id = auth()->user()->id;
+        $cleaning->penempatan_id = $request->penempatan_id;
+        $cleaning->catatan = $request->catatan;
+        $cleaning->created_at = now();
+        $cleaning->user_id = auth()->user()->id;
 
         if ($request->path_foto) {
-            unlink($grooming->path_foto);
+            unlink($cleaning->path_foto);
             $img = $request->path_foto;
-            $folderPath = "foto/";
+            $folderPath = "foto_clean/";
             
             $image_parts = explode(";base64,", $img);
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -183,27 +180,27 @@ class GroomingController extends Controller
             
             Storage::disk('public_uploads')->put($file, $image_base64);
 
-            $grooming->path_foto = 'uploads/foto/'.$fileName;
+            $cleaning->path_foto = 'uploads/foto_clean/'.$fileName;
             
         }
 
-        $grooming->update();
+        $cleaning->update();
 
-        return redirect()->route('grooming.index');
+        return redirect()->route('cleaning.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Cleaning  $cleaning
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $grooming = grooming::find($id);
-        unlink($grooming->path_foto);
+        $cleaning = Cleaning::find($id);
+        unlink($cleaning->path_foto);
 
-        $grooming->delete();
+        $cleaning->delete();
 
         return response()->json('data berhasil dihapus');
     }

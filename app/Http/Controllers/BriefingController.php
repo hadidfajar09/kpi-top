@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\grooming;
-use App\Models\karyawan;
+use App\Models\Briefing;
+use App\Models\Penempatan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-class GroomingController extends Controller
+class BriefingController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,44 +18,44 @@ class GroomingController extends Controller
      */
     public function index()
     {
-        
-        return view('backend.grooming.index');
+        return view('backend.briefing.index');
     }
 
     public function data()
     {
-        $grooming = grooming::
+        $briefing = Briefing::
             latest()->get();
 
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
                 return datatables()
-                ->of($grooming)//source
+                ->of($briefing)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('path_foto', function($grooming){
-                    return '<img src="'.$grooming->path_foto.' " width="150">';
+                ->addColumn('path_foto', function($briefing){
+                    return '<img src="'.$briefing->path_foto.' " width="150">';
                 })
                 
-                ->addColumn('karyawan', function($grooming){
-                    return '<h1 class="badge badge-dark">'.$grooming->karyawan->name.'</h1>';
+                ->addColumn('penempatan', function($briefing){
+                    return '<h1 class="badge badge-dark">'.$briefing->penempatan->nama.'</h1>';
                 })
-                ->addColumn('user', function($grooming){
-                    return '<h1 class="badge badge-success">'.$grooming->user->name.'</h1>';
+                ->addColumn('user', function($briefing){
+                    return '<h1 class="badge badge-success">'.$briefing->user->name.'</h1>';
                 })
 
-                ->addColumn('tanggal', function($grooming){
-                    return formatTanggal($grooming->created_at);
+                ->addColumn('tanggal', function($briefing){
+                    $result = Carbon::parse($briefing->created_at)->diffForHumans();
+                    return $result;
                 })
              
-                ->addColumn('aksi', function($grooming){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('grooming.edit', $grooming->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('grooming.destroy', $grooming->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
+                ->addColumn('aksi', function($briefing){ //untuk aksi
+                    $button = '<div class="btn-group"><a href="'.route('briefing.edit', $briefing->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('briefing.destroy', $briefing->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','karyawan','user','tanggal'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
-                ->of($grooming)//source
+                ->of($briefing)//source
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('select_all', function($karyawan){
                     return '<input type="checkbox" name="id_pelanggan[]" value="'.$karyawan->id.'">';
@@ -82,9 +83,9 @@ class GroomingController extends Controller
      */
     public function create()
     {
-        $karyawan = karyawan::all()->pluck('name','id');
+        $penempatan = Penempatan::all()->pluck('nama','id');
 
-        return view('backend.grooming.create', compact('karyawan'));
+        return view('backend.briefing.create', compact('penempatan'));
     }
 
     /**
@@ -95,15 +96,15 @@ class GroomingController extends Controller
      */
     public function store(Request $request)
     {
-        $grooming = new grooming();
+        $briefing = new Briefing();
 
-        $grooming->karyawan_id = $request->karyawan_id;
-        $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
-        $grooming->user_id = auth()->user()->id;
+        $briefing->penempatan_id = $request->penempatan_id;
+        $briefing->catatan = $request->catatan;
+        $briefing->created_at = now();
+        $briefing->user_id = auth()->user()->id;
 
             $img = $request->path_foto;
-            $folderPath = "foto/";
+            $folderPath = "foto_briefing/";
             
             $image_parts = explode(";base64,", $img);
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -116,23 +117,20 @@ class GroomingController extends Controller
             
             Storage::disk('public_uploads')->put($file, $image_base64);
 
-            $grooming->path_foto = 'uploads/foto/'.$fileName;
+            $briefing->path_foto = 'uploads/foto_briefing/'.$fileName;
 
-        $grooming->save();
+        $briefing->save();
 
-        return redirect()->route('grooming.index');
-
-
-        
+        return redirect()->route('briefing.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Briefing  $briefing
      * @return \Illuminate\Http\Response
      */
-    public function show(grooming $grooming)
+    public function show(Briefing $briefing)
     {
         //
     }
@@ -140,37 +138,37 @@ class GroomingController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Briefing  $briefing
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $grooming = grooming::findOrfail($id);
-        $karyawan = karyawan::all();
+        $briefing = Briefing::findOrfail($id);
+        $penempatan = Penempatan::all();
 
-        return view('backend.grooming.edit',compact('karyawan','grooming'));
+        return view('backend.briefing.edit',compact('penempatan','briefing'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Briefing  $briefing
      * @return \Illuminate\Http\Response
      */
     public function updated(Request $request, $id)
     {
-        $grooming = grooming::find($id);
+        $briefing = Briefing::find($id);
 
-        $grooming->karyawan_id = $request->karyawan_id;
-        $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
-        $grooming->user_id = auth()->user()->id;
+        $briefing->penempatan_id = $request->penempatan_id;
+        $briefing->catatan = $request->catatan;
+        $briefing->created_at = now();
+        $briefing->user_id = auth()->user()->id;
 
         if ($request->path_foto) {
-            unlink($grooming->path_foto);
+            unlink($briefing->path_foto);
             $img = $request->path_foto;
-            $folderPath = "foto/";
+            $folderPath = "foto_briefing/";
             
             $image_parts = explode(";base64,", $img);
             $image_type_aux = explode("image/", $image_parts[0]);
@@ -183,27 +181,27 @@ class GroomingController extends Controller
             
             Storage::disk('public_uploads')->put($file, $image_base64);
 
-            $grooming->path_foto = 'uploads/foto/'.$fileName;
+            $briefing->path_foto = 'uploads/foto_briefing/'.$fileName;
             
         }
 
-        $grooming->update();
+        $briefing->update();
 
-        return redirect()->route('grooming.index');
+        return redirect()->route('briefing.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\grooming  $grooming
+     * @param  \App\Models\Briefing  $briefing
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $grooming = grooming::find($id);
-        unlink($grooming->path_foto);
+        $briefing = Briefing::find($id);
+        unlink($briefing->path_foto);
 
-        $grooming->delete();
+        $briefing->delete();
 
         return response()->json('data berhasil dihapus');
     }

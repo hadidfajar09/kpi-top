@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\AuthAgentController;
+use App\Http\Controllers\BriefingController;
+use App\Http\Controllers\CleaningController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\DistribusiController;
+use App\Http\Controllers\GroomingController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KecamatanController;
@@ -135,6 +138,23 @@ Route::group(['middleware' => 'auth'], function () {
           Route::get('/omset/data', [OmsetController::class, 'data'])->name('omset.data');
           Route::resource('/omset', OmsetController::class);
 
+
+            // //grooming
+            Route::get('/grooming/data', [GroomingController::class, 'data'])->name('grooming.data');
+            Route::resource('/grooming', GroomingController::class);
+            Route::post('/grooming/updated/{id}', [GroomingController::class, 'updated'])->name('grooming.updated');
+  
+            // //kebersihan
+            Route::get('/cleaning/data', [CleaningController::class, 'data'])->name('cleaning.data');
+            Route::resource('/cleaning', CleaningController::class);
+            Route::post('/cleaning/updated/{id}', [CleaningController::class, 'updated'])->name('cleaning.updated');
+
+              // //breafing
+              Route::get('/briefing/data', [BriefingController::class, 'data'])->name('briefing.data');
+              Route::resource('/briefing', BriefingController::class);
+              Route::post('/briefing/updated/{id}', [BriefingController::class, 'updated'])->name('briefing.updated');
+  
+            
          //END KPI
       //account
       Route::get('/user/profile', [UserController::class, 'profile'])->name('user.profile');

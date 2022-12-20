@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateGroomingsTable extends Migration
+class CreateBriefingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateGroomingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('groomings', function (Blueprint $table) {
+        Schema::create('briefings', function (Blueprint $table) {
             $table->id();
-            $table->longText('path_foto');
-            $table->string('karyawan_id');
-            $table->string('user_id');
+            $table->integer('penempatan_id');
+            $table->integer('user_id');
+            $table->string('path_foto');
             $table->text('catatan')->nullable();
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class CreateGroomingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('groomings');
+        Schema::dropIfExists('briefings');
     }
 }

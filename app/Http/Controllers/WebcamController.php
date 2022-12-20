@@ -15,8 +15,9 @@ class WebcamController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $img = $request->image;
-        $folderPath = "importPelanggan/";
+        $folderPath = "foto/";
         
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
@@ -26,7 +27,8 @@ class WebcamController extends Controller
         $fileName = uniqid() . '.png';
         
         $file = $folderPath . $fileName;
-        Storage::put($file, $image_base64);
+        // $img->move(public_path('/foto/'),$fileName);
+        Storage::disk('public_uploads')->put($file, $image_base64);
         
         dd('Image uploaded successfully: '.$fileName);
     }

@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class grooming extends Model
+class Cleaning extends Model
 {
     use HasFactory;
 
-    protected $table = 'groomings';
+    protected $table = 'cleanings';
 
     protected $guarded = [];
 
-    public function karyawan()
+    public function penempatan()
     {
-        return $this->belongsTo(karyawan::class, 'karyawan_id', 'id');
+        return $this->belongsTo(Penempatan::class, 'penempatan_id', 'id');
     }
     public function user()
     {

@@ -117,16 +117,25 @@
               </p>
             </a>
           </li>
+
           <li class="nav-item">
-            <a href="{{ route('distribusi.index') }}" class="nav-link">
-              <i class="nav-icon far fa-edit"></i>
+            <a href="{{ route('grooming.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Grooming
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('laporan.index') }}" class="nav-link">
+            <a href="{{ route('distribusi.index') }}" class="nav-link">
+              <i class="nav-icon far fa-edit"></i>
+              <p>
+                Distribusi
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('cleaning.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Kebersihan
@@ -142,7 +151,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('laporan.index') }}" class="nav-link">
+            <a href="{{ route('briefing.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Briefing
