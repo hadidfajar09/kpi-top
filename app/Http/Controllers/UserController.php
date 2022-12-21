@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Briefing;
+use App\Models\Cleaning;
 use App\Models\Distribusi;
+use App\Models\grooming;
+use App\Models\karyawan;
 use App\Models\Pelanggan;
 use App\Models\Transaksi;
 use App\Models\User;
@@ -16,9 +20,15 @@ class UserController extends Controller
     {
 
         $agent = User::where('level',1)->count();
+        $grooming=grooming::whereDate('created_at', date('Y-m-d'))->get()->count();
+        $briefing=Briefing::whereDate('created_at', date('Y-m-d'))->get()->count();
+        $cleaning=Cleaning::whereDate('created_at', date('Y-m-d'))->get()->count();
+        $karyawan=karyawan::get()->count();
         $pangkalan = User::where('level',2)->count();
         $pelanggan = Pelanggan::count();
         
+
+
         
         $tanggal_awal = date('Y-m-01');
         $tanggal_akhir = date('Y-m-d');
@@ -42,8 +52,8 @@ class UserController extends Controller
         while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
             $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
 
-            $distribusi = Distribusi::where('status',1)->where('tanggal_pengantaran', 'LIKE', "%$tanggal_awal%")->sum('drop_tabung');
-            $transaksi = Transaksi::where('created_at', 'LIKE', "%$tanggal_awal%")->sum('jumlah_tabung');
+            $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+            $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
 
             $stock = $distribusi - $transaksi;
             $total_stock[] += $stock;
@@ -60,7 +70,7 @@ class UserController extends Controller
 
         $tanggal_awal = date('Y-m-01');
         
-            return view('backend.dashboard',compact('agent','pangkalan','pelanggan','transaksi_pelanggan','tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar'));
+            return view('backend.dashboard',compact('agent','pangkalan','pelanggan','transaksi_pelanggan','tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
        
         
     }

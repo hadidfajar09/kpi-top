@@ -126,14 +126,14 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>
               <p>
                 Distribusi
               </p>
             </a>
-          </li>
+          </li> --}}
           <li class="nav-item">
             <a href="{{ route('cleaning.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
@@ -143,7 +143,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('laporan.index') }}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Aset dan Stok Toko
@@ -159,7 +159,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('laporan.index') }}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 Report Closing
@@ -178,12 +178,12 @@
             </a>
           </li>
 
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="{{ route('slider.index') }}" class="nav-link">
               <i class="nav-icon far fa-circle text-primary"></i>
               <p>Pengumuman</p>
             </a>
-          </li>
+          </li> --}}
 
           
 
@@ -225,7 +225,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>
               <p>
@@ -240,7 +240,7 @@
                 Laporan Stock
               </p>
             </a>
-          </li>
+          </li> --}}
 
 
 

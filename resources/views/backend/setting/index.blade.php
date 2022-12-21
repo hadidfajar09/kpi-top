@@ -76,19 +76,7 @@ Pengaturan Aplikasi
               </div>
 
               
-              <div class="form-group row">
-                <label for="" class="col-md-2 control-label col-lg-offset-1">Logo Kartu Pelanggan</label>
-                <div class="col-lg-6">
-
-                    <input type="file" class="form-control" name="path_pelanggan" id="path_pelanggan" onchange="preview('.tampil-pelanggan',this.files[0])">
-                    <span class="help-block with-errors"></span><br>
-                    <div class="tampil-pelanggan"></div>
-                    <div class="tampil-pelanggan-bg"></div>
-                </div>
-
-                
-            </div>
-              
+          
              
                
               </div>

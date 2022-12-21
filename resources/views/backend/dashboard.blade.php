@@ -19,7 +19,7 @@ a:link {
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Dashboard</h1>
-            <h4 class="m-0">System Information Key Perfomance Indicator</h4>
+            <h4 class="m-0">Daily Report</h4>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -38,7 +38,7 @@ a:link {
         <!-- Info boxes -->
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('agent.index') }}" class="text-dark">
+            <a href="{{ route('karyawan.index') }}" class="text-dark">
             <div class="info-box">
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-user-cog"></i></span>
 
@@ -46,7 +46,7 @@ a:link {
                 
                 <span class="info-box-text">Karyawan</span>
                 <span class="info-box-number">
-                  {{ $agent }}
+                  {{ $karyawan }}
                 </span>
                
               </div>
@@ -58,13 +58,13 @@ a:link {
           </div>
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('pangkalan.index') }}" class="text-dark">
+            <a href="{{ route('briefing.index') }}" class="text-dark">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-luggage-cart"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Jabatan</span>
-                <span class="info-box-number">{{ $pangkalan }}</span>
+                <span class="info-box-text">Briefing Today</span>
+                <span class="info-box-number">{{ $briefing }}</span>
                 
               </div>
               <!-- /.info-box-content -->
@@ -78,13 +78,13 @@ a:link {
           <div class="clearfix hidden-md-up"></div>
 
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('pelanggan.index') }}" class="text-dark">
+            <a href="{{ route('grooming.index') }}" class="text-dark">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-success elevation-1"><i class="fas fa-id-card-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Activity</span>
-                <span class="info-box-number">{{ $pelanggan }}</span>
+                <span class="info-box-text">Grooming Today</span>
+                <span class="info-box-number">{{ $grooming }}</span>
                
               </div>
               <!-- /.info-box-content -->
@@ -94,13 +94,13 @@ a:link {
           </div>
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('transaksi.index') }}" class="text-dark">
+            <a href="{{ route('cleaning.index') }}" class="text-dark">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-cart-plus"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Report</span>
-                <span class="info-box-number">{{ $transaksi_pelanggan }}</span>
+                <span class="info-box-text">Kebersihan Today</span>
+                <span class="info-box-number">{{ $cleaning }}</span>
               
               </div>
               <!-- /.info-box-content -->
@@ -116,7 +116,7 @@ a:link {
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h5 class="card-title">Grafik Input - Output Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
+                <h5 class="card-title">Grafik Daily Briefing - Grooming Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
 
                
               </div>
@@ -173,7 +173,7 @@ var salesChartData = {
   labels: {{ json_encode($data_tanggal) }},
   datasets: [
     {
-      label: 'Stock Masuk',
+      label: 'Grooming',
       backgroundColor: '#fd7e14',
       borderColor: 'rgba(0, 61, 255, 1)',
       pointRadius: false,
@@ -185,7 +185,7 @@ var salesChartData = {
     },
 
     {
-        label: 'Stock Keluar',
+        label: 'Briefing Pagi',
         backgroundColor: 'rgba(157, 0, 0, 0.8)',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,

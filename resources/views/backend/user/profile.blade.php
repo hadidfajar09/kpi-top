@@ -32,7 +32,7 @@ Edit Account
 
       <div class="row">
         <div class="col-md-12">
-          <div class="card card-orange">
+          <div class="card card-danger">
             <div class="card-header">
               <h3 class="card-title">Edit Account</h3>
             </div>
@@ -99,7 +99,7 @@ Edit Account
               <!-- /.card-body -->
               <div class="card-footer">
                 
-                <button type="submit" class="btn btn-warning float-right">Update</button>
+                <button type="submit" class="btn btn-danger float-right">Update</button>
               </div>
               <!-- /.card-footer -->
             </form>

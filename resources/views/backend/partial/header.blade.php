@@ -22,7 +22,7 @@
           <span class="badge badge-warning navbar-badge">{{ $riwayat->count() }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">Riwayat Pemgambilan Tabung</span>
+          <span class="dropdown-item dropdown-header">Riwayat Daily</span>
           <div class="dropdown-divider"></div>
           @foreach ($riwayat as $row)
           <a href="{{ route('transaksi.index') }}" class="dropdown-item">
