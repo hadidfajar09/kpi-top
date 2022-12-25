@@ -29,8 +29,8 @@
             <div class="form-group row">
               <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Sales</label>
               <div class="col-md-8">
-                <select class="form-control" name="karyawan_id" id="karyawan_id" required>
-                  <option value="">Pilih Sales</option>
+                <select class="form-control" name="karyawan_id" id="karyawan_id" required multiple>
+                  <option value="" disabled>Pilih Sales</option>
                   @foreach ($sales as $key => $row)
                       <option value="{{ $key }}">{{ $row }}</option>
                   @endforeach

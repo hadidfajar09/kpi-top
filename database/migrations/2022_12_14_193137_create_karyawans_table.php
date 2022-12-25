@@ -26,6 +26,7 @@ class CreateKaryawansTable extends Migration
             $table->string('end_work');
             $table->string('foto')->nullable();
             $table->string('path_berkas')->nullable();
+            $table->integer('point')->nullable();
             $table->timestamps();
         });
     }

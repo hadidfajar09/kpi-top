@@ -16,6 +16,7 @@ class CreateCleaningsTable extends Migration
         Schema::create('cleanings', function (Blueprint $table) {
             $table->id();
             $table->integer('penempatan_id');
+            $table->integer('karyawan_id');
             $table->integer('user_id');
             $table->string('path_foto');
             $table->text('catatan')->nullable();
