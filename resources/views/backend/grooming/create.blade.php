@@ -79,10 +79,7 @@ Tambah Daily Grooming
                   <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto</label>
                   <div id="my_camera" width="50"></div>
                   <div class="col-md-8">
-                    <center>
-
                       <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Cek" onClick="take_snapshot()">
-                    </center>
                       <input type="hidden" name="path_foto" class="image-tag">
                   </div>
                   </div>

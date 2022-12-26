@@ -143,7 +143,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/grooming/data', [GroomingController::class, 'data'])->name('grooming.data');
             Route::resource('/grooming', GroomingController::class);
             Route::post('/grooming/updated/{id}', [GroomingController::class, 'updated'])->name('grooming.updated');
-  
+            Route::get('/grooming/acc/{id}', [GroomingController::class, 'accept'])->name('grooming.acc');
+            Route::get('/grooming/decline/{id}', [GroomingController::class, 'decline'])->name('grooming.decline');
+            
             // //kebersihan
             Route::get('/cleaning/data', [CleaningController::class, 'data'])->name('cleaning.data');
             Route::resource('/cleaning', CleaningController::class);

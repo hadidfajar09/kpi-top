@@ -45,12 +45,24 @@ class GroomingController extends Controller
                 ->addColumn('tanggal', function($grooming){
                     return formatTanggal($grooming->created_at);
                 })
+
+                ->addColumn('status', function($grooming){
+                    if($grooming->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($grooming->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
              
                 ->addColumn('aksi', function($grooming){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('grooming.edit', $grooming->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('grooming.destroy', $grooming->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
+                    $button = '<div class="btn-group"><a href="'.route('grooming.edit', $grooming->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('grooming.destroy', $grooming->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('grooming.acc', $grooming->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('grooming.decline', $grooming->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','karyawan','user','tanggal'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','karyawan','user','tanggal','status'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -85,6 +97,27 @@ class GroomingController extends Controller
         $karyawan = karyawan::all()->pluck('name','id');
 
         return view('backend.grooming.create', compact('karyawan'));
+    }
+
+    public function accept($id)
+    {
+        grooming::findOrFail($id)->update([
+            'status' => 1
+        ]);
+
+      
+       return redirect()->back();
+
+    }
+
+    public function decline($id)
+    {
+        grooming::findOrFail($id)->update([
+            'status' => 0
+        ]);
+
+      
+       return redirect()->back();
     }
 
     /**
