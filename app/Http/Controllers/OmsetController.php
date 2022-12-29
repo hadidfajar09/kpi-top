@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Omset;
-use App\Http\Controllers\Controller;
 use App\Models\karyawan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use App\Http\Controllers\Controller;
 
 class OmsetController extends Controller
 {
@@ -92,7 +93,7 @@ class OmsetController extends Controller
     {
         $request->validate([
             'tanggal_setor' => 'required',
-            'karyawan_id' => 'required',
+            'karyawan_id' => 'required|unique:omsets,karyawan_id,NULL,id,tanggal_setor,' . Carbon::today()->toDateString(),
             'catatan' => 'required',
             'nominal' => 'required',
         ]);

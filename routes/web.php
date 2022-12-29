@@ -150,11 +150,15 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/cleaning/data', [CleaningController::class, 'data'])->name('cleaning.data');
             Route::resource('/cleaning', CleaningController::class);
             Route::post('/cleaning/updated/{id}', [CleaningController::class, 'updated'])->name('cleaning.updated');
+            Route::get('/cleaning/acc/{id}', [CleaningController::class, 'accept'])->name('cleaning.acc');
+            Route::get('/cleaning/decline/{id}', [CleaningController::class, 'decline'])->name('cleaning.decline');
 
               // //breafing
               Route::get('/briefing/data', [BriefingController::class, 'data'])->name('briefing.data');
               Route::resource('/briefing', BriefingController::class);
               Route::post('/briefing/updated/{id}', [BriefingController::class, 'updated'])->name('briefing.updated');
+              Route::get('/briefing/acc/{id}', [BriefingController::class, 'accept'])->name('briefing.acc');
+            Route::get('/briefing/decline/{id}', [BriefingController::class, 'decline'])->name('briefing.decline');
   
             
          //END KPI

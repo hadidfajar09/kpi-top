@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\grooming;
 use App\Models\karyawan;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,7 +44,8 @@ class GroomingController extends Controller
                 })
 
                 ->addColumn('tanggal', function($grooming){
-                    return formatTanggal($grooming->created_at);
+                    $result = Carbon::parse($grooming->created_at);
+                    return $result;
                 })
 
                 ->addColumn('status', function($grooming){
@@ -128,11 +130,28 @@ class GroomingController extends Controller
      */
     public function store(Request $request)
     {
+        // $request->validate([
+        //     'karyawan_id' => 'required|unique:groomings,karyawan_id,NULL,id' . Carbon::today()->toDateString(),
+        // ],[
+        //     'karyawan_id.unique' => 'Anda sudah Grooming Hari ini'
+        // ]);
+
+        // $validated =  $request->validate([
+        //     'karyawan_id' => function($attribute, $value, $fail) {
+        //         $today = Carbon::now()->startOfDay();
+        //         $record = grooming::where('karyawan_id', $value)
+        //             ->where('created_at', '>=', $today)
+        //             ->first();
+        //         if ($record) {
+        //             $fail('Error message');
+        //         }
+        //     }
+        // ]);
+
         $grooming = new grooming();
 
         $grooming->karyawan_id = $request->karyawan_id;
         $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
         $grooming->user_id = auth()->user()->id;
 
             $img = $request->path_foto;

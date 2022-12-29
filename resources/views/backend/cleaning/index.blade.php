@@ -62,6 +62,7 @@ Daftar Absen kebersihan
                               <th width="10%">Leader</th>
                               <th width="15%">Foto</th>
                               <th>Catatan</th>
+                              <th width="5%">Status</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
@@ -117,6 +118,7 @@ Daftar Absen kebersihan
                         {data: 'user'},
                         {data: 'path_foto'},
                         {data: 'catatan'},
+                        {data: 'status'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ]
             });

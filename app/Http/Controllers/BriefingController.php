@@ -43,15 +43,27 @@ class BriefingController extends Controller
                 })
 
                 ->addColumn('tanggal', function($briefing){
-                    $result = Carbon::parse($briefing->created_at)->diffForHumans();
+                    $result = Carbon::parse($briefing->created_at);
                     return $result;
+                })
+
+                ->addColumn('status', function($briefing){
+                    if($briefing->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($briefing->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
                 })
              
                 ->addColumn('aksi', function($briefing){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('briefing.edit', $briefing->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('briefing.destroy', $briefing->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button></div>';
+                    $button = '<div class="btn-group"><a href="'.route('briefing.edit', $briefing->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('briefing.destroy', $briefing->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('briefing.acc', $briefing->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('briefing.decline', $briefing->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -86,6 +98,27 @@ class BriefingController extends Controller
         $penempatan = Penempatan::all()->pluck('nama','id');
 
         return view('backend.briefing.create', compact('penempatan'));
+    }
+
+    public function accept($id)
+    {
+        Briefing::findOrFail($id)->update([
+            'status' => 1
+        ]);
+
+      
+       return redirect()->back();
+
+    }
+
+    public function decline($id)
+    {
+        Briefing::findOrFail($id)->update([
+            'status' => 0
+        ]);
+
+      
+       return redirect()->back();
     }
 
     /**

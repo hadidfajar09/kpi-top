@@ -12,7 +12,7 @@ Edit Daily Cleaning
         max-height: 80%;
     }
 
-    #results img {
+    .hasil img {
         max-width: 80%;
         max-height: 80%;
 
@@ -76,27 +76,70 @@ Edit Daily Cleaning
                 </div>
 
                 <div class="form-group row">
+
                   <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto lama</label>
-                    <div class="col-md-8">
-                        <img src="{{ asset($cleaning->path_foto) }}" width="450" alt="">
+                </div>
+                <div class="form-group row">
+                    <div class="col-md-3">
+                      <a href="{{ asset($cleaning->path_foto) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                      <img src="{{ asset($cleaning->path_foto) }}" class="img-fluid" width="550" alt="">
+                    </a>
                   </div>
+                  <div class="col-md-3">
+                    <a href="{{ asset($cleaning->path_foto_2) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                    <img src="{{ asset($cleaning->path_foto_2) }}" class="img-fluid" width="250" alt="">
+                  </a>
+                </div>
+                <div class="col-md-3">
+                  <a href="{{ asset($cleaning->path_foto_3) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                  <img src="{{ asset($cleaning->path_foto_3) }}" class="img-fluid" width="250" alt="">
+                </a>
+              </div>
+              <div class="col-md-3">
+                <a href="{{ asset($cleaning->path_foto_4) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
+                <img src="{{ asset($cleaning->path_foto_4) }}" class="img-fluid" width="250" alt="">
+              </a>
+            </div>
                   </div>
     
-                <div class="form-group row">
-                  <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto</label>
-                  <div id="my_camera" width="50"></div>
-                  <div class="col-md-8">
-                      <input type=button value="Cek" onClick="take_snapshot()">
-                      <input type="hidden" name="path_foto" class="image-tag">
-                  </div>
-                  </div>
-
                   <div class="form-group row">
-                    <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">HASIL</label>
-                                <div class="col-md-8">
+                    <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto Area</label>
+                    <div id="my_camera" width="50"></div>
+                    <div class="col-md-6" style="margin: auto;"> <br>
+                      <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 1" onClick="take_snapshot()">
+                      <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 2" onClick="take_snapshot2()">
+                      <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 3" onClick="take_snapshot3()">
+                      <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 4" onClick="take_snapshot4()">
+                      <input type="hidden" name="path_foto" class="image-tag">
+                      <input type="hidden" name="path_foto_2" class="image-tag2">
+                      <input type="hidden" name="path_foto_3" class="image-tag3">
+                      <input type="hidden" name="path_foto_4" class="image-tag4">
+                    </div>
+                    </div>
+  
+
+                    <div class="form-group row">
+                      <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">HASIL</label>
+                    </div>
+  
+                    <div class="hasil">
+  
+                   
+                    <div class="form-group row">
+                      <div class="col-md-3">
                         <div id="results"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="results2"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="results3"></div>
+                      </div>
+                      <div class="col-md-3">
+                        <div id="results4"></div>
+                      </div>
                     </div>
-                    </div>
+                  </div>
     
                     <div class="form-group row">
                       <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Catatan</label>
@@ -159,7 +202,28 @@ Edit Daily Cleaning
     function take_snapshot() {
         Webcam.snap( function(data_uri) {
             $(".image-tag").val(data_uri);
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" width="450"/>';
+            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+
+    function take_snapshot2() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag2").val(data_uri);
+            document.getElementById('results2').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+
+    function take_snapshot3() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag3").val(data_uri);
+            document.getElementById('results3').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+
+    function take_snapshot4() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag4").val(data_uri);
+            document.getElementById('results4').innerHTML = '<img src="'+data_uri+'" width="250"/>';
         } );
     }
 </script>

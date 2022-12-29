@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="{{ asset('backend_pemda/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('backend_pemda/dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
   @stack('css')
 </head>
 <body class="sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -91,6 +92,8 @@
 {{-- <script src="{{ asset('js/validator.min.js') }}"></script> --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js"></script>
+
   
 <!-- AdminLTE for demo purposes -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
@@ -101,7 +104,13 @@
     $(selector).empty();
     $(selector).append(`<img src="${window.URL.createObjectURL(temporaryFile)}" width="${width}">`);
   }
+
+  $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+                event.preventDefault();
+                $(this).ekkoLightbox();
+            });
 </script>
+
 @stack('scripts')
 </body>
 

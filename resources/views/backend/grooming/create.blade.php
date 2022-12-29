@@ -71,6 +71,11 @@ Tambah Daily Grooming
           
                       </select>
                         <span class="help-block with-errors text-danger"></span>
+                        
+                        @error('karyawan_id')
+                        <span class="text-danger">{{ $message }}</span>
+                          
+                      @enderror
     
                     </div>
                 </div>

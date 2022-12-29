@@ -19,6 +19,9 @@ class CreateCleaningsTable extends Migration
             $table->integer('karyawan_id');
             $table->integer('user_id');
             $table->string('path_foto');
+            $table->string('path_foto_2')->nullable();
+            $table->string('path_foto_3')->nullable();
+            $table->string('path_foto_4')->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();
         });

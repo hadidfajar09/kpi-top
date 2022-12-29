@@ -108,7 +108,15 @@ Daftar Karyawan
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'name'},
-                        {data: 'foto'},
+                        {
+                data: 'foto',
+                name: 'foto',
+                render: function(data, type, full, meta) {
+                    return '<img src="'+data+'" width="120">';
+                },
+                searchable: false,
+                orderable: false
+            },
                         {data: 'jabatan'},
                         {data: 'berkas'},
                         {data: 'end_work'},

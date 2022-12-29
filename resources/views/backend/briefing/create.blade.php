@@ -71,6 +71,11 @@ Tambah Daily Briefing
           
                       </select>
                         <span class="help-block with-errors text-danger"></span>
+
+                        @error('penempatan_id')
+                        <span class="text-danger">{{ $message }}</span>
+                          
+                      @enderror
     
                     </div>
                 </div>

@@ -20,6 +20,7 @@ class CreateBriefingsTable extends Migration
             $table->integer('user_id');
             $table->string('path_foto');
             $table->text('catatan')->nullable();
+            $table->integer('status')->nullable();
             $table->timestamps();
         });
     }
