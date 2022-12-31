@@ -33,7 +33,9 @@ class GroomingController extends Controller
                 ->of($grooming)//source
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('path_foto', function($grooming){
-                    return '<img src="'.$grooming->path_foto.' " width="150">';
+                    return ' <a href="'.$grooming->path_foto.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$grooming->path_foto.'" class="img-fluid" alt="">
+                  </a>';
                 })
                 
                 ->addColumn('karyawan', function($grooming){
@@ -148,31 +150,47 @@ class GroomingController extends Controller
         //     }
         // ]);
 
-        $grooming = new grooming();
+        $karyawan = $request->karyawan_id;
+        $data_lama = grooming::where('karyawan_id',$karyawan)->latest()->first();
+        $now = Carbon::now();
 
-        $grooming->karyawan_id = $request->karyawan_id;
-        $grooming->catatan = $request->catatan;
-        $grooming->user_id = auth()->user()->id;
+        if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
+            $grooming = new grooming();
 
-            $img = $request->path_foto;
-            $folderPath = "foto/";
-            
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-            
-            $file = $folderPath . $fileName;
-            
-            Storage::disk('public_uploads')->put($file, $image_base64);
+            $grooming->karyawan_id = $request->karyawan_id;
+            $grooming->catatan = $request->catatan;
+            $grooming->user_id = auth()->user()->id;
+    
+                $img = $request->path_foto;
+                $folderPath = "foto/";
+                
+                $image_parts = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = uniqid() . '.png';
+                
+                $file = $folderPath . $fileName;
+                
+                Storage::disk('public_uploads')->put($file, $image_base64);
+    
+                $grooming->path_foto = 'uploads/foto/'.$fileName;
+    
+            $grooming->save();
+    
+            return redirect()->route('grooming.index');
+        }else{
 
-            $grooming->path_foto = 'uploads/foto/'.$fileName;
+            $notif = array(
+                'message' => 'Data Grooming sudah ada',
+                'alert-type' => 'error'
+            );
 
-        $grooming->save();
+            return redirect()->back()->with($notif);
+        }
 
-        return redirect()->route('grooming.index');
+       
 
 
         

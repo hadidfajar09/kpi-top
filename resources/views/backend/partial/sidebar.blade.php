@@ -104,9 +104,54 @@
                   <p>List Karyawan</p>
                 </a>
               </li>
+
+              <li class="nav-item">
+                <a href="{{ route('karyawan.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Absensi Karyawan</p>
+                </a>
+              </li>
              
             </ul>
           </li>
+
+          <li class="nav-header">ABSENSI</li>
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Masuk
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Mulai Istirahat
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Akhir Istirahat
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Pulang
+              </p>
+            </a>
+          </li>
+          
+          
+         
         
           <li class="nav-header">DAILY ACTIVITY</li>
           <li class="nav-item">
@@ -146,7 +191,7 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
-                Aset dan Stok Toko
+                COD
               </p>
             </a>
           </li>

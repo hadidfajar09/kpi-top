@@ -84,4 +84,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Desa::class, 'id_desa', 'id');
     }
+
+    public function data_karyawan()
+    {
+        return $this->belongsTo(karyawan::class, 'karyawan_id', 'id');
+    }
+
 }

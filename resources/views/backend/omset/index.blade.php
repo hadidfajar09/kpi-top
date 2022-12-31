@@ -58,7 +58,7 @@ Daftar Omset Sales
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Sales</th>
-                              <th width="10%">Leader</th>
+                              <th width="10%">Uploader</th>
                               <th width="15%">Nominal</th>
                               <th>Catatan</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>

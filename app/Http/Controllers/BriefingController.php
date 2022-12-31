@@ -31,8 +31,13 @@ class BriefingController extends Controller
                 return datatables()
                 ->of($briefing)//source
                 ->addIndexColumn() //untuk nomer
+                // ->addColumn('path_foto', function($briefing){
+                //     return '<img src="'.$briefing->path_foto.' " width="150">';
+                // })
                 ->addColumn('path_foto', function($briefing){
-                    return '<img src="'.$briefing->path_foto.' " width="150">';
+                    return ' <a href="'.$briefing->path_foto.'" data-toggle="lightbox">
+                    <img src="'.$briefing->path_foto.'" class="img-fluid" alt="">
+                  </a>';
                 })
                 
                 ->addColumn('penempatan', function($briefing){

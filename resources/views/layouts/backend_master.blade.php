@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="{{ asset('backend_pemda/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('backend_pemda/dist/css/adminlte.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" >
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css">
   @stack('css')
 </head>
@@ -98,6 +99,30 @@
 <!-- AdminLTE for demo purposes -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('backend_pemda/dist/js/demo.js') }}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <script>
+     @if(Session::has('message'))
+      var type = "{{ Session::get('alert-type','info') }}"
+      switch(type){
+         case 'info':
+         toastr.info(" {{ Session::get('message') }} ");
+         break;
+     
+         case 'success':
+         toastr.success(" {{ Session::get('message') }} ");
+         break;
+     
+         case 'warning':
+         toastr.warning(" {{ Session::get('message') }} ");
+         break;
+     
+         case 'error':
+         toastr.error(" {{ Session::get('message') }} ");
+         break; 
+      }
+      @endif 
+  </script>
 
 <script>
   function preview(selector,temporaryFile,width = 200){

@@ -135,6 +135,27 @@ a:link {
                   <!-- /.col -->
                 </div>
 
+                <div class="row">
+                  <div class="col-md-3">
+                    <div class="chart">
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="pieChart" width="50" height="50"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="chart">
+                      <!-- Sales Chart Canvas -->
+                      <canvas id="pieChart2" width="50" height="50"></canvas>
+                    </div>
+                    <!-- /.chart-responsive -->
+                  </div>
+                  <!-- /.col -->
+                
+                  <!-- /.col -->
+                </div>
+
                 
                 <!-- /.row -->
               </div>
@@ -235,6 +256,21 @@ var salesChartOptions = {
 
 
   });
+
+  var pieChart = new Chart($('#pieChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Option 1', 'Option 2', 'Option 3'],
+            datasets: [{
+                label: 'Pie Chart',
+                data: [300, 50, 20],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
 
 </script>
 

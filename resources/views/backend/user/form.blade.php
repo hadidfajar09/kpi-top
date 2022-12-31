@@ -27,6 +27,20 @@
             </div>
 
             <div class="form-group row">
+              <label for="email" class="col-md-4 col-md-offset-1 control-label">Data Karyawan</label>
+              <div class="col-sm-8">
+                  <select class="form-control" name="karyawan_id" id="karyawan_id" required>
+                      <option value="">Nama Karyawan</option>
+                      @foreach ($karyawan as $key => $row)
+                          <option value="{{ $key }}">{{ $row }}</option>
+                      @endforeach
+        
+                    </select>
+                            <span class="help-block with-errors text-danger"></span>
+              </div>
+            </div>
+
+            <div class="form-group row">
               <label for="level" class="col-md-4 col-md-offset-1 control-label">Hak Akses</label>
               <div class="col-md-8">
                 <select class="form-control" name="level" id="level" required>
@@ -34,7 +48,7 @@
                  
                       <option value="3">HRD</option>
                       <option value="4">LEADER</option>
-                      <option value="5">SPV</option>
+                      <option value="5">KARYAWAN</option>
     
                 </select>
                 <span class="help-block with-errors text-danger"></span>

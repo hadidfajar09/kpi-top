@@ -123,7 +123,8 @@ class UserController extends Controller
 
     public function index()
     {
-        return view('backend.user.index');
+        $karyawan = karyawan::orderBy('name','asc')->pluck('name','id');
+        return view('backend.user.index',compact('karyawan'));
     }
 
     public function store(Request $request)
@@ -161,7 +162,7 @@ class UserController extends Controller
                 }else if($user->level == 3){
                   return '<span class="badge badge-success">HRD</span>';
                 }else if($user->level == 5){
-                    return '<span class="badge badge-info">SPV</span>';
+                    return '<span class="badge badge-info">KARYAWAN</span>';
                 }else{
                     return '<span class="badge badge-warning">SUPER ADMIN</span>';
                 }

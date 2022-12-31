@@ -87,17 +87,17 @@ Edit Daily Cleaning
                   </div>
                   <div class="col-md-3">
                     <a href="{{ asset($cleaning->path_foto_2) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                    <img src="{{ asset($cleaning->path_foto_2) }}" class="img-fluid" width="250" alt="">
+                    <img src="{{ asset($cleaning->path_foto_2) }}" class="img-fluid" width="550" alt="">
                   </a>
                 </div>
                 <div class="col-md-3">
                   <a href="{{ asset($cleaning->path_foto_3) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                  <img src="{{ asset($cleaning->path_foto_3) }}" class="img-fluid" width="250" alt="">
+                  <img src="{{ asset($cleaning->path_foto_3) }}" class="img-fluid" width="550" alt="">
                 </a>
               </div>
               <div class="col-md-3">
                 <a href="{{ asset($cleaning->path_foto_4) }}" data-toggle="lightbox" data-gallery="example-gallery" class="col-sm-4">
-                <img src="{{ asset($cleaning->path_foto_4) }}" class="img-fluid" width="250" alt="">
+                <img src="{{ asset($cleaning->path_foto_4) }}" class="img-fluid" width="550" alt="">
               </a>
             </div>
                   </div>
