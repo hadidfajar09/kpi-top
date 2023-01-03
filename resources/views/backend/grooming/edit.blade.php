@@ -59,22 +59,6 @@ Edit Daily Grooming
             <form action="{{ route('grooming.updated',$grooming->id) }}" class="form-profile" data-toggle="validator" method="post" enctype="multipart/form-data" >
               @csrf
               <div class="card-body">
-              
-                <div class="form-group row">
-                    <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Karyawan</label>
-                    <div class="col-md-8">
-                      <select class="form-control" name="karyawan_id" id="karyawan_id" required>
-                        <option value="">Pilih Karyawan</option>
-                        @foreach($karyawan as $row)
-                          <option value="{{ $row->id }}" @if($grooming->karyawan_id == $row->id) selected @endif>{{ $row->name }}</option>
-                          @endforeach
-          
-                      </select>
-                        <span class="help-block with-errors text-danger"></span>
-    
-                    </div>
-                </div>
-
                 <div class="form-group row">
                   <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto lama</label>
                     <div class="col-md-8">
@@ -86,7 +70,7 @@ Edit Daily Grooming
                   <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto</label>
                   <div id="my_camera" width="50"></div>
                   <div class="col-md-8">
-                    <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Cek" onClick="take_snapshot()">
+                    <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Preview" onClick="take_snapshot()">
                       <input type="hidden" name="path_foto" class="image-tag">
                   </div>
                   </div>

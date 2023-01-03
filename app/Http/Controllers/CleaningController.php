@@ -32,6 +32,7 @@ class CleaningController extends Controller
         $cleaning = Cleaning::
             latest()->get();
 
+            $cleaning_karyawan = Cleaning::where('user_id', auth()->user()->id)->latest()->get();
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
                 return datatables()
@@ -56,11 +57,11 @@ class CleaningController extends Controller
                     return $result;
                 })
 
-                ->addColumn('status', function($grooming){
-                    if($grooming->status == 0){
+                ->addColumn('status', function($cleaning){
+                    if($cleaning->status == 0){
                         return '<span class="badge badge-danger">Ditolak</span>';
       
-                    }else if($grooming->status == 1){
+                    }else if($cleaning->status == 1){
                       return '<span class="badge badge-success">Diterima</span>';
                     }else{
                         return '<span class="badge badge-light">Pending</span>';
@@ -76,22 +77,43 @@ class CleaningController extends Controller
                 ->make(true);
             }else{
                 return datatables()
-                ->of($cleaning)//source
+                ->of($cleaning_karyawan)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('select_all', function($karyawan){
-                    return '<input type="checkbox" name="id_pelanggan[]" value="'.$karyawan->id.'">';
+                ->addColumn('path_foto', function($cleaning_karyawan){
+                    return ' <a href="'.$cleaning_karyawan->path_foto.'" data-toggle="lightbox">
+                    <img src="'.$cleaning_karyawan->path_foto.'" class="img-fluid" alt="" data-(width|height)="[0-9]+">
+                  </a>';
                 })
-                ->addColumn('kode_pelanggan', function($karyawan){
-                    return '<span class="badge badge-success">'.$karyawan->kode_pelanggan.'</span>';
+                
+                
+                ->addColumn('penempatan', function($cleaning_karyawan){
+                    return '<h1 class="badge badge-dark">'.$cleaning_karyawan->penempatan->nama.'</h1>';
                 })
-                ->addColumn('nominal_gaji', function($karyawan){
-                    return 'Rp ' . formatUang($karyawan->penghasilan->nominal_gaji);
+                ->addColumn('user', function($cleaning_karyawan){
+                    return '<h1 class="badge badge-success">'.$cleaning_karyawan->user->name.'</h1>';
                 })
-                ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '-';
+
+                ->addColumn('tanggal', function($cleaning_karyawan){
+                    $result = Carbon::parse($cleaning_karyawan->created_at);
+                    return $result;
+                })
+
+                ->addColumn('status', function($cleaning_karyawan){
+                    if($cleaning_karyawan->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($cleaning_karyawan->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
+                ->addColumn('aksi', function($cleaning_karyawan){ //untuk aksi
+                    $button = '<div class="btn-group"><a href="'.route('cleaning.edit', $cleaning_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><a href="'.route('cleaning.show', $cleaning_karyawan->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','kode_pelanggan','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status'])//biar kebaca html
                 ->make(true);
             }
         
@@ -133,86 +155,201 @@ class CleaningController extends Controller
      */
     public function store(Request $request)
     {
-        $cleaning = new Cleaning();
+        $karyawan = auth()->user()->id;
+        $data_lama = Cleaning::where('user_id',$karyawan)->latest()->first();
+        $now = Carbon::now();
 
-        $cleaning->penempatan_id = $request->penempatan_id;
-        $cleaning->catatan = $request->catatan;
-        $cleaning->created_at = now();
-        $cleaning->user_id = auth()->user()->id;
+        if($data_lama){
+            if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
+                $cleaning = new Cleaning();
 
-        $folderPath = "foto_clean/";
-        if($request->path_foto){
-            $img = $request->path_foto;
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
+                $cleaning->penempatan_id = $request->penempatan_id;
+                $cleaning->catatan = $request->catatan;
+                $cleaning->created_at = now();
+                $cleaning->user_id = auth()->user()->id;
+        
+                if($request->path_foto == NULL){
+                    $notif = array(
+                        'message' => 'Anda belum memasukkan foto',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }else{
+                    $folderPath = "foto_clean/";
+                    if($request->path_foto){
+                        $img = $request->path_foto;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    if($request->path_foto_2){
+                        $img = $request->path_foto_2;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_2 = 'uploads/foto_clean/'.$fileName;
+                    }
+                     
+                    if($request->path_foto_3){
+                        $img = $request->path_foto_3;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_3 = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    if($request->path_foto_4){
+                        $img = $request->path_foto_4;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_4 = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    $cleaning->save();
+                }
+                  
+                $notif = array(
+                    'message' => 'Data Kebersihan Berhasil di Upload',
+                    'alert-type' => 'success'
+                );
+        
+                return redirect()->route('cleaning.index')->with($notif);
+            }else{
+    
+                $notif = array(
+                    'message' => 'Data Cleaning sudah ada',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }
+        }else{
+            $cleaning = new Cleaning();
 
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-
-            $file = $folderPath . $fileName;
-
-            Storage::disk('public_uploads')->put($file, $image_base64);
-
-            $cleaning->path_foto = 'uploads/foto_clean/'.$fileName;
+            $cleaning->penempatan_id = $request->penempatan_id;
+            $cleaning->catatan = $request->catatan;
+            $cleaning->created_at = now();
+            $cleaning->user_id = auth()->user()->id;
+    
+            if($request->path_foto == NULL){
+                $notif = array(
+                    'message' => 'Anda belum memasukkan foto',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }else{
+                $folderPath = "foto_clean/";
+                    if($request->path_foto){
+                        $img = $request->path_foto;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    if($request->path_foto_2){
+                        $img = $request->path_foto_2;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_2 = 'uploads/foto_clean/'.$fileName;
+                    }
+                     
+                    if($request->path_foto_3){
+                        $img = $request->path_foto_3;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_3 = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    if($request->path_foto_4){
+                        $img = $request->path_foto_4;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $cleaning->path_foto_4 = 'uploads/foto_clean/'.$fileName;
+                    }
+            
+                    $cleaning->save();
+            }
+              
+            $notif = array(
+                'message' => 'Data Kebersihan Berhasil di Upload',
+                'alert-type' => 'success'
+            );
+    
+            return redirect()->route('cleaning.index')->with($notif);
         }
-
-        if($request->path_foto_2){
-            $img = $request->path_foto_2;
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-
-            $file = $folderPath . $fileName;
-
-            Storage::disk('public_uploads')->put($file, $image_base64);
-
-            $cleaning->path_foto_2 = 'uploads/foto_clean/'.$fileName;
-        }
-         
-        if($request->path_foto_3){
-            $img = $request->path_foto_3;
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-
-            $file = $folderPath . $fileName;
-
-            Storage::disk('public_uploads')->put($file, $image_base64);
-
-            $cleaning->path_foto_3 = 'uploads/foto_clean/'.$fileName;
-        }
-
-        if($request->path_foto_4){
-            $img = $request->path_foto_4;
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-
-            $file = $folderPath . $fileName;
-
-            Storage::disk('public_uploads')->put($file, $image_base64);
-
-            $cleaning->path_foto_4 = 'uploads/foto_clean/'.$fileName;
-        }
-
-        $cleaning->save();
-
-        $notif = array(
-            'message' => 'Berhasil Upload Foto Kebersihan',
-            'alert-type' => 'success'
-        );
-
-        return redirect()->route('cleaning.index')->with($notif);
     }
 
     /**

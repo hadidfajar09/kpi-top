@@ -17,8 +17,8 @@ class OmsetController extends Controller
      */
     public function index()
     {
-        $sales = karyawan::where('jabatan_id', 4)->pluck('name','id');
-        return view('backend.omset.index',compact('sales'));
+        // $sales = karyawan::where('jabatan_id', 4)->pluck('name','id');
+        return view('backend.omset.index');
     }
 
     public function data()
@@ -32,11 +32,11 @@ class OmsetController extends Controller
                 ->of($omset)//source
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('sales', function($omset){
-                    return '<span class="badge badge-success">'.$omset->sales->name.'</span>';
+                    return '<span class="badge badge-success">'.$omset->user->name.'</span>';
                 })
-                ->addColumn('user', function($omset){
-                    return '<span class="badge badge-primary">'.$omset->user->name.'</span>';
-                })
+                // ->addColumn('user', function($omset){
+                //     return '<span class="badge badge-primary">'.$omset->user->name.'</span>';
+                // })
                 ->addColumn('nominal', function($omset){
                     return 'Rp ' . formatUang($omset->nominal);
                 })
@@ -48,7 +48,7 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('omset.destroy', $omset->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','user'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -93,7 +93,6 @@ class OmsetController extends Controller
     {
         $request->validate([
             'tanggal_setor' => 'required',
-            'karyawan_id' => 'required|unique:omsets,karyawan_id,NULL,id,tanggal_setor,' . Carbon::today()->toDateString(),
             'catatan' => 'required',
             'nominal' => 'required',
         ]);
@@ -101,10 +100,10 @@ class OmsetController extends Controller
         $omset = new Omset();
 
         $omset->tanggal_setor = $request->tanggal_setor;
-        $omset->karyawan_id = $request->karyawan_id;
+        $omset->karyawan_id = auth()->user()->id;
         $omset->catatan = $request->catatan;
         $omset->nominal = $request->nominal;
-        $omset->user_id = auth()->user()->id;
+        // $omset->user_id = auth()->user()->id;
 
         $omset->save();
 

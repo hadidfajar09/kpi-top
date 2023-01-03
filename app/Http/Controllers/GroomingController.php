@@ -27,6 +27,8 @@ class GroomingController extends Controller
         $grooming = grooming::
             latest()->get();
 
+            $grooming_karyawan = grooming::where('karyawan_id', auth()->user()->id)->latest()->get();
+
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
                 return datatables()
@@ -37,10 +39,7 @@ class GroomingController extends Controller
                     <img src="'.$grooming->path_foto.'" class="img-fluid" alt="">
                   </a>';
                 })
-                
-                ->addColumn('karyawan', function($grooming){
-                    return '<h1 class="badge badge-dark">'.$grooming->karyawan->name.'</h1>';
-                })
+             
                 ->addColumn('user', function($grooming){
                     return '<h1 class="badge badge-success">'.$grooming->user->name.'</h1>';
                 })
@@ -66,26 +65,44 @@ class GroomingController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('grooming.edit', $grooming->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('grooming.destroy', $grooming->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('grooming.acc', $grooming->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('grooming.decline', $grooming->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','karyawan','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
-                ->of($grooming)//source
+                ->of($grooming_karyawan)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('select_all', function($karyawan){
-                    return '<input type="checkbox" name="id_pelanggan[]" value="'.$karyawan->id.'">';
+                ->addColumn('path_foto', function($grooming_karyawan){
+                    return ' <a href="'.$grooming_karyawan->path_foto.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$grooming_karyawan->path_foto.'" class="img-fluid" alt="">
+                  </a>';    
                 })
-                ->addColumn('kode_pelanggan', function($karyawan){
-                    return '<span class="badge badge-success">'.$karyawan->kode_pelanggan.'</span>';
+                
+                
+                ->addColumn('user', function($grooming_karyawan){
+                    return '<h1 class="badge badge-success">'.$grooming_karyawan->user->name.'</h1>';
                 })
-                ->addColumn('nominal_gaji', function($karyawan){
-                    return 'Rp ' . formatUang($karyawan->penghasilan->nominal_gaji);
+
+                ->addColumn('tanggal', function($grooming_karyawan){
+                    $result = Carbon::parse($grooming_karyawan->created_at);
+                    return $result;
                 })
-                ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '-';
+
+                ->addColumn('status', function($grooming_karyawan){
+                    if($grooming_karyawan->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($grooming_karyawan->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
+                ->addColumn('aksi', function($grooming_karyawan){ //untuk aksi
+                    $button = '<a href="'.route('grooming.edit', $grooming_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
                    return $button;
                 })
-                ->rawColumns(['aksi','kode_pelanggan','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
                 ->make(true);
             }
         
@@ -109,8 +126,23 @@ class GroomingController extends Controller
             'status' => 1
         ]);
 
+        $grooming = grooming::findOrFail($id);
+        $data_karyawan = karyawan::where('id',auth()->user()->karyawan_id)->first();
+        if($grooming->status == 0){
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();
+        }else if($grooming->status == 2){
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();
+        }
+
+        $notif = array(
+            'message' => 'Data Grooming Diterima',
+            'alert-type' => 'success'
+        );
+
       
-       return redirect()->back();
+       return redirect()->back()->with($notif);
 
     }
 
@@ -120,8 +152,13 @@ class GroomingController extends Controller
             'status' => 0
         ]);
 
+        $notif = array(
+            'message' => 'Data Grooming Ditolak',
+            'alert-type' => 'error'
+        );
+
       
-       return redirect()->back();
+       return redirect()->back()->with($notif);
     }
 
     /**
@@ -150,17 +187,72 @@ class GroomingController extends Controller
         //     }
         // ]);
 
-        $karyawan = $request->karyawan_id;
+        $karyawan = auth()->user()->id;
         $data_lama = grooming::where('karyawan_id',$karyawan)->latest()->first();
         $now = Carbon::now();
 
-        if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
-            $grooming = new grooming();
-
-            $grooming->karyawan_id = $request->karyawan_id;
-            $grooming->catatan = $request->catatan;
-            $grooming->user_id = auth()->user()->id;
+        if($data_lama){
+            if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
+                $grooming = new grooming();
     
+                $grooming->karyawan_id = $karyawan;
+                $grooming->catatan = $request->catatan;
+        
+                if($request->path_foto == NULL){
+                    $notif = array(
+                        'message' => 'Anda belum memasukkan foto',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }else{
+                    $img = $request->path_foto;
+                    $folderPath = "foto/";
+                    
+                    $image_parts = explode(";base64,", $img);
+                    $image_type_aux = explode("image/", $image_parts[0]);
+                    $image_type = $image_type_aux[1];
+                    
+                    $image_base64 = base64_decode($image_parts[1]);
+                    $fileName = uniqid() . '.png';
+                    
+                    $file = $folderPath . $fileName;
+                    
+                    Storage::disk('public_uploads')->put($file, $image_base64);
+        
+                    $grooming->path_foto = 'uploads/foto/'.$fileName;
+                    $grooming->save();
+                }
+                  
+                $notif = array(
+                    'message' => 'Data Grooming Berhasil di Upload',
+                    'alert-type' => 'success'
+                );
+        
+                return redirect()->route('grooming.index')->with($notif);
+            }else{
+    
+                $notif = array(
+                    'message' => 'Data Grooming sudah ada',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }
+        }else{
+            $grooming = new grooming();
+    
+            $grooming->karyawan_id = $karyawan;
+            $grooming->catatan = $request->catatan;
+    
+            if($request->path_foto == NULL){
+                $notif = array(
+                    'message' => 'Anda belum memasukkan foto',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }else{
                 $img = $request->path_foto;
                 $folderPath = "foto/";
                 
@@ -176,19 +268,17 @@ class GroomingController extends Controller
                 Storage::disk('public_uploads')->put($file, $image_base64);
     
                 $grooming->path_foto = 'uploads/foto/'.$fileName;
-    
-            $grooming->save();
-    
-            return redirect()->route('grooming.index');
-        }else{
-
+                $grooming->save();
+            }
+              
             $notif = array(
-                'message' => 'Data Grooming sudah ada',
-                'alert-type' => 'error'
+                'message' => 'Data Grooming Berhasil di Upload',
+                'alert-type' => 'success'
             );
-
-            return redirect()->back()->with($notif);
+    
+            return redirect()->route('grooming.index')->with($notif);
         }
+        
 
        
 
@@ -232,10 +322,8 @@ class GroomingController extends Controller
     {
         $grooming = grooming::find($id);
 
-        $grooming->karyawan_id = $request->karyawan_id;
+        $grooming->karyawan_id = auth()->user()->id;
         $grooming->catatan = $request->catatan;
-        $grooming->created_at = now();
-        $grooming->user_id = auth()->user()->id;
 
         if ($request->path_foto) {
             unlink($grooming->path_foto);
@@ -259,7 +347,12 @@ class GroomingController extends Controller
 
         $grooming->update();
 
-        return redirect()->route('grooming.index');
+        $notif = array(
+            'message' => 'Data Grooming Berhasil di Update',
+            'alert-type' => 'info'
+        );
+
+        return redirect()->route('grooming.index')->with($notif);
     }
 
     /**

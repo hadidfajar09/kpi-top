@@ -58,7 +58,6 @@ Daftar Omset Sales
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Sales</th>
-                              <th width="10%">Uploader</th>
                               <th width="15%">Nominal</th>
                               <th>Catatan</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
@@ -113,7 +112,6 @@ Daftar Omset Sales
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal_setor'},
                         {data: 'sales'},
-                        {data: 'user'},
                         {data: 'nominal'},
                         {data: 'catatan'},
                         {data: 'aksi', searchable: false, sortable: false},

@@ -19,58 +19,92 @@ class UserController extends Controller
     public function dashboard()
     {
 
-        $agent = User::where('level',1)->count();
         $grooming=grooming::whereDate('created_at', date('Y-m-d'))->get()->count();
         $briefing=Briefing::whereDate('created_at', date('Y-m-d'))->get()->count();
         $cleaning=Cleaning::whereDate('created_at', date('Y-m-d'))->get()->count();
         $karyawan=karyawan::get()->count();
-        $pangkalan = User::where('level',2)->count();
-        $pelanggan = Pelanggan::count();
-        
 
-
-        
-        $tanggal_awal = date('Y-m-01');
-        $tanggal_akhir = date('Y-m-d');
-        
-        $transaksi_pelanggan = Transaksi::sum('jumlah_tabung');
-
-        
-
-        $data_tanggal = array();
-        $stock = 0;
-        $total_stock = array();
-
-        //stock masuk
-        $stock_masuk = 0;
-        $total_stock_masuk = array();
-
-        //stock keluar
-        $stock_keluar = 0;
-        $total_stock_keluar = array();
-
-        while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
-            $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
-
-            $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
-            $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
-
-            $stock = $distribusi - $transaksi;
-            $total_stock[] += $stock;
-
-            $stock_masuk = $distribusi;
-            $total_stock_masuk[] += $stock_masuk;
-
-            $stock_keluar = $transaksi;
-            $total_stock_keluar[] += $stock_keluar;
+      
+        if (auth()->user()->level == 0) {
+            $tanggal_awal = date('Y-m-01');
+            $tanggal_akhir = date('Y-m-d');
             
-            $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
-
+            $data_tanggal = array();
+            $stock = 0;
+            $total_stock = array();
+    
+            //stock masuk
+            $stock_masuk = 0;
+            $total_stock_masuk = array();
+    
+            //stock keluar
+            $stock_keluar = 0;
+            $total_stock_keluar = array();
+    
+            while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
+                $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
+    
+                $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+    
+                $stock = $distribusi - $transaksi;
+                $total_stock[] += $stock;
+    
+                $stock_masuk = $distribusi;
+                $total_stock_masuk[] += $stock_masuk;
+    
+                $stock_keluar = $transaksi;
+                $total_stock_keluar[] += $stock_keluar;
+                
+                $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
+    
+            }
+    
+            $tanggal_awal = date('Y-m-01');
+            
+                return view('backend.dashboard',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
+           
+        }else{
+            $tanggal_awal = date('Y-m-01');
+            $tanggal_akhir = date('Y-m-d');
+            
+            $data_tanggal = array();
+            $stock = 0;
+            $total_stock = array();
+    
+            //stock masuk
+            $stock_masuk = 0;
+            $total_stock_masuk = array();
+    
+            //stock keluar
+            $stock_keluar = 0;
+            $total_stock_keluar = array();
+    
+            while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
+                $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
+    
+                $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+    
+                $stock = $distribusi - $transaksi;
+                $total_stock[] += $stock;
+    
+                $stock_masuk = $distribusi;
+                $total_stock_masuk[] += $stock_masuk;
+    
+                $stock_keluar = $transaksi;
+                $total_stock_keluar[] += $stock_keluar;
+                
+                $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
+    
+            }
+    
+            $tanggal_awal = date('Y-m-01');
+            
+                return view('backend.dashboard_2',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
+           
         }
 
-        $tanggal_awal = date('Y-m-01');
-        
-            return view('backend.dashboard',compact('agent','pangkalan','pelanggan','transaksi_pelanggan','tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
        
         
     }
@@ -136,9 +170,10 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
         $user->kode_user = $request->kode_user;
+        $user->karyawan_id = $request->karyawan_id;
         $user->password = bcrypt($request->password);
         $user->level = $request->level;
-        $user->profile_photo_path = 'img/morowali.png';
+        $user->profile_photo_path = 'img/profile.png';
 
         $user->save();
 
@@ -155,6 +190,9 @@ class UserController extends Controller
             ->addColumn('kode_user', function($user){
                 return '<h1 class="badge badge-info">'.$user->kode_user.'</h1>';
             })
+            ->addColumn('data_karyawan', function($user){
+                return '<h1 class="badge badge-dark">'.$user->data_karyawan->name.'</h1>';
+            })
             ->addColumn('level', function($user){
                 if($user->level == 4){
                     return '<span class="badge badge-danger">LEADER</span>';
@@ -168,10 +206,10 @@ class UserController extends Controller
                 }
             })
             ->addColumn('aksi', function($user){ //untuk aksi
-                $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('user.update', $user->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('user.destroy', $user->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> </div>';
+                $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('user.update', $user->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('user.destroy', $user->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('user.destroy', $user->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a> </div>';
                return $button;
             })
-            ->rawColumns(['aksi','kode_user','level'])//biar kebaca html
+            ->rawColumns(['aksi','kode_user','level','data_karyawan'])//biar kebaca html
             ->make(true);
     }
 
@@ -186,6 +224,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         $user->email = $request->email;
+        $user->karyawan_id = $request->karyawan_id;
         $user->name = $request->name;
         $user->level = $request->level;
         

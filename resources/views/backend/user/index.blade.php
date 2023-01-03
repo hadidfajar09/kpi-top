@@ -34,7 +34,7 @@ Daftar User
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-outline-warning btn-sm" onclick="addForm('{{ route('user.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+              <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('user.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
 
             </div>
             <!-- /.card-header -->
@@ -55,6 +55,7 @@ Daftar User
                               <th width="5%">No</th>
                               <th>Nama User</th>
                               <th>Email</th>
+                              <th>Data</th>
                               <th>Akses</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
@@ -108,6 +109,7 @@ Daftar User
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'name'},
                         {data: 'email'},
+                        {data: 'data_karyawan'},
                         {data: 'level'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ]
@@ -161,6 +163,7 @@ Daftar User
               .done((response) => {
                 $('#modal-user [name=email]').val(response.email);
                 $('#modal-user [name=name]').val(response.name);
+                $('#modal-user [name=karyawan_id]').val(response.karyawan_id);
                 $('#modal-user [name=level]').val(response.level);
 
               })

@@ -240,33 +240,61 @@
           </li>
 
 
-          @elseif(auth()->user()->level == 3)
+          @else
 
+          <li class="nav-header">ABSENSI</li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-id-card"></i>
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
-                Data Pengguna
-                <i class="fas fa-angle-left right"></i>
+                Absen Masuk
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('pelanggan.index') }}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Pengguna</p>
-                </a>
-              </li>
-            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Mulai Istirahat
+              </p>
+            </a>
           </li>
 
-
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Akhir Istirahat
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('omset.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Absen Pulang
+              </p>
+            </a>
+          </li>
+          
+          
+         
+        
           <li class="nav-header">DAILY ACTIVITY</li>
           <li class="nav-item">
-            <a href="{{ route('transaksi.index') }}" class="nav-link">
+            <a href="{{ route('omset.index') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Omset Sales
+              </p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{ route('grooming.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Grooming
               </p>
             </a>
           </li>
@@ -274,18 +302,42 @@
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>
               <p>
-                Distribusi Agen
+                Distribusi
+              </p>
+            </a>
+          </li> --}}
+          <li class="nav-item">
+            <a href="{{ route('cleaning.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Kebersihan
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('laporan.index') }}" class="nav-link">
+            <a href="#" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
-                Laporan Stock
+                COD
               </p>
             </a>
-          </li> --}}
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('briefing.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Briefing
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-book"></i>
+              <p>
+                Report Closing
+              </p>
+            </a>
+          </li>
 
 
 

@@ -6,6 +6,10 @@ Tambah Daily Briefing
 
 @push('css')
 <style>
+  #my_camera {
+      border-radius: 10px;
+       border: 2px solid black;
+    }
   @media (max-width: 576px) {
     #my_camera video {
         max-width: 80%;
@@ -86,7 +90,7 @@ Tambah Daily Briefing
                   <div class="col-md-8">
                     <center>
 
-                      <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Cek" onClick="take_snapshot()">
+                      <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Preview" onClick="take_snapshot()">
                     </center>
                       <input type="hidden" name="path_foto" class="image-tag">
                   </div>

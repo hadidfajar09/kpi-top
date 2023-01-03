@@ -35,9 +35,7 @@ Daftar Grooming
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              @if (auth()->user()->level == 0 || auth()->user()->level == 3)
               <a class="btn btn-outline-danger btn-sm" href="{{ route('grooming.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
-              @endif
              
 
             </div>
@@ -59,7 +57,6 @@ Daftar Grooming
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Karyawan</th>
-                              <th width="10%">Leader</th>
                               <th width="15%">Foto</th>
                               <th>Catatan</th>
                               <th width="5%">Status</th>
@@ -114,7 +111,6 @@ Daftar Grooming
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
-                        {data: 'karyawan'},
                         {data: 'user'},
                         {data: 'path_foto'},
                         {data: 'catatan'},

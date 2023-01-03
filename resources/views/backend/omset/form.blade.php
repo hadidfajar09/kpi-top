@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="form-group row">
+            {{-- <div class="form-group row">
               <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Sales</label>
               <div class="col-md-8">
                 <select class="form-control" name="karyawan_id" id="karyawan_id" required>
@@ -39,7 +39,7 @@
                   <span class="help-block with-errors text-danger"></span>
 
               </div>
-          </div>
+          </div> --}}
 
           <div class="form-group row">
             <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Nominal</label>
