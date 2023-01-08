@@ -7,6 +7,7 @@ use App\Http\Controllers\CleaningController;
 use App\Http\Controllers\DesaController;
 use App\Http\Controllers\DistribusiController;
 use App\Http\Controllers\GroomingController;
+use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KecamatanController;
@@ -22,8 +23,10 @@ use App\Http\Controllers\RiwayatPengantaranController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SliderController;
+use App\Http\Controllers\CodController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\WebcamController;
+use App\Http\Controllers\ShiftController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -122,9 +125,11 @@ Route::group(['middleware' => 'auth'], function () {
       Route::resource('/karyawan',KaryawanController::class);
       Route::post('/karyawan/perbarui/{id}', [KaryawanController::class, 'barui'])->name('karyawan.barui');
       Route::get('file/download/{id}', [KaryawanController::class, 'download'])->name('file.download');
+      Route::post('/karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
+      Route::get('/karyawan/detail/{id}', [KaryawanController::class, 'detail'])->name('karyawan.detail');
+      // Route::get('karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');
-    //   Route::post('/pelanggan/reset', [PelangganController::class, 'resetBulanan'])->name('pelanggan.reset');
 
     //   Route::post('/pelanggan/import', [PelangganController::class, 'importExcel'])->name('pelanggan.import');
 
@@ -137,6 +142,32 @@ Route::group(['middleware' => 'auth'], function () {
           // //omset
           Route::get('/omset/data', [OmsetController::class, 'data'])->name('omset.data');
           Route::resource('/omset', OmsetController::class);
+          Route::get('/omset/acc/{id}', [OmsetController::class, 'accept'])->name('omset.acc');
+          Route::get('/omset/decline/{id}', [OmsetController::class, 'decline'])->name('omset.decline');
+          
+          // //shift
+          Route::get('/shift/data', [ShiftController::class, 'data'])->name('shift.data');
+          Route::resource('/shift', ShiftController::class);
+
+   // //cod
+   Route::get('/cod/data', [CodController::class, 'data'])->name('cod.data');
+   Route::resource('/cod', CodController::class);
+   Route::post('/cod/updated/{id}', [CodController::class, 'updated'])->name('cod.updated');
+   Route::get('/cod/acc/{id}', [CodController::class, 'accept'])->name('cod.acc');
+   Route::get('/cod/decline/{id}', [CodController::class, 'decline'])->name('cod.decline');
+
+   // //absen
+   Route::get('/absen/masuk', [AbsensiController::class, 'masuk'])->name('absen.masuk');
+   Route::post('/absen/login', [AbsensiController::class, 'absenLogin'])->name('absen.login');
+   Route::get('/absen/istirahat', [AbsensiController::class, 'istirahat'])->name('absen.istirahat');
+   Route::post('/absen/rest', [AbsensiController::class, 'absenRest'])->name('absen.rest');
+   Route::get('/absen/pulang', [AbsensiController::class, 'pulang'])->name('absen.pulang');
+   Route::post('/absen/logout', [AbsensiController::class, 'absenLogout'])->name('absen.logout');
+   Route::get('/absen/data', [AbsensiController::class, 'data'])->name('absen.data');
+   Route::resource('/absen', AbsensiController::class);
+   Route::post('/absen/updated/{id}', [AbsensiController::class, 'updated'])->name('absen.updated');
+   Route::get('/absen/acc/{id}', [AbsensiController::class, 'accept'])->name('absen.acc');
+   Route::get('/absen/decline/{id}', [AbsensiController::class, 'decline'])->name('absen.decline');
 
 
             // //grooming

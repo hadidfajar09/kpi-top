@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\grooming;
 use App\Models\karyawan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
@@ -122,19 +123,23 @@ class GroomingController extends Controller
 
     public function accept($id)
     {
+        $grooming = grooming::findOrFail($id);
+        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($grooming->status == 0){ //ditolak
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();   
+        }
+        if($grooming->status == 2){ //pending
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();
+        }else{
+
+        }
         grooming::findOrFail($id)->update([
             'status' => 1
         ]);
-
-        $grooming = grooming::findOrFail($id);
-        $data_karyawan = karyawan::where('id',auth()->user()->karyawan_id)->first();
-        if($grooming->status == 0){
-            $data_karyawan->grooming += 1;
-            $data_karyawan->update();
-        }else if($grooming->status == 2){
-            $data_karyawan->grooming += 1;
-            $data_karyawan->update();
-        }
 
         $notif = array(
             'message' => 'Data Grooming Diterima',
@@ -148,6 +153,21 @@ class GroomingController extends Controller
 
     public function decline($id)
     {
+        $grooming = grooming::findOrFail($id);
+        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($grooming->status == 1){ //diterima
+            $data_karyawan->grooming--;
+            $data_karyawan->update();   
+        }
+        if($grooming->status == 2){ //pending
+            $data_karyawan->grooming--;
+            $data_karyawan->update();
+        }else{
+
+        }
+
         grooming::findOrFail($id)->update([
             'status' => 0
         ]);
@@ -363,7 +383,14 @@ class GroomingController extends Controller
      */
     public function destroy($id)
     {
-        $grooming = grooming::find($id);
+        $grooming = grooming::findOrFail($id);
+        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+        if($grooming->status == 1){ //diterima
+            $data_karyawan->grooming--;
+            $data_karyawan->update();   
+        }
+    
         unlink($grooming->path_foto);
 
         $grooming->delete();

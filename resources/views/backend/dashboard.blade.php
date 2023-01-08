@@ -38,15 +38,15 @@ a:link {
         <!-- Info boxes -->
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('karyawan.index') }}" class="text-dark">
+            <a href="{{ route('absen.index') }}" class="text-dark">
             <div class="info-box">
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-user-cog"></i></span>
 
               <div class="info-box-content">
                 
-                <span class="info-box-text">Karyawan</span>
+                <span class="info-box-text">RIwayat Absen</span>
                 <span class="info-box-number">
-                  {{ $karyawan }}
+                  {{ $absensi  }}
                 </span>
                
               </div>
@@ -100,7 +100,7 @@ a:link {
 
               <div class="info-box-content">
                 <span class="info-box-text">Kebersihan Today</span>
-                <span class="info-box-number">{{ $cleaning }}</span>
+                <span class="info-box-number">{{ $bersih }}</span>
               
               </div>
               <!-- /.info-box-content -->
@@ -215,6 +215,29 @@ var salesChartData = {
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: {{ json_encode($total_stock_keluar) }}
+      },  
+      
+      {
+        label: 'Cleaning Pagi',
+        backgroundColor: '#873e23',
+        borderColor: 'rgb(135,62,35,1)',
+        pointRadius: false,
+        pointColor: 'rgb(135,62,35,1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: {{ json_encode($total_cleaning) }}
+      },    
+      {
+        label: 'Absensi',
+        backgroundColor: '#2596be',
+        borderColor: 'rgb(135,62,35,1)',
+        pointRadius: false,
+        pointColor: 'rgb(135,62,35,1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: {{ json_encode($total_absen) }}
       },    
 
    

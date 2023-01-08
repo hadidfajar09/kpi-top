@@ -26,6 +26,8 @@ class OmsetController extends Controller
         $omset = Omset::
             latest()->get();
 
+            $omset_karyawan = Omset::where('karyawan_id', auth()->user()->id)->latest()->get();
+
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
                 return datatables()
@@ -52,22 +54,26 @@ class OmsetController extends Controller
                 ->make(true);
             }else{
                 return datatables()
-                ->of($omset)//source
+                ->of($omset_karyawan)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('select_all', function($pelanggan){
-                    return '<input type="checkbox" name="id_pelanggan[]" value="'.$pelanggan->id.'">';
+                ->addColumn('sales', function($omset_karyawan){
+                    return '<span class="badge badge-success">'.$omset_karyawan->user->name.'</span>';
                 })
-                ->addColumn('kode_pelanggan', function($pelanggan){
-                    return '<span class="badge badge-success">'.$pelanggan->kode_pelanggan.'</span>';
+                // ->addColumn('user', function($omset_karyawan){
+                //     return '<span class="badge badge-primary">'.$omset_karyawan->user->name.'</span>';
+                // })
+                ->addColumn('nominal', function($omset_karyawan){
+                    return 'Rp ' . formatUang($omset_karyawan->nominal);
                 })
-                ->addColumn('nominal_gaji', function($pelanggan){
-                    return 'Rp ' . formatUang($pelanggan->penghasilan->nominal_gaji);
+                ->addColumn('tanggal_setor', function($omset_karyawan){
+                    return formatTanggal($omset_karyawan->tanggal_setor);
                 })
-                ->addColumn('aksi', function($pelanggan){ //untuk aksi
-                    $button = '-';
+             
+                ->addColumn('aksi', function($omset_karyawan){ //untuk aksi
+                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','kode_pelanggan','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal'])//biar kebaca html
                 ->make(true);
             }
         
@@ -110,6 +116,36 @@ class OmsetController extends Controller
         return redirect()->route('omset.index');
     }
 
+    public function accept($id)
+    {
+        $grooming = grooming::findOrFail($id);
+        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($grooming->status == 0){ //ditolak
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();   
+        }
+        if($grooming->status == 2){ //pending
+            $data_karyawan->grooming += 1;
+            $data_karyawan->update();
+        }else{
+
+        }
+        grooming::findOrFail($id)->update([
+            'status' => 1
+        ]);
+
+        $notif = array(
+            'message' => 'Data Grooming Diterima',
+            'alert-type' => 'success'
+        );
+
+      
+       return redirect()->back()->with($notif);
+
+    }
+
     /**
      * Display the specified resource.
      *
@@ -140,9 +176,17 @@ class OmsetController extends Controller
      * @param  \App\Models\Omset  $omset
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Omset $omset)
+    public function update(Request $request, $id)
     {
-        //
+        $omset = Omset::find($id);
+        $omset->tanggal_setor = $request->tanggal_setor;
+        $omset->karyawan_id = auth()->user()->id;
+        $omset->catatan = $request->catatan;
+        $omset->nominal = $request->nominal;
+
+        $omset->update();
+
+        return response()->json('Omset Berhasil Disimpan', 200);
     }
 
     /**

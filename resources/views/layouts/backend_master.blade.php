@@ -12,6 +12,7 @@
   
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="{{ asset('backend_pemda/plugins/fontawesome-free/css/all.min.css') }}">
+  <link rel="stylesheet" href="{{ asset('backend_pemda/plugins/daterangepicker/daterangepicker.css') }}">
   <link rel="icon" href="{{ asset($setting->path_logo) }}" type="image/*">
    <!-- DataTables -->
    <link rel="stylesheet" href="{{ asset('backend_pemda/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
@@ -69,6 +70,7 @@
 <script src="{{ asset('backend_pemda/plugins/raphael/raphael.min.js') }}"></script>
 <script src="{{ asset('backend_pemda/plugins/jquery-mapael/jquery.mapael.min.js') }}"></script>
 <script src="{{ asset('backend_pemda/plugins/jquery-mapael/maps/usa_states.min.js') }}"></script>
+<script src="{{ asset('backend_pemda/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('backend_pemda/plugins/chart.js/Chart.min.js') }}"></script>
 

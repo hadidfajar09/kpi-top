@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Briefing;
+use App\Models\Absensi;
 use App\Models\Cleaning;
 use App\Models\Distribusi;
 use App\Models\grooming;
@@ -21,11 +22,12 @@ class UserController extends Controller
 
         $grooming=grooming::whereDate('created_at', date('Y-m-d'))->get()->count();
         $briefing=Briefing::whereDate('created_at', date('Y-m-d'))->get()->count();
-        $cleaning=Cleaning::whereDate('created_at', date('Y-m-d'))->get()->count();
+        $bersih=Cleaning::whereDate('created_at', date('Y-m-d'))->get()->count();
         $karyawan=karyawan::get()->count();
 
       
         if (auth()->user()->level == 0) {
+            $absensi=Absensi::count();
             $tanggal_awal = date('Y-m-01');
             $tanggal_akhir = date('Y-m-d');
             
@@ -40,12 +42,21 @@ class UserController extends Controller
             //stock keluar
             $stock_keluar = 0;
             $total_stock_keluar = array();
+
+             //cleaning
+             $cleaning = 0;
+             $total_cleaning = array();
+             //Absen
+             $absen = 0;
+             $total_absen = array();
     
             while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
                 $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
     
                 $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
                 $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $cleaning = Cleaning::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $absen = Absensi::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
     
                 $stock = $distribusi - $transaksi;
                 $total_stock[] += $stock;
@@ -55,6 +66,13 @@ class UserController extends Controller
     
                 $stock_keluar = $transaksi;
                 $total_stock_keluar[] += $stock_keluar;
+
+                $cleaning = $cleaning;
+                $total_cleaning[] += $cleaning;
+
+                $absen = $absen;
+                $total_absen[] += $absen;
+                
                 
                 $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
     
@@ -62,9 +80,11 @@ class UserController extends Controller
     
             $tanggal_awal = date('Y-m-01');
             
-                return view('backend.dashboard',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
+                return view('backend.dashboard',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','bersih','total_cleaning','total_absen','absensi'));
            
         }else{
+            $user = auth()->user()->id;
+            $absensi=Absensi::where('karyawan_id',$user)->count();
             $tanggal_awal = date('Y-m-01');
             $tanggal_akhir = date('Y-m-d');
             
@@ -79,12 +99,21 @@ class UserController extends Controller
             //stock keluar
             $stock_keluar = 0;
             $total_stock_keluar = array();
+            
+            //cleaning
+            $cleaning = 0;
+            $total_cleaning = array();
+            //Absen
+            $absen = 0;
+            $total_absen = array();
     
             while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
                 $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
     
-                $distribusi = grooming::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
-                $transaksi = Briefing::where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $distribusi = grooming::where('karyawan_id',$user)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $transaksi = Briefing::where('user_id',$user)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $cleaning = Cleaning::where('user_id',$user)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $absen = Absensi::where('karyawan_id',$user)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
     
                 $stock = $distribusi - $transaksi;
                 $total_stock[] += $stock;
@@ -94,6 +123,12 @@ class UserController extends Controller
     
                 $stock_keluar = $transaksi;
                 $total_stock_keluar[] += $stock_keluar;
+               
+                $cleaning = $cleaning;
+                $total_cleaning[] += $cleaning;
+
+                $absen = $absen;
+                $total_absen[] += $absen;
                 
                 $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
     
@@ -101,7 +136,7 @@ class UserController extends Controller
     
             $tanggal_awal = date('Y-m-01');
             
-                return view('backend.dashboard_2',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning'));
+                return view('backend.dashboard_2',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','briefing','grooming','karyawan','cleaning','bersih','total_cleaning','total_absen','absensi'));
            
         }
 

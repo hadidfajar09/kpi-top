@@ -34,9 +34,7 @@ Daftar Omset Sales
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              @if (auth()->user()->level == 0 || auth()->user()->level == 3)
               <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
-              @endif
              
 
             </div>

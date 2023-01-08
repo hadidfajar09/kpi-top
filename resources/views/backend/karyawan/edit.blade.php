@@ -99,6 +99,19 @@ Edit Karyawan
                     </div>
                   </div>
 
+
+                  <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Jadwal Shift</label>
+                    <div class="col-sm-4">
+                         <select class="form-control" name="shift_id" id="shift_id">
+                          @foreach($shift as $row)
+                          <option value="{{ $row->id }}" @if($karyawan->shift_id == $row->id) selected @endif>{{ $row->nama_shift }}</option>
+                          @endforeach
+                      </select>
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
                   <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Berkas</label>
                     <div class="col-sm-4">

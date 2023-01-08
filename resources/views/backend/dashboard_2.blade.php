@@ -35,18 +35,72 @@ a:link {
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
+        <div class="row">
+          <div class="col-lg-4 col-12">
+            <!-- small card -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>Absen Masuk</h3>
+
+                <p>Selamat Bekerja</p>
+              </div>
+              <div class="icon">
+                <i class="fas fa-sign-in"></i>
+              </div>
+              <a href="{{ route('absen.masuk') }}" class="small-box-footer">
+                Yuk Absen <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-12">
+            <!-- small card -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Absen Istirahat</h3>
+
+                <p>Istirahat yang cukup</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="{{ route('absen.istirahat') }}" class="small-box-footer">
+                Yuk Absen <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-4 col-12">
+            <!-- small card -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>Absen Pulang</h3>
+
+                <p>Terima Kasih Telah bekerja dengan baik</p>
+              </div>
+              <div class="icon">
+              </div>
+              <a href="{{ route('absen.pulang') }}" class="small-box-footer">
+                Yuk Absen <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
+          <!-- ./col -->
+        
+          <!-- ./col -->
+        </div>
         <!-- Info boxes -->
         <div class="row">
           <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('karyawan.index') }}" class="text-dark">
+            <a href="{{ route('absen.index') }}" class="text-dark">
             <div class="info-box">
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-user-cog"></i></span>
 
               <div class="info-box-content">
                 
-                <span class="info-box-text">Karyawan</span>
+                <span class="info-box-text">Riwayat Absen</span>
                 <span class="info-box-number">
-                  {{ $karyawan }}
+                  {{ $absensi }}
                 </span>
                
               </div>
@@ -63,7 +117,7 @@ a:link {
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-luggage-cart"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Briefing Today</span>
+                <span class="info-box-text">Riwayat Briefing</span>
                 <span class="info-box-number">{{ $briefing }}</span>
                 
               </div>
@@ -83,7 +137,7 @@ a:link {
               <span class="info-box-icon bg-success elevation-1"><i class="fas fa-id-card-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Grooming Today</span>
+                <span class="info-box-text">Riwayat Grooming</span>
                 <span class="info-box-number">{{ $grooming }}</span>
                
               </div>
@@ -99,8 +153,8 @@ a:link {
               <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-cart-plus"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Kebersihan Today</span>
-                <span class="info-box-number">{{ $cleaning }}</span>
+                <span class="info-box-text">Riwayat Kebersihan</span>
+                <span class="info-box-number">{{ $bersih }}</span>
               
               </div>
               <!-- /.info-box-content -->
@@ -110,9 +164,10 @@ a:link {
           </div>
           <!-- /.col -->
         </div>
-        <!-- /.row -->
 
-        <div class="row">
+     
+
+             <div class="row">
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
@@ -126,7 +181,7 @@ a:link {
                   <div class="col-md-12">
                     <div class="chart">
                       <!-- Sales Chart Canvas -->
-                      <canvas id="salesChart" height="180" style="height: 270px;"></canvas>
+                      <canvas id="salesChart" height="50" ></canvas>
                     </div>
                     <!-- /.chart-responsive -->
                   </div>
@@ -136,27 +191,31 @@ a:link {
                 </div>
 
                 <div class="row">
-                  <div class="col-md-3">
-                    <div class="chart">
-                      <!-- Sales Chart Canvas -->
-                      <canvas id="pieChart" width="50" height="50"></canvas>
+                  <div class="col-md-6">
+                  <div class="card card-danger">
+                    <div class="card-header">
+                      <h3 class="card-title">Pie Chart</h3>
+      
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
                     </div>
-                    <!-- /.chart-responsive -->
-                  </div>
-
-                  <div class="col-md-3">
-                    <div class="chart">
-                      <!-- Sales Chart Canvas -->
-                      <canvas id="pieChart2" width="50" height="50"></canvas>
+                    <div class="card-body">
+                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
                     </div>
-                    <!-- /.chart-responsive -->
+                    <!-- /.card-body -->
                   </div>
                   <!-- /.col -->
                 
                   <!-- /.col -->
                 </div>
 
-                
+              </div>
                 <!-- /.row -->
               </div>
               <!-- ./card-body -->
@@ -179,6 +238,16 @@ a:link {
 @endsection
 
 @push('scripts')
+
+<script>
+   //Date picker
+   $('#reservationdate').datetimepicker({
+        format: 'L'
+    });
+
+    //Date and time picker
+    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+</script>
 
 <script>
   window.setTimeout(function() {
@@ -215,6 +284,29 @@ var salesChartData = {
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
         data: {{ json_encode($total_stock_keluar) }}
+      }, 
+      
+      {
+        label: 'Cleaning Pagi',
+        backgroundColor: '#873e23',
+        borderColor: 'rgb(135,62,35,1)',
+        pointRadius: false,
+        pointColor: 'rgb(135,62,35,1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: {{ json_encode($total_cleaning) }}
+      },    
+      {
+        label: 'Absensi',
+        backgroundColor: '#2596be',
+        borderColor: 'rgb(135,62,35,1)',
+        pointRadius: false,
+        pointColor: 'rgb(135,62,35,1)',
+        pointStrokeColor: '#c1c7d1',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(220,220,220,1)',
+        data: {{ json_encode($total_absen) }}
       },    
 
    

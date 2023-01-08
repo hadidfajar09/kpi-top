@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cleaning;
 use App\Models\Penempatan;
+use App\Models\karyawan;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use App\Http\Controllers\Controller;
@@ -128,23 +130,63 @@ class CleaningController extends Controller
 
     public function accept($id)
     {
+        $kebersihan = Cleaning::findOrFail($id);
+        $user = User::where('id',$kebersihan->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($kebersihan->status == 0){ //ditolak
+            $data_karyawan->kebersihan += 1;
+            $data_karyawan->update();   
+        }
+        if($kebersihan->status == 2){ //pending
+            $data_karyawan->kebersihan += 1;
+            $data_karyawan->update();
+        }else{
+
+        }
+
         Cleaning::findOrFail($id)->update([
             'status' => 1
         ]);
 
+        $notif = array(
+            'message' => 'Data Cleaning Diterima',
+            'alert-type' => 'success'
+        );
+
       
-       return redirect()->back();
+       return redirect()->back()->with($notif);
 
     }
 
     public function decline($id)
     {
+        $cleaning = Cleaning::findOrFail($id);
+        $user = User::where('id',$cleaning->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($cleaning->status == 1){ //diterima
+            $data_karyawan->kebersihan--;
+            $data_karyawan->update();   
+        }
+        if($cleaning->status == 2){ //pending
+            $data_karyawan->kebersihan--;
+            $data_karyawan->update();
+        }else{
+
+        }
+
         Cleaning::findOrFail($id)->update([
             'status' => 0
         ]);
 
+        $notif = array(
+            'message' => 'Data Cleaning Ditolak',
+            'alert-type' => 'success'
+        );
+
       
-       return redirect()->back();
+       return redirect()->back()->with($notif);
     }
 
     /**
@@ -508,6 +550,13 @@ class CleaningController extends Controller
     public function destroy($id)
     {
         $cleaning = Cleaning::find($id);
+        $grooming = grooming::findOrFail($id);
+        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+        if($grooming->status == 1){ //diterima
+            $data_karyawan->grooming--;
+            $data_karyawan->update();   
+        }
         if($cleaning->path_foto){
             unlink($cleaning->path_foto);
         }

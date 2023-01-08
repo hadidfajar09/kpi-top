@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Briefing;
 use App\Models\Penempatan;
+use App\Models\User;
+use App\Models\karyawan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -25,6 +27,9 @@ class BriefingController extends Controller
     {
         $briefing = Briefing::
             latest()->get();
+
+            $briefing_karyawan = Briefing::where('user_id', auth()->user()->id)->latest()->get();
+
 
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
@@ -72,22 +77,44 @@ class BriefingController extends Controller
                 ->make(true);
             }else{
                 return datatables()
-                ->of($briefing)//source
+                ->of($briefing_karyawan)//source
                 ->addIndexColumn() //untuk nomer
-                ->addColumn('select_all', function($karyawan){
-                    return '<input type="checkbox" name="id_pelanggan[]" value="'.$karyawan->id.'">';
+                ->addColumn('path_foto', function($briefing_karyawan){
+                    return ' <a href="'.$briefing_karyawan->path_foto.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$briefing_karyawan->path_foto.'" class="img-fluid" alt="">
+                  </a>';    
                 })
-                ->addColumn('kode_pelanggan', function($karyawan){
-                    return '<span class="badge badge-success">'.$karyawan->kode_pelanggan.'</span>';
+                
+                
+                ->addColumn('user', function($briefing_karyawan){
+                    return '<h1 class="badge badge-success">'.$briefing_karyawan->user->name.'</h1>';
                 })
-                ->addColumn('nominal_gaji', function($karyawan){
-                    return 'Rp ' . formatUang($karyawan->penghasilan->nominal_gaji);
+
+                ->addColumn('penempatan', function($briefing_karyawan){
+                    return '<h1 class="badge badge-dark">'.$briefing_karyawan->penempatan->nama.'</h1>';
                 })
-                ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '-';
+
+                ->addColumn('tanggal', function($briefing_karyawan){
+                    $result = Carbon::parse($briefing_karyawan->created_at);
+                    return $result;
+                })
+
+                ->addColumn('status', function($briefing_karyawan){
+                    if($briefing_karyawan->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($briefing_karyawan->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
+                ->addColumn('aksi', function($briefing_karyawan){ //untuk aksi
+                    $button = '<a href="'.route('briefing.edit', $briefing_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
                    return $button;
                 })
-                ->rawColumns(['aksi','kode_pelanggan','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status','penempatan'])//biar kebaca html
                 ->make(true);
             }
         
@@ -107,23 +134,64 @@ class BriefingController extends Controller
 
     public function accept($id)
     {
+        $briefing = Briefing::findOrFail($id);
+        $user = User::where('id',$briefing->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($briefing->status == 0){ //ditolak
+            $data_karyawan->briefing += 1;
+            $data_karyawan->update();   
+        }
+        if($briefing->status == 2){ //pending
+            $data_karyawan->briefing += 1;
+            $data_karyawan->update();
+        }else{
+
+        }
+
         Briefing::findOrFail($id)->update([
             'status' => 1
         ]);
 
+        $notif = array(
+            'message' => 'Data Briefing Diterima',
+            'alert-type' => 'success'
+        );
+
       
-       return redirect()->back();
+       return redirect()->back()->with($notif);
 
     }
 
     public function decline($id)
     {
+        $briefing = Briefing::findOrFail($id);
+        $user = User::where('id',$briefing->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($briefing->status == 1){ //diterima
+            $data_karyawan->briefing--;
+            $data_karyawan->update();   
+        }
+        if($briefing->status == 2){ //pending
+            $data_karyawan->briefing--;
+            $data_karyawan->update();
+        }else{
+
+        }
+
         Briefing::findOrFail($id)->update([
             'status' => 0
         ]);
 
       
-       return redirect()->back();
+        $notif = array(
+            'message' => 'Data Briefing Ditolak',
+            'alert-type' => 'error'
+        );
+
+      
+       return redirect()->back()->with($notif);
     }
 
     /**
@@ -134,32 +202,103 @@ class BriefingController extends Controller
      */
     public function store(Request $request)
     {
-        $briefing = new Briefing();
 
-        $briefing->penempatan_id = $request->penempatan_id;
-        $briefing->catatan = $request->catatan;
-        $briefing->created_at = now();
-        $briefing->user_id = auth()->user()->id;
+        $karyawan = auth()->user()->id;
+        $data_lama = Briefing::where('user_id',$karyawan)->latest()->first();
+        $now = Carbon::now();
 
-            $img = $request->path_foto;
-            $folderPath = "foto_briefing/";
-            
-            $image_parts = explode(";base64,", $img);
-            $image_type_aux = explode("image/", $image_parts[0]);
-            $image_type = $image_type_aux[1];
-            
-            $image_base64 = base64_decode($image_parts[1]);
-            $fileName = uniqid() . '.png';
-            
-            $file = $folderPath . $fileName;
-            
-            Storage::disk('public_uploads')->put($file, $image_base64);
+        if($data_lama){
+            if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
+                $briefing = new Briefing();
+    
+                $briefing->user_id = $karyawan;
+                $briefing->penempatan_id = $request->penempatan_id;
+                $briefing->catatan = $request->catatan;
+        
+                if($request->path_foto == NULL){
+                    $notif = array(
+                        'message' => 'Anda belum memasukkan foto',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }else{
+                    $img = $request->path_foto;
+                    $folderPath = "foto_briefing/";
+                    
+                    $image_parts = explode(";base64,", $img);
+                    $image_type_aux = explode("image/", $image_parts[0]);
+                    $image_type = $image_type_aux[1];
+                    
+                    $image_base64 = base64_decode($image_parts[1]);
+                    $fileName = uniqid() . '.png';
+                    
+                    $file = $folderPath . $fileName;
+                    
+                    Storage::disk('public_uploads')->put($file, $image_base64);
+        
+                    $briefing->path_foto = 'uploads/foto_briefing/'.$fileName;
+                    $briefing->save();
+                }
+                  
+                $notif = array(
+                    'message' => 'Data Briefing Berhasil di Upload',
+                    'alert-type' => 'success'
+                );
+        
+                return redirect()->route('briefing.index')->with($notif);
+            }else{
+    
+                $notif = array(
+                    'message' => 'Data Briefing sudah ada',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }
+        }else{
+            $briefing = new Briefing();
+    
+            $briefing->user_id = $karyawan;
+            $briefing->penempatan_id = $request->penempatan_id;
+            $briefing->catatan = $request->catatan;
+    
+            if($request->path_foto == NULL){
+                $notif = array(
+                    'message' => 'Anda belum memasukkan foto',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }else{
+                $img = $request->path_foto;
+                $folderPath = "foto_briefing/";
+                
+                $image_parts = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                
+                $image_base64 = base64_decode($image_parts[1]);
+                $fileName = uniqid() . '.png';
+                
+                $file = $folderPath . $fileName;
+                
+                Storage::disk('public_uploads')->put($file, $image_base64);
+    
+                $briefing->path_foto = 'uploads/foto_briefing/'.$fileName;
+                $briefing->save();
+            }
+              
+            $notif = array(
+                'message' => 'Data Briefing Berhasil di Upload',
+                'alert-type' => 'success'
+            );
+    
+            return redirect()->route('briefing.index')->with($notif);
+        }
+        
 
-            $briefing->path_foto = 'uploads/foto_briefing/'.$fileName;
-
-        $briefing->save();
-
-        return redirect()->route('briefing.index');
+      
     }
 
     /**
@@ -200,7 +339,6 @@ class BriefingController extends Controller
 
         $briefing->penempatan_id = $request->penempatan_id;
         $briefing->catatan = $request->catatan;
-        $briefing->created_at = now();
         $briefing->user_id = auth()->user()->id;
 
         if ($request->path_foto) {
@@ -225,7 +363,12 @@ class BriefingController extends Controller
 
         $briefing->update();
 
-        return redirect()->route('briefing.index');
+        $notif = array(
+            'message' => 'Data Briefing Berhasil di Update',
+            'alert-type' => 'info'
+        );
+
+        return redirect()->route('briefing.index')->with($notif);
     }
 
     /**
@@ -236,7 +379,13 @@ class BriefingController extends Controller
      */
     public function destroy($id)
     {
-        $briefing = Briefing::find($id);
+        $briefing = Briefing::findOrFail($id);
+        $user = User::where('id',$briefing->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+        if($briefing->status == 1){ //diterima
+            $data_karyawan->briefing--;
+            $data_karyawan->update();   
+        }
         unlink($briefing->path_foto);
 
         $briefing->delete();

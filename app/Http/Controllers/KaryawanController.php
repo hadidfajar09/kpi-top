@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Jabatan;
 use App\Models\kontrak;
 use App\Models\karyawan;
+use App\Models\Shift;
 use App\Models\Penempatan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -52,7 +53,7 @@ class KaryawanController extends Controller
                 })
              
                 ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
+                    $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.detail', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
                    return $button;
                 })
                 ->rawColumns(['aksi','end_work','status'])//biar kebaca html
@@ -90,7 +91,8 @@ class KaryawanController extends Controller
         $jabatan = Jabatan::all()->pluck('jabatan','id');
         $kontrak = kontrak::all()->pluck('kontrak','id');
         $penempatan = Penempatan::all()->pluck('nama','id');
-        return view('backend.karyawan.create', compact('jabatan','kontrak','penempatan'));
+        $shift = Shift::all()->pluck('nama_shift','id');
+        return view('backend.karyawan.create', compact('jabatan','kontrak','penempatan','shift'));
     }
 
     public function download($id)
@@ -98,6 +100,12 @@ class KaryawanController extends Controller
         $karyawan = karyawan::findOrFail($id);
         $filePath = $karyawan->path_berkas;
         return response()->download($filePath);
+    }
+
+    public function detail($id)
+    {
+        $karyawan_detail = karyawan::findOrFail($id);
+        
     }
 
     /**
@@ -113,6 +121,7 @@ class KaryawanController extends Controller
             'jabatan_id' => 'required',
             'kontrak_id' => 'required',
             'penempatan_id' => 'required',
+            'shift_id' => 'required',
             'berkas' => 'required',
             'alamat' => 'required',
             'nomor' => 'required',
@@ -128,6 +137,7 @@ class KaryawanController extends Controller
         $karyawan->jabatan_id = $request->jabatan_id;
         $karyawan->kontrak_id = $request->kontrak_id;
         $karyawan->penempatan_id = $request->penempatan_id;
+        $karyawan->shift_id = $request->shift_id;
         $karyawan->berkas = $request->berkas;
         $karyawan->alamat = $request->alamat;
         $karyawan->nomor = $request->nomor;
@@ -156,7 +166,12 @@ class KaryawanController extends Controller
 
         $karyawan->save();
 
-        return redirect()->route('karyawan.index');
+        $notif = array(
+            'message' => 'Anda Berhasil Menambahkan Karyawan',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('karyawan.index')->with($notif);
     }
 
     /**
@@ -182,8 +197,9 @@ class KaryawanController extends Controller
         $jabatan = Jabatan::all();
         $kontrak = kontrak::all();
         $penempatan = Penempatan::all();
+        $shift = Shift::all();
 
-        return view('backend.karyawan.edit',compact('jabatan','kontrak','penempatan','karyawan'));
+        return view('backend.karyawan.edit',compact('jabatan','kontrak','penempatan','karyawan','shift'));
     }
 
     /**
@@ -205,6 +221,7 @@ class KaryawanController extends Controller
             'jabatan_id' => 'required',
             'kontrak_id' => 'required',
             'penempatan_id' => 'required',
+            'shift_id' => 'required',
             'berkas' => 'required',
             'alamat' => 'required',
             'nomor' => 'required',
@@ -220,6 +237,7 @@ class KaryawanController extends Controller
         $karyawan->jabatan_id = $request->jabatan_id;
         $karyawan->kontrak_id = $request->kontrak_id;
         $karyawan->penempatan_id = $request->penempatan_id;
+        $karyawan->shift_id = $request->shift_id;
         $karyawan->berkas = $request->berkas;
         $karyawan->alamat = $request->alamat;
         $karyawan->nomor = $request->nomor;
@@ -227,7 +245,7 @@ class KaryawanController extends Controller
         $karyawan->end_work = $request->end_work;
 
         if ($request->hasFile('path_berkas')) {
-            if ($request->file('path_berkas')->isValid()) {
+            if ($request->file  ('path_berkas')->isValid()) {
                 $documentFile = $request->file('path_berkas');
                 $extention = $documentFile->getClientOriginalExtension();
                 $slug = \Str::slug($request->get('name'));
@@ -250,7 +268,12 @@ class KaryawanController extends Controller
 
         $karyawan->update();
 
-        return redirect()->route('karyawan.index');
+        $notif = array(
+            'message' => 'Anda Berhasil Update Data Karyawan',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('karyawan.index')->with($notif);
     }
 
     /**
@@ -268,5 +291,24 @@ class KaryawanController extends Controller
         $karyawan->delete();
 
         return response()->json('data berhasil dihapus');
+    }
+
+    public function resetPoint(Request $request)
+    {
+        $karyawan = karyawan::orderBy('id','desc')->get();
+        foreach ($karyawan as $row) {
+            $row->absen = 0;
+            $row->omset = 0;
+            $row->grooming = 0;
+            $row->kebersihan = 0;
+            $row->point = 0;
+            $row->cod = 0;
+            $row->briefing = 0;
+            
+            $row->update();
+        }
+
+
+        return response()->json('Point Bulanan Berhasil direset');
     }
 }

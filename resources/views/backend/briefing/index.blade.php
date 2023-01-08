@@ -35,10 +35,7 @@ Daftar Absen Briefing
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              @if (auth()->user()->level == 0 || auth()->user()->level == 3)
               <a class="btn btn-outline-danger btn-sm" href="{{ route('briefing.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
-              @endif
-             
 
             </div>
             <!-- /.card-header -->

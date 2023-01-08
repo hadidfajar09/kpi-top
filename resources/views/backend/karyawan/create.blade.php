@@ -106,6 +106,20 @@ Tambah Karyawan
                   </div>
 
                   <div class="form-group row">
+                    <label for="email" class="col-sm-2 col-form-label">Jadwal Shift</label>
+                    <div class="col-sm-4">
+                        <select class="form-control" name="shift_id" id="shift_id" required>
+                            <option value="">Pilih Shift</option>
+                            @foreach ($shift as $key => $row)
+                                <option value="{{ $key }}">{{ $row }}</option>
+                            @endforeach
+              
+                          </select>
+                                  <span class="help-block with-errors text-danger"></span>
+                    </div>
+                  </div>
+
+                  <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Berkas</label>
                     <div class="col-sm-4">
                         <input class="form-control" type="text" value="KTP,IJAZAH,AKTE" name="berkas" data-role="tagsinput">

@@ -33,6 +33,8 @@ Daftar Karyawan
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
+              <button class="btn btn-outline-danger btn-sm" onclick="resetBulanan('{{ route('karyawan.reset') }}')"" ><i class="
+                fa fa-spinner"></i> Reset Bulanan</button>
             </div>
             <!-- /.card-header -->
             <div class="row">
@@ -90,6 +92,7 @@ Daftar Karyawan
 </div>
 
 @include('backend.penempatan.form')
+@include('backend.karyawan.form_reset')
 @endsection
 
 
@@ -155,6 +158,26 @@ buttons: [
                     });
                 }
             });
+
+            $('#modal-point').validator().on('submit', function(e){
+                if (! e.preventDefault()) {
+                    $.ajax({
+                        url: $('#modal-point form').attr('action'),
+                        type: 'post',
+                        data: $('#modal-point form').serialize()
+                    })
+                    .done((response) => {
+                        $('#modal-point').modal('hide');
+                        table.ajax.reload();
+                        Swal.fire('Berhasil Reset Point Bulanan')
+                    })
+
+                    .fail((errors) => {
+                      Swal.fire('Data sudah ada atau terjadi kesalahan')
+                        return;
+                    });
+                }
+            });
           });
 
           function addForm(url){
@@ -187,6 +210,18 @@ buttons: [
                 alert('Data tidak ditemukan');
                 return;
               })
+        }
+
+        function resetBulanan(url){
+            $('#modal-point').modal('show');
+            $('#modal-point .modal-title').text('Reset POint Bulanan');
+
+            $('#modal-point form')[0].reset();
+            $('#modal-point form').attr('action',url);
+            $('#modal-point [name=_method]').val('post');
+            $('#modal-point [name=file_excel]').focus();
+
+           
         }
 
         function deleteData(url) {

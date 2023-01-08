@@ -6,10 +6,6 @@ Tambah Daily Briefing
 
 @push('css')
 <style>
-  #my_camera {
-      border-radius: 10px;
-       border: 2px solid black;
-    }
   @media (max-width: 576px) {
     #my_camera video {
         max-width: 80%;

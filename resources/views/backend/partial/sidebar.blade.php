@@ -79,6 +79,12 @@
                   <p>Penempatan</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('shift.index') }}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Shift</p>
+                </a>
+              </li>
              
             </ul>
           </li>
@@ -117,6 +123,14 @@
 
           <li class="nav-header">ABSENSI</li>
           <li class="nav-item">
+            <a href="{{ route('absen.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Riwayat Absen
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ route('omset.index') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
@@ -124,20 +138,11 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+                   <li class="nav-item">
             <a href="{{ route('omset.index') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
-                Absen Mulai Istirahat
-              </p>
-            </a>
-          </li>
-
-          <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Absen Akhir Istirahat
+                Absen Istirahat
               </p>
             </a>
           </li>
@@ -188,7 +193,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('cod.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 COD
@@ -315,7 +320,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="{{ route('cod.index') }}" class="nav-link">
               <i class="nav-icon fas fa-book"></i>
               <p>
                 COD
