@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Jabatan;
 use App\Models\kontrak;
 use App\Models\karyawan;
+use App\Models\User;
+use App\Models\Absensi;
 use App\Models\Shift;
 use App\Models\Penempatan;
 use Illuminate\Support\Str;
@@ -53,7 +55,7 @@ class KaryawanController extends Controller
                 })
              
                 ->addColumn('aksi', function($karyawan){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.detail', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
+                    $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.show', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
                    return $button;
                 })
                 ->rawColumns(['aksi','end_work','status'])//biar kebaca html
@@ -102,9 +104,84 @@ class KaryawanController extends Controller
         return response()->download($filePath);
     }
 
-    public function detail($id)
+    public function detail()
     {
-        $karyawan_detail = karyawan::findOrFail($id);
+        $user = User::where('karyawan_id',6)->first();
+        $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->get();
+
+        return datatables()
+        ->of($karyawan_detail)//source
+        ->addIndexColumn() //untuk nomer
+        ->addColumn('tanggal', function($karyawan_detail){
+            $result = formatTanggal($karyawan_detail->created_at);
+            return $result;
+        })
+        ->addColumn('karyawan', function($karyawan_detail){
+            $result = '<h1 class="badge badge-light">'.$karyawan_detail->karyawan->name.'</h1>';
+            return $result;
+        })
+        ->addColumn('jam_masuk', function($karyawan_detail){
+            $result = '<h1 class="badge badge-success">'.$karyawan_detail->jam_masuk.'</h1>';
+            return $result;
+        })
+        ->addColumn('foto_masuk', function($karyawan_detail){
+            return ' <a href="'.$karyawan_detail->foto_masuk.'" data-toggle="lightbox">
+            <img src="'.$karyawan_detail->foto_masuk.'" class="img-fluid" alt="">
+          </a>';
+        })
+        ->addColumn('jam_istirahat', function($karyawan_detail){
+            $result = '<h1 class="badge badge-info">'.$karyawan_detail->jam_istirahat.'</h1>';
+            return $result;
+        })
+        ->addColumn('foto_istirahat', function($karyawan_detail){
+            return ' <a href="'.$karyawan_detail->foto_istirahat.'" data-toggle="lightbox">
+            <img src="'.$karyawan_detail->foto_istirahat.'" class="img-fluid" alt="">
+          </a>';
+        })
+        ->addColumn('jam_pulang', function($karyawan_detail){
+            $result = '<h1 class="badge badge-danger">'.$karyawan_detail->jam_pulang.'</h1>';
+            return $result;
+        })
+        ->addColumn('foto_pulang', function($karyawan_detail){
+            return ' <a href="'.$karyawan_detail->foto_pulang.'" data-toggle="lightbox">
+            <img src="'.$karyawan_detail->foto_pulang.'" class="img-fluid" alt="">
+          </a>';
+        })
+     
+        ->addColumn('accept', function($karyawan_detail){
+            if($karyawan_detail->accept == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+
+            }else if($karyawan_detail->accept == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else{  
+                return '<span class="badge badge-light">Pending</span>';
+
+            }
+        })
+
+
+        ->addColumn('status', function($karyawan_detail){
+            if($karyawan_detail->status == 0){
+                return '<span class="badge badge-warning">Sakit</span>';
+
+            }else if($karyawan_detail->status == 1){
+              return '<span class="badge badge-success">Hadir</span>';
+            }else if($karyawan_detail->status == 3){
+                return '<span class="badge badge-warning">Izin</span>';
+            }else{
+                return '<span class="badge badge-danger">Telat</span>';
+
+            }
+        })
+     
+        ->addColumn('aksi', function($karyawan_detail){ //untuk aksi
+            $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $karyawan_detail->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button></div>';
+           return $button;
+        })
+        ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
+        ->make(true);
+    
         
     }
 
@@ -182,7 +259,9 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('karyawan_id',$id)->first();
+        $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->get();
+        return view('backend.karyawan.detail_view',compact('karyawan_detail','user'));
     }
 
     /**

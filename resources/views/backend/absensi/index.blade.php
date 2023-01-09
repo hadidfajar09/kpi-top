@@ -50,7 +50,7 @@ Daftar Riwayat ABsent
                   <!-- /.card-header -->
                   <div class="card-body">
                       <div class="row">
-                        <div class="col-sm-12">
+                        <div class="col-sm-12 table-responsive">
                           <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
                             >
                             <thead>

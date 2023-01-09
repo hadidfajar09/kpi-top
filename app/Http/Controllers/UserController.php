@@ -212,6 +212,10 @@ class UserController extends Controller
 
         $user->save();
 
+        $karyawan = Karyawan::where('id', $user->karyawan_id)->first();
+        $karyawan->user_id = $user->id;
+        $karyawan->update();
+
         return response()->json('Data berhasil disimpan', 200);
     }
 

@@ -121,7 +121,7 @@ class AbsensiController extends Controller
                     return $result;
                 })
                 ->addColumn('foto_masuk', function($absensi_karyawan){
-                    return ' <a href="'.$absensi_karyawan->foto_masuk.'" data-toggle="lightbox" class="col-sm-4">
+                    return ' <a href="'.$absensi_karyawan->foto_masuk.'" data-toggle="lightbox">
                     <img src="'.$absensi_karyawan->foto_masuk.'" class="img-fluid" alt="">
                   </a>';
                 })
@@ -130,7 +130,7 @@ class AbsensiController extends Controller
                     return $result;
                 })
                 ->addColumn('foto_istirahat', function($absensi_karyawan){
-                    return ' <a href="'.$absensi_karyawan->foto_istirahat.'" data-toggle="lightbox" class="col-sm-4">
+                    return ' <a href="'.$absensi_karyawan->foto_istirahat.'" data-toggle="lightbox">
                     <img src="'.$absensi_karyawan->foto_istirahat.'" class="img-fluid" alt="">
                   </a>';
                 })
@@ -139,7 +139,7 @@ class AbsensiController extends Controller
                     return $result;
                 })
                 ->addColumn('foto_pulang', function($absensi_karyawan){
-                    return ' <a href="'.$absensi_karyawan->foto_pulang.'" data-toggle="lightbox" class="col-sm-4">
+                    return ' <a href="'.$absensi_karyawan->foto_pulang.'" data-toggle="lightbox">
                     <img src="'.$absensi_karyawan->foto_pulang.'" class="img-fluid" alt="">
                   </a>';
                 })

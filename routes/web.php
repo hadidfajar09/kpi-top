@@ -126,7 +126,7 @@ Route::group(['middleware' => 'auth'], function () {
       Route::post('/karyawan/perbarui/{id}', [KaryawanController::class, 'barui'])->name('karyawan.barui');
       Route::get('file/download/{id}', [KaryawanController::class, 'download'])->name('file.download');
       Route::post('/karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
-      Route::get('/karyawan/detail/{id}', [KaryawanController::class, 'detail'])->name('karyawan.detail');
+      Route::get('/karyawan/detail/data', [KaryawanController::class, 'detail'])->name('karyawan.detail.data');
       // Route::get('karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');

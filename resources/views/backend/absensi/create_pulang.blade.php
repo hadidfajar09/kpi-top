@@ -112,10 +112,6 @@ Absen Pulang
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <script language="JavaScript">
 
-    Webcam.set('constraints',{
-            facingMode: "environment"
-        });
-        
     Webcam.set({
         width: 490,
         height: 350,

@@ -352,10 +352,10 @@ var salesChartOptions = {
   var pieChart = new Chart($('#pieChart'), {
         type: 'pie',
         data: {
-            labels: ['Option 1', 'Option 2', 'Option 3'],
+            labels: ['Tepat Waktu', 'Telat', 'Izin','Sakit'],
             datasets: [{
-                label: 'Pie Chart',
-                data: [300, 50, 20],
+                label: 'Absen',
+                data: [60, 20, 10, 10],
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
             }]
         },
