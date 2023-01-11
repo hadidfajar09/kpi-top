@@ -550,11 +550,10 @@ class CleaningController extends Controller
     public function destroy($id)
     {
         $cleaning = Cleaning::find($id);
-        $grooming = grooming::findOrFail($id);
-        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $user = User::where('id',$cleaning->karyawan_id)->first(); //ambil user 17
         $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
-        if($grooming->status == 1){ //diterima
-            $data_karyawan->grooming--;
+        if($cleaning->status == 1){ //diterima
+            $data_karyawan->cleaning--;
             $data_karyawan->update();   
         }
         if($cleaning->path_foto){

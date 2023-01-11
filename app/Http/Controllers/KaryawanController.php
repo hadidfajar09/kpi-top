@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
+use App\Models\grooming;
+use App\Models\Cleaning;
+use App\Models\Briefing;
 use App\Models\kontrak;
 use App\Models\karyawan;
 use App\Models\User;
 use App\Models\Absensi;
 use App\Models\Shift;
+use Carbon\Carbon;
 use App\Models\Penempatan;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -53,12 +57,18 @@ class KaryawanController extends Controller
                       return '<span class="badge badge-success">Aktif</span>';
                     }
                 })
+
+                ->addColumn('foto', function($karyawan){
+                    return ' <a href="'.$karyawan->foto.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$karyawan->foto.'" class="img-fluid" alt="" width="100">
+                  </a>';    
+                })
              
                 ->addColumn('aksi', function($karyawan){ //untuk aksi
                     $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.show', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','end_work','status'])//biar kebaca html
+                ->rawColumns(['aksi','end_work','status','foto'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -259,9 +269,75 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
+        $karyawan = karyawan::findOrFail($id);
         $user = User::where('karyawan_id',$id)->first();
-        $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->get();
-        return view('backend.karyawan.detail_view',compact('karyawan_detail','user'));
+        $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->paginate(30);
+        return view('backend.karyawan.detail_view',compact('karyawan_detail','user','karyawan'));
+    }
+
+    public function grafikKaryawan($id)//karyawan
+    {
+        // dd(Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1);//jumlah hari
+
+        
+        //pie
+
+
+            $user = User::where('karyawan_id',$id)->first();
+            $absensi=Absensi::where('karyawan_id',$user->id)->count();
+            
+            $tanggal_awal = date('Y-m-01');
+            $tanggal_akhir = date('Y-m-d');
+            
+            $data_tanggal = array();
+            $stock = 0;
+            $total_stock = array();
+    
+            //stock masuk
+            $stock_masuk = 0;
+            $total_stock_masuk = array();
+    
+            //stock keluar
+            $stock_keluar = 0;
+            $total_stock_keluar = array();
+            
+            //cleaning
+            $cleaning = 0;
+            $total_cleaning = array();
+            //Absen
+            $absen = 0;
+            $total_absen = array();
+    
+            while(strtotime($tanggal_awal) <= strtotime($tanggal_akhir)){
+                $data_tanggal[] = (int) substr($tanggal_awal, 8, 2);
+    
+                $distribusi = grooming::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $transaksi = Briefing::where('user_id',$user->id)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $cleaning = Cleaning::where('user_id',$user->id)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+                $absen = Absensi::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal_awal%")->count();
+    
+                $stock = $distribusi - $transaksi;
+                $total_stock[] += $stock;
+    
+                $stock_masuk = $distribusi;
+                $total_stock_masuk[] += $stock_masuk;
+    
+                $stock_keluar = $transaksi;
+                $total_stock_keluar[] += $stock_keluar;
+               
+                $cleaning = $cleaning;
+                $total_cleaning[] += $cleaning;
+
+                $absen = $absen;
+                $total_absen[] += $absen;
+                
+                $tanggal_awal = date('Y-m-d', strtotime("+1 day",strtotime($tanggal_awal)));
+    
+            }
+    
+            $tanggal_awal = date('Y-m-01');
+            
+                return view('backend.karyawan.grafik',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','cleaning','total_cleaning','total_absen','absensi'));
     }
 
     /**
@@ -364,6 +440,8 @@ class KaryawanController extends Controller
     public function destroy($id)
     {
         $karyawan = karyawan::find($id);
+
+        $akun_user = User::where('karyawan_id',$id)->delete();
         unlink($karyawan->foto);
         File::delete($karyawan->path_berkas);
 

@@ -106,6 +106,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/pangkalan', PangkalanController::class);
     Route::get('/get/desa/{id_kecamatan}', [PangkalanController::class, 'GetDesa']);
 
+    //repost closing
+     // //laporan
+     Route::get('/closing', [ReportClosingController::class, 'index'])->name('closing.index');
+     Route::get('/closing/data/{awal}/{akhir}', [ReportClosingController::class, 'data'])->name('closing.data');
+     Route::get('/closing/pdf/{awal}/{akhir}', [ReportClosingController::class, 'exportPdf'])->name('closing.export');
+
 
       // //pangkalan
       Route::get('/agent/data', [AgentController::class, 'data'])->name('agent.data');
@@ -127,6 +133,9 @@ Route::group(['middleware' => 'auth'], function () {
       Route::get('file/download/{id}', [KaryawanController::class, 'download'])->name('file.download');
       Route::post('/karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
       Route::get('/karyawan/detail/data', [KaryawanController::class, 'detail'])->name('karyawan.detail.data');
+      
+      //diagram
+      Route::get('karyawan/grafik/{id}', [KaryawanController::class, 'grafikKaryawan'])->name('karyawan.grafik');
       // Route::get('karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');

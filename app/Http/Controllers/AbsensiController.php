@@ -583,6 +583,28 @@ class AbsensiController extends Controller
      */
     public function destroy($id)
     {
-        
+        $absensi = Absensi::find($id);
+        $user = User::where('id',$absensi->karyawan_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+        if($absensi->accept == 1){ //diterima
+            $data_karyawan->absen--;
+            $data_karyawan->update();   
+        }
+        if($absensi->path_foto){
+            unlink($absensi->path_foto);
+        }
+        if($absensi->path_foto_2){
+            unlink($absensi->path_foto_2);
+        }
+        if($absensi->path_foto_3){
+            unlink($absensi->path_foto_3);
+        }
+        if($absensi->path_foto_4){
+            unlink($absensi->path_foto_4);
+        }
+
+        $absensi->delete();
+
+        return response()->json('data berhasil dihapus');
     }
 }

@@ -12,7 +12,7 @@ Daftar Riwayat ABsent
     <div class="container-fluid">
       <div class="row mb -2">
         <div class="col-sm-6">
-          <h1 class="m-0">Daftar Absensi</h1>
+          <h1 class="m-0">Daftar Absensi "{{ $karyawan->name }}"</h1>
         </div><!-- /.col -->
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -35,9 +35,7 @@ Daftar Riwayat ABsent
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <a class="btn btn-outline-danger btn-sm" href="{{ route('grooming.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
-             
-
+              <a class="btn btn-outline-danger btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Grafik</a>
             </div>
             <!-- /.card-header -->
             <div class="row">
@@ -46,12 +44,11 @@ Daftar Riwayat ABsent
                 <!-- /.card -->
 
                 <div class="card">
-                <input type="hidden" id="id" value="{{ $user->id }}">
                   <!-- /.card-header -->
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12 table-responsive">
-                          <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
+                          <table  class="table table-bordered table-striped dataTable dtr-inline"
                             >
                             <thead>
                               <th width="5%">No</th>
@@ -65,7 +62,6 @@ Daftar Riwayat ABsent
                               <th width="10%">Foto</th>
                               <th width="5%">Kehadiran</th>
                               <th width="5%">Status</th>
-                              <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
                                 @php
@@ -77,19 +73,43 @@ Daftar Riwayat ABsent
                                 <td>{{ formatTanggal($row->created_at) }}</td>
                                 <td>{{ $row->karyawan->name }}</td>
                                 <td>{{ $row->jam_masuk }}</td>
-                                <td><img src="{{ asset($row->foto_masuk) }}" width="50" alt=""></td>
+                                <td><a href="{{ asset($row->foto_masuk) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_masuk) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>{{ $row->jam_istirahat }}</td>
-                                <td><img src="{{ asset($row->foto_istirahat) }}" width="50" alt=""></td>
+                                <td><a href="{{ asset($row->foto_istirahat) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_masuk) }}" width="50" alt="" class="img-fluid"></a> </td>
+                                <td>{{ $row->jam_pulang }}</td>
+                                <td><a href="{{ asset($row->foto_pulang) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_pulang) }}" width="50" alt="" class="img-fluid"></a> </td>
+                                <td>
+                                    @if ( $row->status == 0 )
+                                    <span class="badge badge-warning">Sakit</span>
+                                    @elseif( $row->status == 1)
+                                    <span class="badge badge-success">Hadir</span>
+                                    @elseif( $row->status == 3)
+                                    <span class="badge badge-warning">Izin</span>
+                                    @else
+                                    <span class="badge badge-danger">Telat</span>
+                                    @endif
+                                  </td>
+                                <td>  @if ( $row->accept == 0 )
+                                  <span class="badge badge-danger">Ditolak</span>
+                                  @elseif( $row->accept == 1)
+                                  <span class="badge badge-success">Diterima</span>
+                                  @else
+                                  <span class="badge badge-light">Pending</span>
+                                  @endif </td>
                               </tr>
-
+                              
                               @endforeach
 
                             </tbody>
                           </table>
+                            
                         </div>
                       </div>
                   </div>
                   <!-- /.card-body -->
+                  <div class="card-footer">
+                    {{$karyawan_detail->appends(Request::all())->links('pagination::bootstrap-4')}}
+                  </div>
                 </div>
                 <!-- /.card -->
               </div>
