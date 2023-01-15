@@ -63,9 +63,9 @@ a:link {
   
                   <div class="row">
                     <div class="col-md-6">
-                    <div class="card card-danger">
+                    <div class="card card-primary">
                       <div class="card-header">
-                        <h3 class="card-title">Absensi</h3>
+                        <h3 class="card-title">Absensi Bulan ini</h3>
         
                         <div class="card-tools">
                           <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -89,7 +89,7 @@ a:link {
                   <div class="col-md-6">
                     <div class="card card-warning">
                       <div class="card-header">
-                        <h3 class="card-title">Grooming</h3>
+                        <h3 class="card-title">Grooming Bulan Ini</h3>
         
                         <div class="card-tools">
                           <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -146,9 +146,6 @@ a:link {
 </script>
 
 <script>
-  window.setTimeout(function() {
-  window.location.reload();
-}, 300000);
 
   $('body').addClass('sidebar-collapse');
   
@@ -171,7 +168,7 @@ var salesChartData = {
     },
 
     {
-        label: 'Briefing Pagi',
+        label: 'Briefing',
         backgroundColor: 'rgba(157, 0, 0, 0.8)',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
@@ -183,7 +180,7 @@ var salesChartData = {
       }, 
       
       {
-        label: 'Cleaning Pagi',
+        label: 'Cleaning',
         backgroundColor: '#873e23',
         borderColor: 'rgb(135,62,35,1)',
         pointRadius: false,
@@ -250,9 +247,9 @@ var salesChartOptions = {
         data: {
             labels: ['Tepat Waktu', 'Telat', 'Izin','Sakit'],
             datasets: [{
-                label: 'Absen',
-                data: [60, 20, 10, 10],
-                backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
+                label: 'Absen%',
+                data: [{{ json_encode($absensi_diterima) }}, {{ json_encode($absensi_telat) }}, {{ json_encode($absensi_izin) }}, {{ json_encode($absensi_sakit) }}],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12','#2d3084  '],
             }]
         },
         options: {
@@ -263,10 +260,10 @@ var salesChartOptions = {
     var pieChart = new Chart($('#pieChart2'), {
         type: 'pie',
         data: {
-            labels: ['Tepat Waktu', 'Telat', 'Izin','Sakit'],
+            labels: ['Diterima', 'Ditolak', 'Kosong'],
             datasets: [{
-                label: 'Absen',
-                data: [60, 20, 10, 10],
+                label: 'Grooming',
+                data: [60, 20, 10],
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
             }]
         },

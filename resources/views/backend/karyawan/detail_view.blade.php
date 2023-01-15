@@ -35,7 +35,8 @@ Daftar Riwayat ABsent
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <a class="btn btn-outline-danger btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Grafik</a>
+              <a class="btn btn-outline-primary btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Grafik</a>
+              <a class="btn btn-outline-success btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Report Closing</a>
             </div>
             <!-- /.card-header -->
             <div class="row">

@@ -249,6 +249,8 @@ class KaryawanController extends Controller
             $image->move(public_path('/foto/'),$nama);
 
             $karyawan->foto = 'foto/'.$nama;
+        }else{
+            $karyawan->foto = 'img/avatar.png';
         }
 
         $karyawan->save();
@@ -277,14 +279,43 @@ class KaryawanController extends Controller
 
     public function grafikKaryawan($id)//karyawan
     {
-        // dd(Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1);//jumlah hari
-
+        $jumlah_hari = Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1;//jumlah hari
         
         //pie
-
-
             $user = User::where('karyawan_id',$id)->first();
+
+            //absensi
             $absensi=Absensi::where('karyawan_id',$user->id)->count();
+
+            $absensi_diterima = Absensi::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',1)->count(); //absen yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $absensi_telat = Absensi::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $absensi_izin = Absensi::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',3)->count(); //absen yg izin
+            // $absensi_izin_persentase = round($absensi_izin/$jumlah_hari*100);
+            
+            $absensi_sakit = Absensi::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+            //grooming
+            $grooming=grooming::where('karyawan_id',$user->id)->count();
+
+            $grooming_diterima = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',1)->count(); //grooming yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $absensi_telat = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $absensi_izin = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',3)->count(); //absen yg izin
+            // $absensi_izin_persentase = round($absensi_izin/$jumlah_hari*100);
+            
+            $absensi_sakit = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+
+
             
             $tanggal_awal = date('Y-m-01');
             $tanggal_akhir = date('Y-m-d');
@@ -337,7 +368,7 @@ class KaryawanController extends Controller
     
             $tanggal_awal = date('Y-m-01');
             
-                return view('backend.karyawan.grafik',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','cleaning','total_cleaning','total_absen','absensi'));
+                return view('backend.karyawan.grafik',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','cleaning','total_cleaning','total_absen','absensi','absensi_diterima','absensi_telat','absensi_izin','absensi_sakit'));
     }
 
     /**
@@ -442,8 +473,14 @@ class KaryawanController extends Controller
         $karyawan = karyawan::find($id);
 
         $akun_user = User::where('karyawan_id',$id)->delete();
-        unlink($karyawan->foto);
-        File::delete($karyawan->path_berkas);
+        if($karyawan->foto != 'img/avatar.png'){
+
+            unlink($karyawan->foto);
+        }
+        if($karyawan->path_berkas){
+
+            File::delete($karyawan->path_berkas);
+        }
 
         $karyawan->delete();
 

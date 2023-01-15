@@ -35,9 +35,6 @@ Daftar Riwayat ABsent
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <a class="btn btn-outline-danger btn-sm" href="{{ route('grooming.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
-             
-
             </div>
             <!-- /.card-header -->
             <div class="row">

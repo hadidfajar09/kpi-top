@@ -73,7 +73,6 @@ class LaporanController extends Controller
 
         return datatables()
         ->of($data)
-        ->rawColumns(['transaksi_pelanggan','pendapatan'])
         ->make(true);
             
      }
