@@ -73,6 +73,10 @@ class LaporanController extends Controller
 
         return datatables()
         ->of($data)
+        // ->addColumn('tanggal', function($karyawan_detail){
+        //     $result = formatTanggal($karyawan_detail->created_at);
+        //     return $result;
+        // })
         ->make(true);
             
      }

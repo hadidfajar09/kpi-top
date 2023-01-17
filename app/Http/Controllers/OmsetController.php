@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Omset;
+use App\Models\User;
 use App\Models\karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -20,6 +21,8 @@ class OmsetController extends Controller
         // $sales = karyawan::where('jabatan_id', 4)->pluck('name','id');
         return view('backend.omset.index');
     }
+
+    
 
     public function data()
     {
@@ -45,12 +48,24 @@ class OmsetController extends Controller
                 ->addColumn('tanggal_setor', function($omset){
                     return formatTanggal($omset->tanggal_setor);
                 })
+
+                ->addColumn('status', function($omset){
+                    if($omset->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($omset->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
              
                 ->addColumn('aksi', function($omset){ //untuk aksi
-                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('omset.destroy', $omset->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> </div>';
+                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('omset.destroy', $omset->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('omset.acc', $omset->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('omset.decline', $omset->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','status'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -68,12 +83,24 @@ class OmsetController extends Controller
                 ->addColumn('tanggal_setor', function($omset_karyawan){
                     return formatTanggal($omset_karyawan->tanggal_setor);
                 })
+
+                ->addColumn('status', function($omset){
+                    if($omset->status == 0){
+                        return '<span class="badge badge-danger">Ditolak</span>';
+      
+                    }else if($omset->status == 1){
+                      return '<span class="badge badge-success">Diterima</span>';
+                    }else{
+                        return '<span class="badge badge-light">Pending</span>';
+
+                    }
+                })
              
                 ->addColumn('aksi', function($omset_karyawan){ //untuk aksi
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','omset'])//biar kebaca html
                 ->make(true);
             }
         
@@ -118,32 +145,62 @@ class OmsetController extends Controller
 
     public function accept($id)
     {
-        $grooming = grooming::findOrFail($id);
-        $user = User::where('id',$grooming->karyawan_id)->first(); //ambil user 17
+        $omset = Omset::findOrFail($id);
+        $user = User::where('id',$omset->karyawan_id)->first(); //ambil user 17
         $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
 
-        if($grooming->status == 0){ //ditolak
-            $data_karyawan->grooming += 1;
+        if($omset->status == 0){ //ditolak
+            $data_karyawan->omset += 1;
             $data_karyawan->update();   
         }
-        if($grooming->status == 2){ //pending
-            $data_karyawan->grooming += 1;
+        if($omset->status == 2){ //pending
+            $data_karyawan->omset += 1;
             $data_karyawan->update();
         }else{
 
         }
-        grooming::findOrFail($id)->update([
+        Omset::findOrFail($id)->update([
             'status' => 1
         ]);
 
         $notif = array(
-            'message' => 'Data Grooming Diterima',
+            'message' => 'Data Omset Diterima',
             'alert-type' => 'success'
         );
 
       
        return redirect()->back()->with($notif);
 
+    }
+
+    public function decline($id)
+    {
+        $omset = Omset::findOrFail($id);
+        $user = User::where('id',$omset->user_id)->first(); //ambil user 17
+        $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
+
+        if($omset->status == 1){ //diterima
+            $data_karyawan->omset--;
+            $data_karyawan->update();   
+        }
+        if($omset->status == 2){ //pending
+            $data_karyawan->omset--;
+            $data_karyawan->update();
+        }else{
+
+        }
+
+        Omset::findOrFail($id)->update([
+            'status' => 0
+        ]);
+
+        $notif = array(
+            'message' => 'Data Omset Ditolak',
+            'alert-type' => 'success'
+        );
+
+      
+       return redirect()->back()->with($notif);
     }
 
     /**

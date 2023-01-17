@@ -58,6 +58,7 @@ Daftar Omset Sales
                               <th width="10%">Sales</th>
                               <th width="15%">Nominal</th>
                               <th>Catatan</th>
+                              <th width="10%">Status</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
@@ -112,6 +113,7 @@ Daftar Omset Sales
                         {data: 'sales'},
                         {data: 'nominal'},
                         {data: 'catatan'},
+                        {data: 'status'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ],
                 dom: 'Bfrltip',

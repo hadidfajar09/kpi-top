@@ -18,13 +18,13 @@ a:link {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Daily</h1>
-            <h4 class="m-0">Grafik Statistik</h4>
+            <h1 class="m-0">{{ $karyawan->name }} | {{ $karyawan->jabatan->jabatan }}</h1>
+            <h4 class="m-0">Grafik Statistik Bulan ini</h4>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="{{ url('/') }}">Home</a></li>
-              <li class="breadcrumb-item active">Grafik Statistik</li>
+              <li class="breadcrumb-item active">Grafik Statistik Bulan ini</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -112,6 +112,107 @@ a:link {
   
                 </div>
                   <!-- /.row -->
+                  <div class="row">
+                    <div class="col-md-6">
+                    <div class="card card-pink">
+                      <div class="card-header">
+                        <h3 class="card-title">Briefing Bulan ini</h3>
+        
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <canvas id="pieChart3" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.col -->
+                  
+                    <!-- /.col -->
+                  </div>
+
+                  <div class="col-md-6">
+                    <div class="card card-olive">
+                      <div class="card-header">
+                        <h3 class="card-title">Cleaning Bulan Ini</h3>
+        
+                        <div class="card-tools">
+                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                          </button>
+                          <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                          </button>
+                        </div>
+                      </div>
+                      <div class="card-body">
+                        <canvas id="pieChart4" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                      </div>
+                      <!-- /.card-body -->
+                    </div>
+                    <!-- /.col -->
+                  
+                    <!-- /.col -->
+                  </div>
+  
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                  <div class="card card-cyan">
+                    <div class="card-header">
+                      <h3 class="card-title">COD Bulan ini</h3>
+      
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="pieChart5" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.col -->
+                
+                  <!-- /.col -->
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card card-olive">
+                    <div class="card-header">
+                      <h3 class="card-title">Omset Bulan Ini</h3>
+      
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                          <i class="fas fa-times"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <canvas id="pieChart6" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                    <!-- /.card-body -->
+                  </div>
+                  <!-- /.col -->
+                
+                  <!-- /.col -->
+                </div>
+
+              </div>
                 </div>
                 <!-- ./card-body -->
                
@@ -260,10 +361,10 @@ var salesChartOptions = {
     var pieChart = new Chart($('#pieChart2'), {
         type: 'pie',
         data: {
-            labels: ['Diterima', 'Ditolak', 'Kosong'],
+            labels: ['Diterima', 'Ditolak', 'Pending'],
             datasets: [{
                 label: 'Grooming',
-                data: [60, 20, 10],
+                data: [{{ json_encode($grooming_diterima) }}, {{ json_encode($grooming_ditolak) }}, {{ json_encode($grooming_pending) }}],
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
             }]
         },
@@ -275,10 +376,10 @@ var salesChartOptions = {
     var pieChart = new Chart($('#pieChart3'), {
         type: 'pie',
         data: {
-            labels: ['Tepat Waktu', 'Telat', 'Izin','Sakit'],
+            labels: ['Diterima', 'Ditolak', 'Pending'],
             datasets: [{
-                label: 'Absen',
-                data: [60, 20, 10, 10],
+                label: 'Briefing',
+                data: [{{ json_encode($briefing_diterima) }}, {{ json_encode($briefing_ditolak) }}, {{ json_encode($briefing_pending) }}],
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
             }]
         },
@@ -290,10 +391,38 @@ var salesChartOptions = {
     var pieChart = new Chart($('#pieChart4'), {
         type: 'pie',
         data: {
-            labels: ['Tepat Waktu', 'Telat', 'Izin','Sakit'],
+            labels: ['Diterima', 'Ditolak', 'Pending'],
+            datasets: [{
+                label: 'Cleaning',
+                data: [{{ json_encode($cleaning_diterima) }}, {{ json_encode($cleaning_ditolak) }}, {{ json_encode($cleaning_pending) }}],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+    var pieChart = new Chart($('#pieChart5'), {
+        type: 'pie',
+        data: {
+          labels: ['Diterima', 'Ditolak', 'Pending'],
+            datasets: [{
+                label: 'Cod',
+                data: [{{ json_encode($cod_diterima) }}, {{ json_encode($cod_ditolak) }}, {{ json_encode($cod_pending) }}],
+                backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+    var pieChart = new Chart($('#pieChart6'), {
+        type: 'pie',
+        data: {
+          labels: ['Diterima', 'Ditolak', 'Pending'],
             datasets: [{
                 label: 'Absen',
-                data: [60, 20, 10, 10],
+                data: [{{ json_encode($omset_diterima) }}, {{ json_encode($omset_ditolak) }}, {{ json_encode($omset_pending) }}],
                 backgroundColor: ['#f56954', '#00a65a', '#f39c12'],
             }]
         },

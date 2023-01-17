@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Jabatan;
 use App\Models\grooming;
+use App\Models\Cod;
+use App\Models\Omset;
 use App\Models\Cleaning;
 use App\Models\Briefing;
 use App\Models\kontrak;
@@ -279,9 +281,10 @@ class KaryawanController extends Controller
 
     public function grafikKaryawan($id)//karyawan
     {
-        $jumlah_hari = Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1;//jumlah hari
+        // $jumlah_hari = Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1;//jumlah hari
         
         //pie
+        $karyawan = karyawan::find($id)->first();
             $user = User::where('karyawan_id',$id)->first();
 
             //absensi
@@ -305,14 +308,61 @@ class KaryawanController extends Controller
             $grooming_diterima = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',1)->count(); //grooming yg diterima
             // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
 
-            $absensi_telat = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
+            $grooming_pending = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
             // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
 
-            $absensi_izin = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',3)->count(); //absen yg izin
-            // $absensi_izin_persentase = round($absensi_izin/$jumlah_hari*100);
-            
-            $absensi_sakit = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            $grooming_ditolak = grooming::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
             // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+
+            //Briefing
+            $briefing=Briefing::where('user_id',$user->id)->count();
+
+            $briefing_diterima = Briefing::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',1)->count(); //grooming yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $briefing_pending = Briefing::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $briefing_ditolak = Briefing::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+            //Cleaning
+            $cleaning=Cleaning::where('user_id',$user->id)->count();
+
+            $cleaning_diterima = Cleaning::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',1)->count(); //grooming yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $cleaning_pending = Cleaning::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $cleaning_ditolak = Cleaning::whereMonth('created_at', Carbon::now()->month)->where('user_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+              //Cleaning
+            $cod=Cod::where('karyawan_id',$user->id)->count();
+
+            $cod_diterima = Cod::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',1)->count(); //grooming yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $cod_pending = Cod::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $cod_ditolak = Cod::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+
+            //Cleaning
+            $omset=Omset::where('karyawan_id',$user->id)->count();
+
+            $omset_diterima = Omset::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',1)->count(); //grooming yg diterima
+            // $absensi_diterima_persentase = round($absensi_diterima/$jumlah_hari*100);
+
+            $omset_pending = Omset::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',2)->count(); //absen yg telat
+            // $absensi_telat_persentase = round($absensi_telat/$jumlah_hari*100);
+
+            $omset_ditolak = Omset::whereMonth('created_at', Carbon::now()->month)->where('karyawan_id',$user->id)->where('status',0)->count(); //absen yg sakit
+            // $absensi_sakit_persentase = round($absensi_sakit/$jumlah_hari*100) ;
+   
 
 
 
@@ -368,7 +418,7 @@ class KaryawanController extends Controller
     
             $tanggal_awal = date('Y-m-01');
             
-                return view('backend.karyawan.grafik',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','cleaning','total_cleaning','total_absen','absensi','absensi_diterima','absensi_telat','absensi_izin','absensi_sakit'));
+                return view('backend.karyawan.grafik',compact('tanggal_awal','tanggal_akhir','data_tanggal','total_stock','total_stock_masuk','total_stock_keluar','cleaning','total_cleaning','total_absen','absensi','absensi_diterima','absensi_telat','absensi_izin','absensi_sakit','grooming_diterima','grooming_ditolak','grooming_pending','karyawan','briefing_diterima','briefing_ditolak','briefing_pending','cleaning_diterima','cleaning_ditolak','cleaning_pending','cod_diterima','cod_ditolak','cod_pending','omset_diterima','omset_ditolak','omset_pending'));
     }
 
     /**
@@ -504,5 +554,72 @@ class KaryawanController extends Controller
 
 
         return response()->json('Point Bulanan Berhasil direset');
+    }
+
+    public function laporan(Request $request)
+    {
+        $id_form = $request->id;
+        $id = karyawan::findOrFail($id_form);
+        $tanggalAwal = date('Y-m-d', mktime(0,0,0,date('m'),1,date('Y')));
+        $tanggalAkhir = date('Y-m-d');
+
+        if($request->tanggal_awal){
+            $tanggalAwal = $request->tanggal_awal;
+            $tanggalAkhir = $request->tanggal_akhir;
+        }
+        return view('backend.karyawan.laporan.index', compact('tanggalAwal','tanggalAkhir','id'));
+    }
+
+    public function getData($awal, $akhir, $id)
+    {
+        $user = User::where('karyawan_id',$id)->first();//user_id
+        $karyawan = karyawan::where('id',$id)->first();
+       $no = 1;
+       $data = array();
+      
+
+       while(strtotime($awal) <= strtotime($akhir)){
+           $tanggal = $awal;
+
+           $awal = date('Y-m-d', strtotime("+1 day",strtotime($awal)));
+
+           $absen = Absensi::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+           $grooming = grooming::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+           $cleaning = Cleaning::where('user_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+
+           $row = array();
+           $row['DT_RowIndex'] = $no++;
+           $row['tanggal'] = formatTanggal($tanggal);
+           $row['absen'] = $absen->status;
+           $row['grooming'] = $grooming->status;
+           $row['cleaning'] = $cleaning->status;
+
+           $data[] = $row;
+
+       }
+
+    //    $data[] = [
+    //        'DT_RowIndex' => '',
+    //        'tanggal' => '',
+    //        'stock_pangkalan' => '',
+    //        'transaksi_pelanggan' => 'Total Stock Tabung',
+    //        'sisa_stock' => $total_stock,
+    //    ];
+       return $data;
+    }
+
+    public function dataReport($awal,$akhir,$id)
+    {
+        
+       $data = $this->getData($awal,$akhir,$id);
+
+       return datatables()
+       ->of($data)
+       // ->addColumn('tanggal', function($karyawan_detail){
+       //     $result = formatTanggal($karyawan_detail->created_at);
+       //     return $result;
+       // })
+       ->make(true);
+           
     }
 }

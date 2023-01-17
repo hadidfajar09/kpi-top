@@ -36,7 +36,7 @@ Daftar Riwayat ABsent
           <div class="card">
             <div class="card-header">
               <a class="btn btn-outline-primary btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Grafik</a>
-              <a class="btn btn-outline-success btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Report Closing</a>
+              <a class="btn btn-outline-success btn-sm" href="{{ route('karyawan.laporan',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Report Closing</a>
             </div>
             <!-- /.card-header -->
             <div class="row">
@@ -76,7 +76,7 @@ Daftar Riwayat ABsent
                                 <td>{{ $row->jam_masuk }}</td>
                                 <td><a href="{{ asset($row->foto_masuk) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_masuk) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>{{ $row->jam_istirahat }}</td>
-                                <td><a href="{{ asset($row->foto_istirahat) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_masuk) }}" width="50" alt="" class="img-fluid"></a> </td>
+                                <td><a href="{{ asset($row->foto_istirahat) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_istirahat) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>{{ $row->jam_pulang }}</td>
                                 <td><a href="{{ asset($row->foto_pulang) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_pulang) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>

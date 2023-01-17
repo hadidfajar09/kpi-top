@@ -136,6 +136,10 @@ Route::group(['middleware' => 'auth'], function () {
       
       //diagram
       Route::get('karyawan/grafik/{id}', [KaryawanController::class, 'grafikKaryawan'])->name('karyawan.grafik');
+      //report
+      Route::get('/karyawan/laporan/{id}', [KaryawanController::class, 'laporan'])->name('karyawan.laporan');
+      Route::get('/karyawan/data/{awal}/{akhir}/{id}', [KaryawanController::class, 'dataReport'])->name('report.data');
+      Route::get('/karyawan/pdf/{awal}/{akhir}', [KaryawanController::class, 'exportPdf'])->name('report.export');
       // Route::get('karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');
