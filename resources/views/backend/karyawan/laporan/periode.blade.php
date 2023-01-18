@@ -2,7 +2,7 @@
   <div class="modal fade" id="modal-periode" tabindex="-1" role="dialog" aria-labelledby="modal-periode">
     <div class="modal-dialog" role="document">
 
-        <form action="{{ route('laporan.index') }}" role="form" method="get" class="form-horizontal">
+        <form action="{{ route('karyawan.laporan',$id->id) }}" role="form" method="get" class="form-horizontal">
          
 
       <div class="modal-content">
@@ -14,8 +14,6 @@
         </div>
         <div class="modal-body">
            
-          <input type="hidden" name="id" id="id" value="{{ request($id->id)}}">
-
             <div class="form-group row">
               <label for="tanggal_awal" class="col-lg-4 col-lg-offset-1 control-label">Tanggal Awal</label>
               <div class="col-lg-8">

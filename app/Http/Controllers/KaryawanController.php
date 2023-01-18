@@ -8,6 +8,7 @@ use App\Models\Cod;
 use App\Models\Omset;
 use App\Models\Cleaning;
 use App\Models\Briefing;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\kontrak;
 use App\Models\karyawan;
 use App\Models\User;
@@ -556,10 +557,9 @@ class KaryawanController extends Controller
         return response()->json('Point Bulanan Berhasil direset');
     }
 
-    public function laporan(Request $request)
+    public function laporan(Request $request, $id)
     {
-        $id_form = $request->id;
-        $id = karyawan::findOrFail($id_form);
+        $id = karyawan::findOrFail($id);
         $tanggalAwal = date('Y-m-d', mktime(0,0,0,date('m'),1,date('Y')));
         $tanggalAkhir = date('Y-m-d');
 
@@ -586,13 +586,26 @@ class KaryawanController extends Controller
            $absen = Absensi::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
            $grooming = grooming::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
            $cleaning = Cleaning::where('user_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+           $briefing = Briefing::where('user_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+           $omset = Omset::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+           $cod = Cod::where('karyawan_id',$user->id)->where('created_at', 'LIKE', "%$tanggal%")->first();
+
+           $absen_baru = $absen['accept'] ?? 4;
+           $grooming_baru = $grooming['status'] ?? 4;
+           $cleaning_baru = $cleaning['status'] ?? 4;
+           $briefing_baru = $briefing['status'] ?? 4;
+           $omset_baru = $omset['status'] ?? 4;
+           $cod_baru = $cod['status'] ?? 4;
 
            $row = array();
            $row['DT_RowIndex'] = $no++;
            $row['tanggal'] = formatTanggal($tanggal);
-           $row['absen'] = $absen->status;
-           $row['grooming'] = $grooming->status;
-           $row['cleaning'] = $cleaning->status;
+           $row['absen'] = $absen_baru;
+           $row['grooming'] = $grooming_baru;
+           $row['cleaning'] = $cleaning_baru;
+           $row['briefing'] = $briefing_baru;
+           $row['omset'] = $omset_baru;
+           $row['cod'] = $cod_baru;
 
            $data[] = $row;
 
@@ -615,11 +628,96 @@ class KaryawanController extends Controller
 
        return datatables()
        ->of($data)
-       // ->addColumn('tanggal', function($karyawan_detail){
-       //     $result = formatTanggal($karyawan_detail->created_at);
-       //     return $result;
-       // })
+       ->addColumn('absen', function($data){
+        if($data['absen'] == 0){
+            return '<span class="badge badge-danger">Ditolak</span>';
+
+        }else if($data['absen'] == 1){
+          return '<span class="badge badge-success">Diterima</span>';
+        }else if($data['absen'] == 2){
+            return '<span class="badge badge-light">Pending</span>';
+
+        }else{
+            return '<span class="badge badge-dark">kosong</span>';
+        }
+        })
+        ->addColumn('grooming', function($data){
+            if($data['grooming'] == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+    
+            }else if($data['grooming'] == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else if($data['grooming'] == 2){
+                return '<span class="badge badge-light">Pending</span>';
+    
+            }else{
+                return '<span class="badge badge-dark">kosong</span>';
+            }
+            })
+        ->addColumn('cleaning', function($data){
+            if($data['cleaning'] == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+    
+            }else if($data['cleaning'] == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else if($data['cleaning'] == 2){
+                return '<span class="badge badge-light">Pending</span>';
+    
+            }else{
+                return '<span class="badge badge-dark">kosong</span>';
+            }
+            })
+        ->addColumn('briefing', function($data){
+            if($data['briefing'] == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+    
+            }else if($data['briefing'] == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else if($data['briefing'] == 2){
+                return '<span class="badge badge-light">Pending</span>';
+    
+            }else{
+                return '<span class="badge badge-dark">kosong</span>';
+            }
+            })
+        ->addColumn('omset', function($data){
+            if($data['omset'] == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+    
+            }else if($data['omset'] == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else if($data['omset'] == 2){
+                return '<span class="badge badge-light">Pending</span>';
+    
+            }else{
+                return '<span class="badge badge-dark">kosong</span>';
+            }
+            })
+        ->addColumn('cod', function($data){
+            if($data['cod'] == 0){
+                return '<span class="badge badge-danger">Ditolak</span>';
+    
+            }else if($data['cod'] == 1){
+              return '<span class="badge badge-success">Diterima</span>';
+            }else if($data['cod'] == 2){
+                return '<span class="badge badge-light">Pending</span>';
+    
+            }else{
+                return '<span class="badge badge-dark">kosong</span>';
+            }
+            })
+       ->rawColumns(['absen','grooming','cleaning','briefing','omset','cod'])//biar kebaca html
        ->make(true);
            
+    }
+
+    public function exportDaily($awal, $akhir, $id)
+    {
+        $karyawan = karyawan::findOrFail($id);
+        $data =  $this->getData($awal,$akhir,$id);
+           $pdf = PDF::loadView('backend.karyawan.laporan.pdf', compact('awal','akhir','data','karyawan'));
+           $pdf->setPaper('a4','potrait');
+           return $pdf->stream('Laporan Daily Activity'.date('Y-m-d-his').' .pdf');
+  
     }
 }

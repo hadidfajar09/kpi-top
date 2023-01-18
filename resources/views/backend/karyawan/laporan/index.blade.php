@@ -19,6 +19,7 @@ Laporan Daily
           <h1>
             Laporan Daily Activity {{ formatTanggal($tanggalAwal,false) }} s/d {{ formatTanggal($tanggalAkhir,false) }}
           </h1>
+          
         </div><!-- /.col -->
         <div class="col-sm-2">
           <ol class="breadcrumb float-sm-right">
@@ -41,7 +42,12 @@ Laporan Daily
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')"" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
+              <h3>{{ $id->name }} | {{ $id->jabatan->jabatan }}</h3>
+              <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
+
+              <a href="{{ route('report.export',[$tanggalAwal,$tanggalAkhir,$id]) }}" target="_blank" class="btn btn-success" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>
+
+              
 
             </div>
             <!-- /.card-header -->
@@ -61,12 +67,12 @@ Laporan Daily
                             <thead>
                               <th width="5%">No</th>
                               <th width="10%">Tanggal</th>
-                              <th width="10%">Absen</th>
-                              <th width="10%">Grooming</th>
-                              <th width="10%">Kebersihan</th>
-                              <th width="10%">Briefing</th>
-                              <th width="10%">Omset</th>
-                              <th width="10%">COD</th>
+                              <th width="5%">Absen</th>
+                              <th width="5%">Grooming</th>
+                              <th width="5%">Kebersihan</th>
+                              <th width="5%">Briefing</th>
+                              <th width="5%">Omset</th>
+                              <th width="5%">COD</th>
                             </thead>
                             <tbody>
 
@@ -116,14 +122,17 @@ Laporan Daily
             serverSide: true,
             autoWidth: false,
                 ajax: {
-                    url: '{{ route('karyawan.laporan', [$tanggalAwal, $tanggalAkhir, $id]) }}'
+                    url: '{{ route('report.data', [$tanggalAwal, $tanggalAkhir, $id]) }}'
                 },
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
-                        {data: 'stock_pangkalan'},
-                        {data: 'transaksi_pelanggan'},
-                        {data: 'sisa_stock'},
+                        {data: 'absen'},
+                        {data: 'grooming'},
+                        {data: 'cleaning'},
+                        {data: 'briefing'},
+                        {data: 'omset'},
+                        {data: 'cod'},
                 ],
                 dom: 'Brt',
                 bSort: true,

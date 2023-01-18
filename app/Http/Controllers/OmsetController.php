@@ -100,7 +100,7 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','omset'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','omset','status'])//biar kebaca html
                 ->make(true);
             }
         
