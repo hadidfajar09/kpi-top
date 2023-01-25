@@ -61,6 +61,7 @@ Absen Masuk
               <div class="card-body ">
                 <div class="card card-danger col-lg-2 mb-3" style="margin: auto;">
                   <div class="card-header">
+                  <h1 class="card-title text-center"></h1>
                   <h1 class="card-title text-center"  id="clock"></h1>
                   </div>
                   

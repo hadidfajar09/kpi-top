@@ -64,6 +64,25 @@ Tambah Karyawan
                 </div>
 
                 <div class="form-group row">
+                  <label for="name" class="col-sm-2 col-form-label">Email</label>
+                  <div class="col-sm-4">
+                    <input type="email" class="form-control" name="email" id="email"  required autofocus>
+                    <span class="help-block with-errors text-danger"></span>
+                    @error('email')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label for="name" class="col-sm-2 col-form-label">Password</label>
+                  <div class="col-sm-4">
+                    <input type="password" class="form-control" name="password" id="password"  required autofocus>
+                    <span class="help-block with-errors text-danger"></span>
+                  </div>
+                </div>
+
+                <div class="form-group row">
                     <label for="email" class="col-sm-2 col-form-label">Jabatan</label>
                     <div class="col-sm-4">
                         <select class="form-control" name="jabatan_id" id="jabatan_id" required>

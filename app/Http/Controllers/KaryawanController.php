@@ -47,9 +47,19 @@ class KaryawanController extends Controller
                 ->of($karyawan)//source
                 ->addIndexColumn() //untuk nomer
              
-                
+                ->addColumn('berkas', function($karyawan){
+                    if($karyawan->berkas){
+                        return $karyawan->berkas;
+                    }else{
+                        return '<span class="badge badge-dark">Belum Terisi</span>';
+                    }
+                })
                 ->addColumn('end_work', function($karyawan){
-                    return formatTanggal($karyawan->end_work);
+                    if($karyawan->end_work){
+                        return formatTanggal($karyawan->end_work);
+                    }else{
+                        return '<span class="badge badge-dark">Belum Terisi</span>';
+                    }
                 })
 
                 ->addColumn('status', function($karyawan){
@@ -71,7 +81,7 @@ class KaryawanController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.show', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','end_work','status','foto'])//biar kebaca html
+                ->rawColumns(['aksi','end_work','status','foto','berkas'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -206,13 +216,15 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|max:255',
+            'email' => 'required|unique:users',
             'jabatan_id' => 'required',
             'kontrak_id' => 'required',
             'penempatan_id' => 'required',
             'shift_id' => 'required',
-            'berkas' => 'required',
+            'berkas' => 'sometimes',
             'alamat' => 'required',
             'nomor' => 'required',
             'join_date' => 'required',
@@ -258,6 +270,21 @@ class KaryawanController extends Controller
 
         $karyawan->save();
 
+
+        $karyawan_id = karyawan::latest()->first()->id;
+        $request->kode_user = 'U'. tambahNolDepan((int)$karyawan_id+1, 3);
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->kode_user = $request->kode_user;
+        $user->karyawan_id = $karyawan_id;
+        $user->password = bcrypt($request->password);
+        $user->level = 5;
+        $user->profile_photo_path = 'img/avatar.png';
+
+        $user->save();
+
         $notif = array(
             'message' => 'Anda Berhasil Menambahkan Karyawan',
             'alert-type' => 'success'
@@ -277,7 +304,7 @@ class KaryawanController extends Controller
         $karyawan = karyawan::findOrFail($id);
         $user = User::where('karyawan_id',$id)->first();
         $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->paginate(30);
-        $shift = Shift::where('id',$karyawan->id)->first();
+        $shift = Shift::where('id',$karyawan->shift_id)->first();
         return view('backend.karyawan.detail_view',compact('karyawan_detail','user','karyawan','shift'));
     }
 
@@ -286,7 +313,7 @@ class KaryawanController extends Controller
         // $jumlah_hari = Carbon::now()->diffInDays(Carbon::now()->firstOfMonth())+1;//jumlah hari
         
         //pie
-        $karyawan = karyawan::find($id)->first();
+        $karyawan = karyawan::find($id);
             $user = User::where('karyawan_id',$id)->first();
 
             //absensi
@@ -460,14 +487,15 @@ class KaryawanController extends Controller
             'kontrak_id' => 'required',
             'penempatan_id' => 'required',
             'shift_id' => 'required',
-            'berkas' => 'required',
+            'berkas' => 'sometimes',
             'alamat' => 'required',
             'nomor' => 'required',
             'join_date' => 'required',
-            'end_work' => 'required',
+            'end_work' => 'sometimes',
             'path_berkas' => "sometimes|nullable|mimes:pdf|max:4000",
             'foto' => "sometimes|nullable|mimes:jpg,png,jpeg|max:4000"
         ]);
+
 
         $karyawan = karyawan::find($id);
 

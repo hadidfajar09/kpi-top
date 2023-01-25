@@ -33,8 +33,8 @@ Daftar Karyawan
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <button class="btn btn-outline-danger btn-sm" onclick="resetBulanan('{{ route('karyawan.reset') }}')"" ><i class="
-                fa fa-spinner"></i> Reset Bulanan</button>
+              {{-- <button class="btn btn-outline-danger btn-sm" onclick="resetBulanan('{{ route('karyawan.reset') }}')"" ><i class="
+                fa fa-spinner"></i> Reset Bulanan</button> --}}
             </div>
             <!-- /.card-header -->
             <div class="row">
