@@ -130,32 +130,6 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Absen Masuk
-              </p>
-            </a>
-          </li>
-                   <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Absen Istirahat
-              </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Absen Pulang
-              </p>
-            </a>
-          </li>
-          
-          
          
         
           <li class="nav-header">DAILY ACTIVITY</li>
@@ -249,24 +223,32 @@
 
           <li class="nav-header">ABSENSI</li>
           <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
+            <a href="{{ route('absen.index') }}" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>
+                Riwayat Absen
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('absen.masuk') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Absen Masuk
               </p>
             </a>
           </li>
+         
           <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
+            <a href="{{ route('absen.istirahat') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Absen Mulai Istirahat
               </p>
             </a>
           </li>
-
           <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
+            <a href="{{ route('absen.istirahat.akhir') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Absen Akhir Istirahat
@@ -274,7 +256,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('omset.index') }}" class="nav-link">
+            <a href="{{ route('absen.pulang') }}" class="nav-link">
               <i class="nav-icon fas fa-calendar-alt"></i>
               <p>
                 Absen Pulang
@@ -282,9 +264,6 @@
             </a>
           </li>
           
-          
-         
-        
           <li class="nav-header">DAILY ACTIVITY</li>
           <li class="nav-item">
             <a href="{{ route('omset.index') }}" class="nav-link">
@@ -335,14 +314,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-book"></i>
-              <p>
-                Report Closing
-              </p>
-            </a>
-          </li>
+         
 
 
 

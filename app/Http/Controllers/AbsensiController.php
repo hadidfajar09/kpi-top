@@ -61,6 +61,15 @@ class AbsensiController extends Controller
                     <img src="'.$absensi->foto_istirahat.'" class="img-fluid" alt="">
                   </a>';
                 })
+                ->addColumn('jam_akhir', function($absensi){
+                    $result = '<h1 class="badge badge-info">'.$absensi->jam_akhir.'</h1>';
+                    return $result;
+                })
+                ->addColumn('foto_akhir', function($absensi){
+                    return ' <a href="'.$absensi->foto_akhir.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$absensi->foto_akhir.'" class="img-fluid" alt="">
+                  </a>';
+                })
                 ->addColumn('jam_pulang', function($absensi){
                     $result = '<h1 class="badge badge-danger">'.$absensi->jam_pulang.'</h1>';
                     return $result;
@@ -102,7 +111,7 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('absen.destroy', $absensi->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('absen.acc', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('absen.decline', $absensi->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -132,6 +141,15 @@ class AbsensiController extends Controller
                 ->addColumn('foto_istirahat', function($absensi_karyawan){
                     return ' <a href="'.$absensi_karyawan->foto_istirahat.'" data-toggle="lightbox">
                     <img src="'.$absensi_karyawan->foto_istirahat.'" class="img-fluid" alt="">
+                  </a>';
+                })
+                ->addColumn('jam_akhir', function($absensi_karyawan){
+                    $result = '<h1 class="badge badge-info">'.$absensi_karyawan->jam_akhir.'</h1>';
+                    return $result;
+                })
+                ->addColumn('foto_akhir', function($absensi_karyawan){
+                    return ' <a href="'.$absensi_karyawan->foto_akhir.'" data-toggle="lightbox" class="col-sm-4">
+                    <img src="'.$absensi_karyawan->foto_akhir.'" class="img-fluid" alt="">
                   </a>';
                 })
                 ->addColumn('jam_pulang', function($absensi_karyawan){
@@ -175,7 +193,7 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
                 ->make(true);
             }
         
@@ -373,6 +391,86 @@ class AbsensiController extends Controller
         }
     }
 
+    public function istirahatAkhir()
+    {
+        return view('backend.absensi.create_istirahat_akhir');
+    }
+
+    public function absenRestAkhir(Request $request)
+    {
+        $karyawan = auth()->user()->id;
+        $data_lama = Absensi::where('karyawan_id',$karyawan)->latest()->first();
+        $data_shift = karyawan::where('id',auth()->user()->karyawan_id)->first();
+        $shift = Shift::where('id',$data_shift->shift_id)->first();
+        $now = Carbon::now();
+
+        if($data_lama){
+            if($data_lama->created_at->format('Y-m-d') == date('Y-m-d')){
+               
+                $data_lama->jam_akhir = date('H:i');
+        
+                if($request->foto_akhir == NULL){
+                    $notif = array(
+                        'message' => 'Anda belum memasukkan foto',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }else{
+                    if($data_lama->foto_istirahat){
+                        $img = $request->foto_akhir;
+                        $folderPath = "istirahat_akhir/";
+                        
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+                        
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+                        
+                        $file = $folderPath . $fileName;
+                        
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $data_lama->foto_akhir = 'uploads/istirahat_akhir/'.$fileName;
+                        $data_lama->update();
+                    }else{
+                        $notif = array(
+                            'message' => 'Data Absen Istirahat Belum ada',
+                            'alert-type' => 'error'
+                        );
+
+                        return redirect()->back()->with($notif);
+                    }
+                   
+                }
+                  
+                $notif = array(
+                    'message' => 'Data Akhir Istirahat Berhasil di Upload',
+                    'alert-type' => 'success'
+                );
+        
+                return redirect()->route('absen.index')->with($notif);
+            }else{
+    
+                $notif = array(
+                    'message' => 'Anda Belum Absen Hari Ini',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }
+        }else{
+              
+            $notif = array(
+                'message' => 'Anda Belum Absen Hari ini',
+                'alert-type' => 'error'
+            );
+    
+            return redirect()->back()->with($notif);
+        }
+    }
+
     public function pulang()
     {
         return view('backend.absensi.create_pulang');
@@ -399,7 +497,7 @@ class AbsensiController extends Controller
         
                     return redirect()->back()->with($notif);
                 }else{
-                    if($data_lama->foto_istirahat){
+                    if($data_lama->foto_akhir){
                         $img = $request->foto_pulang;
                         $folderPath = "pulang/";
                         
@@ -567,7 +665,12 @@ class AbsensiController extends Controller
     public function update(Request $request, $id)
     {
         $absensi = Absensi::find($id);
-        $absensi->status = $request->status;
+        if($request->status == NULL){
+            $absensi->status = $absensi->status;
+        }else{
+            $absensi->status = $request->status;
+        }
+        
         $absensi->keterangan = $request->keterangan;
 
         $absensi->update();

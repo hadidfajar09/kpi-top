@@ -36,7 +36,7 @@ a:link {
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-3 col-12">
             <!-- small card -->
             <div class="small-box bg-success">
               <div class="inner">
@@ -53,11 +53,11 @@ a:link {
             </div>
           </div>
           <!-- ./col -->
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-3 col-12">
             <!-- small card -->
             <div class="small-box bg-info">
               <div class="inner">
-                <h3>Absen Istirahat</h3>
+                <h3>Mulai Istirahat</h3>
 
                 <p>Istirahat yang cukup</p>
               </div>
@@ -69,8 +69,24 @@ a:link {
               </a>
             </div>
           </div>
+          <div class="col-lg-3 col-12">
+            <!-- small card -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>Akhir Istirahat</h3>
+
+                <p>Istirahat yang cukup</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="{{ route('absen.istirahat.akhir') }}" class="small-box-footer">
+                Yuk Absen <i class="fas fa-arrow-circle-right"></i>
+              </a>
+            </div>
+          </div>
           <!-- ./col -->
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-3 col-12">
             <!-- small card -->
             <div class="small-box bg-danger">
               <div class="inner">
@@ -190,32 +206,7 @@ a:link {
                   <!-- /.col -->
                 </div>
 
-                <div class="row">
-                  <div class="col-md-6">
-                  <div class="card card-danger">
-                    <div class="card-header">
-                      <h3 class="card-title">Pie Chart</h3>
-      
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                          <i class="fas fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-card-widget="remove">
-                          <i class="fas fa-times"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <div class="card-body">
-                      <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                    <!-- /.card-body -->
-                  </div>
-                  <!-- /.col -->
-                
-                  <!-- /.col -->
-                </div>
-
-              </div>
+             
                 <!-- /.row -->
               </div>
               <!-- ./card-body -->

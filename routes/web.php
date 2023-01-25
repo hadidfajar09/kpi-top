@@ -174,6 +174,8 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/absen/login', [AbsensiController::class, 'absenLogin'])->name('absen.login');
    Route::get('/absen/istirahat', [AbsensiController::class, 'istirahat'])->name('absen.istirahat');
    Route::post('/absen/rest', [AbsensiController::class, 'absenRest'])->name('absen.rest');
+   Route::get('/absen/istirahat/akhir', [AbsensiController::class, 'istirahatAkhir'])->name('absen.istirahat.akhir');
+   Route::post('/absen/rest/akhir', [AbsensiController::class, 'absenRestAkhir'])->name('absen.rest.akhir');
    Route::get('/absen/pulang', [AbsensiController::class, 'pulang'])->name('absen.pulang');
    Route::post('/absen/logout', [AbsensiController::class, 'absenLogout'])->name('absen.logout');
    Route::get('/absen/data', [AbsensiController::class, 'data'])->name('absen.data');

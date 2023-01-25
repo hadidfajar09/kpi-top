@@ -21,8 +21,8 @@
             <div class="form-group row">
               <label for="jabatan" class="col-md-4 col-md-offset-1 control-label">Status</label>
               <div class="col-md-8">
-                <select class="form-control" name="status" id="status" required>
-                  <option value="" disabled>Pilih Status</option>
+                <select class="form-control" name="status" id="status">
+                  <option disabled>Pilih Status</option>
                       <option value="3">Izin</option>
                       <option value="0">Sakit</option>
     

@@ -37,6 +37,9 @@ Daftar Riwayat ABsent
             <div class="card-header">
               <a class="btn btn-outline-primary btn-sm" href="{{ route('karyawan.grafik',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Grafik</a>
               <a class="btn btn-outline-success btn-sm" href="{{ route('karyawan.laporan',$karyawan->id) }}"><i class="fa fa-plus-circle"></i> Report Closing</a>
+              <h4>Jam Masuk : {{ $shift->masuk }}</h4>
+              <h4>Jam Istirahat : {{ $shift->istirahat }}</h4>
+              <h4>Jam Pulang : {{ $shift->pulang }}</h4>
             </div>
             <!-- /.card-header -->
             <div class="row">

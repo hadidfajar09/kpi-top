@@ -58,6 +58,8 @@ Daftar Riwayat ABsent
                               <th width="10%">Foto</th>
                               <th width="5%">Istirahat</th>
                               <th width="10%">Foto</th>
+                              <th width="5%">A.Istirahat</th>
+                              <th width="10%">Foto</th>
                               <th width="5%">Pulang</th>
                               <th width="10%">Foto</th>
                               <th width="5%">Kehadiran</th>
@@ -121,6 +123,8 @@ Daftar Riwayat ABsent
                         {data: 'foto_masuk'},
                         {data: 'jam_istirahat'},
                         {data: 'foto_istirahat'},
+                        {data: 'jam_akhir'},
+                        {data: 'foto_akhir'},
                         {data: 'jam_pulang'},
                         {data: 'foto_pulang'},
                         {data: 'status'},

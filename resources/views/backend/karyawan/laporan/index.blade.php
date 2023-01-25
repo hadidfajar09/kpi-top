@@ -45,7 +45,7 @@ Laporan Daily
               <h3>{{ $id->name }} | {{ $id->jabatan->jabatan }}</h3>
               <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
 
-              <a href="{{ route('report.export',[$tanggalAwal,$tanggalAkhir,$id]) }}" target="_blank" class="btn btn-success" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>
+              <a href="{{ route('report.export',[$tanggalAwal,$tanggalAkhir,$id]) }}" target="_blank" class="btn btn-outline-success btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>
 
               
 

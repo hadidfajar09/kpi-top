@@ -135,27 +135,6 @@ a:link {
                   <!-- /.col -->
                 </div>
 
-                <div class="row">
-                  <div class="col-md-3">
-                    <div class="chart">
-                      <!-- Sales Chart Canvas -->
-                      <canvas id="pieChart" width="50" height="50"></canvas>
-                    </div>
-                    <!-- /.chart-responsive -->
-                  </div>
-
-                  <div class="col-md-3">
-                    <div class="chart">
-                      <!-- Sales Chart Canvas -->
-                      <canvas id="pieChart2" width="50" height="50"></canvas>
-                    </div>
-                    <!-- /.chart-responsive -->
-                  </div>
-                  <!-- /.col -->
-                
-                  <!-- /.col -->
-                </div>
-
                 
                 <!-- /.row -->
               </div>

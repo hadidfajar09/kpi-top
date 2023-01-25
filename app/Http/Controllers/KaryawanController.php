@@ -216,7 +216,7 @@ class KaryawanController extends Controller
             'alamat' => 'required',
             'nomor' => 'required',
             'join_date' => 'required',
-            'end_work' => 'required',
+            'end_work' => 'sometimes',
             'path_berkas' => "sometimes|nullable|mimes:pdf|max:4000",
             'foto' => "sometimes|nullable|mimes:jpg,png,jpeg|max:4000"
         ]);
@@ -277,7 +277,8 @@ class KaryawanController extends Controller
         $karyawan = karyawan::findOrFail($id);
         $user = User::where('karyawan_id',$id)->first();
         $karyawan_detail = Absensi::where('karyawan_id',$user->id)->latest()->paginate(30);
-        return view('backend.karyawan.detail_view',compact('karyawan_detail','user','karyawan'));
+        $shift = Shift::where('id',$karyawan->id)->first();
+        return view('backend.karyawan.detail_view',compact('karyawan_detail','user','karyawan','shift'));
     }
 
     public function grafikKaryawan($id)//karyawan
@@ -495,7 +496,10 @@ class KaryawanController extends Controller
 
         if($request->hasFile('foto')){
             $old = $karyawan->foto;
-            unlink($old);
+
+            if($old != 'img/avatar.png'){
+                unlink($old);
+            }
             $image = $request->file('foto');
             $nama = 'foto-'.date('Y-m-dHis').'.'.$image->getClientOriginalExtension();
             $image->move(public_path('/foto/'),$nama);

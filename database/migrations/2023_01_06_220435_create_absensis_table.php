@@ -20,6 +20,8 @@ class CreateAbsensisTable extends Migration
             $table->string('foto_masuk')->nullable();
             $table->string('jam_istirahat')->nullable();
             $table->string('foto_istirahat')->nullable();
+            $table->string('jam_akhir')->nullable();
+            $table->string('foto_akhir')->nullable();
             $table->string('jam_pulang')->nullable();
             $table->string('foto_pulang')->nullable();
             $table->string('keterangan')->nullable();
