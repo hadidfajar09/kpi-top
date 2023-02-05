@@ -57,7 +57,7 @@ Daftar Grooming
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Karyawan</th>
-                              <th width="15%">Foto</th>
+                              <th width="10%">Foto</th>
                               <th>Catatan</th>
                               <th width="5%">Status</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>

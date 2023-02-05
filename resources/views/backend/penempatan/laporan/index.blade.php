@@ -1,7 +1,7 @@
 @extends('layouts.backend_master')
 
 @section('title')
-Laporan Daily 
+Laporan Omset Outlet
 @endsection
 
 @push('css')
@@ -17,14 +17,14 @@ Laporan Daily
       <div class="row mb-2">
         <div class="col-sm-10">
           <h1>
-            Laporan Daily Activity {{ formatTanggal($tanggalAwal,false) }} s/d {{ formatTanggal($tanggalAkhir,false) }}
+            Laporan Omset Outlet {{ formatTanggal($tanggalAwal,false) }} s/d {{ formatTanggal($tanggalAkhir,false) }}
           </h1>
           
         </div><!-- /.col -->
         <div class="col-sm-2">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Laporan Daily</li>
+            <li class="breadcrumb-item active">Omset Outlet</li>
           </ol>
         </div><!-- /.col -->
       </div><!-- /.row -->
@@ -42,10 +42,12 @@ Laporan Daily
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
-              <h3>{{ $id->name }} | {{ $id->jabatan->jabatan }}</h3>
-              <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
+              <h3>Outlet | {{ $penempatan->nama }}</h3><hr>
+              <h4>Total Omset : Rp.{{ formatUang($nominal_total) }} dari Target Rp. {{ formatUang($penempatan->target) }}</h4>
+              <h5 class="text-danger">Persentase : {{ $persentase }}%</h5>
+              <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('penempatan.laporan',$penempatan->id) }}')" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
 
-              <a href="{{ route('report.export',[$tanggalAwal,$tanggalAkhir,$id]) }}" target="_blank" class="btn btn-outline-success btn-sm" onclick="updatePeriode('{{ route('karyawan.laporan',$id->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>
+              <a href="{{ route('penempatan.export',[$tanggalAwal,$tanggalAkhir,$penempatan]) }}" target="_blank" class="btn btn-outline-success btn-sm" onclick="updatePeriode('{{ route('penempatan.laporan',$penempatan->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>
 
               
 
@@ -66,12 +68,12 @@ Laporan Daily
                             >
                             <thead>
                               <th width="5%">No</th>
-                              <th width="10%">Tanggal</th>
-                              <th width="5%">Absen</th>
-                              <th width="5%">Kebersihan</th>
-                              <th width="5%">Briefing</th>
-                              <th width="5%">Omset</th>
-                              <th width="5%">COD</th>
+                              <th width="15%">Tanggal</th>
+                              <th width="15%">Outlet</th>
+                              <th width="10%">Sales</th>
+                              <th width="15%">Nominal</th>
+                              <th>Catatan</th>
+                              <th width="10%">Status</th>
                             </thead>
                             <tbody>
 
@@ -104,7 +106,7 @@ Laporan Daily
   <!-- /.content -->
 </div>
 
-@include('backend.karyawan.laporan.periode')
+@include('backend.penempatan.laporan.periode')
 @endsection
 
 
@@ -121,20 +123,18 @@ Laporan Daily
             serverSide: true,
             autoWidth: false,
                 ajax: {
-                    url: '{{ route('report.data', [$tanggalAwal, $tanggalAkhir, $id]) }}'
+                    url: '{{ route('penempatan.datareport', [$tanggalAwal, $tanggalAkhir, $penempatan]) }}'
                 },
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
-                        {data: 'tanggal'},
-                        {data: 'absen'},
-                        {data: 'cleaning'},
-                        {data: 'briefing'},
-                        {data: 'omset'},
-                        {data: 'cod'},
+                        {data: 'tanggal_setor'},
+                        {data: 'outlet'},
+                        {data: 'sales'},
+                        {data: 'nominal'},
+                        {data: 'catatan'},
+                        {data: 'status'},
                 ],
-                dom: 'Brt',
-                bSort: true,
-                bPaginate: false,
+                
 
             });
 

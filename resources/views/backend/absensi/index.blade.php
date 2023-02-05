@@ -187,7 +187,7 @@ Daftar Riwayat ABsent
         }
 
         function deleteData(url) {
-          if(confirm('Yakin Ingin Hapus Groomming Ini?')){
+          if(confirm('Yakin Ingin Hapus Absensi Ini?')){
             
           $.post(url, {
             '_token': $('[name=csrf-token]').attr('content'),

@@ -61,7 +61,7 @@ a:link {
                     <!-- /.col -->
                   </div>
   
-                  <div class="row">
+                  <div class="row d-flex justify-content-center">
                     <div class="col-md-6">
                     <div class="card card-primary">
                       <div class="card-header">
@@ -86,29 +86,7 @@ a:link {
                     <!-- /.col -->
                   </div>
 
-                  <div class="col-md-6">
-                    <div class="card card-warning">
-                      <div class="card-header">
-                        <h3 class="card-title">Grooming Bulan Ini</h3>
-        
-                        <div class="card-tools">
-                          <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                          </button>
-                          <button type="button" class="btn btn-tool" data-card-widget="remove">
-                            <i class="fas fa-times"></i>
-                          </button>
-                        </div>
-                      </div>
-                      <div class="card-body">
-                        <canvas id="pieChart2" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
-                    <!-- /.col -->
-                  
-                    <!-- /.col -->
-                  </div>
+               
   
                 </div>
                   <!-- /.row -->
@@ -256,17 +234,6 @@ a:link {
 var salesChartData = {
   labels: {{ json_encode($data_tanggal) }},
   datasets: [
-    {
-      label: 'Grooming',
-      backgroundColor: '#fd7e14',
-      borderColor: 'rgba(0, 61, 255, 1)',
-      pointRadius: false,
-      pointColor: 'rgba(0, 61, 255, 1)',
-      pointStrokeColor: 'rgba(0, 61, 255, 1)',
-      pointHighlightFill: 'rgba(0, 61, 255, 1)',
-      pointHighlightStroke: 'rgba(0, 61, 255, 1)',
-      data: {{ json_encode($total_stock_masuk) }}
-    },
 
     {
         label: 'Briefing',

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Omset;
 use App\Models\User;
+use App\Models\Penempatan;
 use App\Models\karyawan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -33,11 +34,17 @@ class OmsetController extends Controller
 
 
             if(auth()->user()->level == 0 || auth()->user()->level == 3){
+                
+                // $karyawan = karyawan::where('id',$omset->karyawan_id)->get();
+                // $penempatan = Penempatan::where('id', $karyawan->penempatan_id)->first();
                 return datatables()
                 ->of($omset)//source
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('sales', function($omset){
                     return '<span class="badge badge-success">'.$omset->user->name.'</span>';
+                })
+                ->addColumn('outlet', function($omset){
+                    return '<span class="badge badge-dark">'.$omset->user->data_karyawan->penempatan->nama.'</span>';
                 })
                 // ->addColumn('user', function($omset){
                 //     return '<span class="badge badge-primary">'.$omset->user->name.'</span>';
@@ -65,7 +72,7 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('omset.destroy', $omset->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('omset.acc', $omset->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('omset.decline', $omset->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','status'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','status','outlet'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -73,6 +80,9 @@ class OmsetController extends Controller
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('sales', function($omset_karyawan){
                     return '<span class="badge badge-success">'.$omset_karyawan->user->name.'</span>';
+                })
+                ->addColumn('outlet', function($omset_karyawan){
+                    return '<span class="badge badge-dark">'.$omset_karyawan->user->data_karyawan->penempatan->nama.'</span>';
                 })
                 // ->addColumn('user', function($omset_karyawan){
                 //     return '<span class="badge badge-primary">'.$omset_karyawan->user->name.'</span>';
@@ -100,7 +110,7 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','omset','status'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','omset','status','outlet'])//biar kebaca html
                 ->make(true);
             }
         
@@ -126,9 +136,11 @@ class OmsetController extends Controller
     {
         $request->validate([
             'tanggal_setor' => 'required',
-            'catatan' => 'required',
+            'catatan' => 'sometimes',
             'nominal' => 'required',
         ]);
+        $karyawan_id = auth()->user()->karyawan_id;
+        $data_karyawan = karyawan::where('id',$karyawan_id)->first();
 
         $omset = new Omset();
 
@@ -136,9 +148,19 @@ class OmsetController extends Controller
         $omset->karyawan_id = auth()->user()->id;
         $omset->catatan = $request->catatan;
         $omset->nominal = $request->nominal;
+        $omset->penempatan_id = $data_karyawan->penempatan_id;
         // $omset->user_id = auth()->user()->id;
 
         $omset->save();
+
+        $penempatan_nominal = Penempatan::where('id',$data_karyawan->penempatan_id)->first();
+
+        if($request->nominal){
+
+            $penempatan_nominal->nominal += $request->nominal;
+            $penempatan_nominal->update();
+        }
+
 
         return redirect()->route('omset.index');
     }

@@ -16,6 +16,8 @@ class CreatePenempatansTable extends Migration
         Schema::create('penempatans', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
+            $table->string('target');
+            $table->string('persentase');
             $table->string('alamat');
             $table->timestamps();
         });

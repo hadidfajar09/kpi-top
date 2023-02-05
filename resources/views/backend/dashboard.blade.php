@@ -63,7 +63,7 @@ a:link {
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-luggage-cart"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Briefing Today</span>
+                <span class="info-box-text">Briefing</span>
                 <span class="info-box-number">{{ $briefing }}</span>
                 
               </div>
@@ -83,8 +83,8 @@ a:link {
               <span class="info-box-icon bg-success elevation-1"><i class="fas fa-id-card-alt"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Grooming Today</span>
-                <span class="info-box-number">{{ $grooming }}</span>
+                <span class="info-box-text">Karyawan</span>
+                <span class="info-box-number">{{ $karyawan }}</span>
                
               </div>
               <!-- /.info-box-content -->
@@ -99,7 +99,7 @@ a:link {
               <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-cart-plus"></i></span>
 
               <div class="info-box-content">
-                <span class="info-box-text">Kebersihan Today</span>
+                <span class="info-box-text">Kebersihan</span>
                 <span class="info-box-number">{{ $bersih }}</span>
               
               </div>
@@ -116,7 +116,7 @@ a:link {
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h5 class="card-title">Grafik Daily Briefing - Grooming Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
+                <h5 class="card-title">Grafik Daily Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
 
                
               </div>
@@ -172,20 +172,9 @@ a:link {
 var salesChartData = {
   labels: {{ json_encode($data_tanggal) }},
   datasets: [
+ 
     {
-      label: 'Grooming',
-      backgroundColor: '#fd7e14',
-      borderColor: 'rgba(0, 61, 255, 1)',
-      pointRadius: false,
-      pointColor: 'rgba(0, 61, 255, 1)',
-      pointStrokeColor: 'rgba(0, 61, 255, 1)',
-      pointHighlightFill: 'rgba(0, 61, 255, 1)',
-      pointHighlightStroke: 'rgba(0, 61, 255, 1)',
-      data: {{ json_encode($total_stock_masuk) }}
-    },
-
-    {
-        label: 'Briefing Pagi',
+        label: 'Briefing',
         backgroundColor: 'rgba(157, 0, 0, 0.8)',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
@@ -197,7 +186,7 @@ var salesChartData = {
       },  
       
       {
-        label: 'Cleaning Pagi',
+        label: 'Cleaning',
         backgroundColor: '#873e23',
         borderColor: 'rgb(135,62,35,1)',
         pointRadius: false,

@@ -79,6 +79,9 @@ Tambah Karyawan
                   <div class="col-sm-4">
                     <input type="password" class="form-control" name="password" id="password"  required autofocus>
                     <span class="help-block with-errors text-danger"></span>
+                    @error('password')
+                    <span class="text-danger">{{ $message }}</span>
+                    @enderror
                   </div>
                 </div>
 

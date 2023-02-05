@@ -74,7 +74,8 @@ Absen Masuk
                       <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Preview" onClick="take_snapshot()">
                       <input type="hidden" name="foto_masuk" class="image-tag">
                   </div>
-                  </div>
+                </div>
+                <h1 class="text-danger" style="font-weight: bold; font-size: 60px; text-align: center;" id="timer"></h1>
 
                   <div class="form-group row">
                     <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">HASIL</label>
@@ -123,11 +124,10 @@ Absen Masuk
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <script language="JavaScript">
-
          
     Webcam.set({
-        width: 490,
-        height: 350,
+        width: 350,
+        height: 500,
         align:'center',
         image_format: 'jpeg',
         jpeg_quality: 90
@@ -136,15 +136,31 @@ Absen Masuk
     Webcam.attach( '#my_camera' );
     
     function take_snapshot() {
+      var timer = document.getElementById("timer");
+var countDown = 5;
+
+// memulai hitungan mundur
+timer.innerHTML = countDown;
+var intervalId = setInterval(function(){
+  countDown--;
+  timer.innerHTML = countDown;
+  if (countDown <= 0) {
+    clearInterval(intervalId);
+    timer.innerHTML = "Berhasil";
+  }
+}, 1000); // setiap 1 detik (1000 ms)
+      setTimeout(function(){
         Webcam.snap( function(data_uri) {
             $(".image-tag").val(data_uri);
             document.getElementById('results').innerHTML = '<img src="'+data_uri+'" width="450"/>';
         } );
+  }, 5000); // 1000 ms = 1 detik
+        
     }
 
     function displayTime() {
   var currentTime = new Date();
-  var hours = currentTime.getHours() + 1;
+  var hours = currentTime.getHours();
   var minutes = currentTime.getMinutes();
   var seconds = currentTime.getSeconds();
 

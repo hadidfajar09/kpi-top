@@ -35,6 +35,10 @@ Daftar Omset Sales
           <div class="card">
             <div class="card-header">
               <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
+
+              @if (auth()->user()->level == 0)
+              <button class="btn btn-outline-success btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Grafik</button>
+              @endif
              
 
             </div>
@@ -55,6 +59,7 @@ Daftar Omset Sales
                             <thead>
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
+                              <th width="15%">Outlet</th>
                               <th width="10%">Sales</th>
                               <th width="15%">Nominal</th>
                               <th>Catatan</th>
@@ -110,6 +115,7 @@ Daftar Omset Sales
                 columns: [
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal_setor'},
+                        {data: 'outlet'},
                         {data: 'sales'},
                         {data: 'nominal'},
                         {data: 'catatan'},

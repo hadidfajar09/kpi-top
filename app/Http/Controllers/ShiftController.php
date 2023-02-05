@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shift;
+use App\Models\karyawan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -143,18 +144,13 @@ class ShiftController extends Controller
     {
         $shift = Shift::find($id);
 
-        // $pangkalan = User::where('id_agent', $agent->id)->get();
+        $karyawan = karyawan::where('shift_id', $id)->get();
         // $distribusi = Distribusi::where('id_agent',$id)->get();
 
         
-        // foreach ($pangkalan as $row) {
-        //     $row->delete();
-        // }
-
-        // foreach ($distribusi as $row) {
-        //     $row->delete();
-        // }
-
+        foreach ($karyawan as $row) {
+            $row->delete();
+        }
 
         $shift->delete();
 

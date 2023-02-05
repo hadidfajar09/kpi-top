@@ -112,9 +112,9 @@ Absen Pulang
 <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
 <script language="JavaScript">
 
-    Webcam.set({
-        width: 490,
-        height: 350,
+Webcam.set({
+        width: 350,
+        height: 500,
         align:'center',
         image_format: 'jpeg',
         jpeg_quality: 90
@@ -131,7 +131,7 @@ Absen Pulang
 
     function displayTime() {
   var currentTime = new Date();
-  var hours = currentTime.getHours() + 1;
+  var hours = currentTime.getHours();
   var minutes = currentTime.getMinutes();
   var seconds = currentTime.getSeconds();
 

@@ -27,6 +27,15 @@
             </div>
 
             <div class="form-group row">
+                <label for="target" class="col-md-4 col-md-offset-1 control-label">Target Bulanan</label>
+                <div class="col-md-8">
+                    <input class="form-control" type="number" name="target" id="target" required autofocus>
+                    <span class="help-block with-errors text-danger"></span>
+
+                </div>
+            </div>
+
+            <div class="form-group row">
               <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Alamat</label>
               <div class="col-md-8">
                   <textarea class="form-control" name="alamat" id="" cols="30" rows="5" required></textarea>

@@ -22,4 +22,6 @@ class Omset extends Model
     {
         return $this->belongsTo(User::class, 'karyawan_id', 'id');
     }
+
+    
 }

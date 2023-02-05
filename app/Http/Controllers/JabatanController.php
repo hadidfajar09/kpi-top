@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\karyawan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Jabatan;
@@ -132,13 +133,13 @@ class JabatanController extends Controller
     {
         $jabatan = Jabatan::find($id);
 
-        // $pangkalan = User::where('id_agent', $agent->id)->get();
+        $karyawan = karyawan::where('jabatan_id', $id)->get();
         // $distribusi = Distribusi::where('id_agent',$id)->get();
 
         
-        // foreach ($pangkalan as $row) {
-        //     $row->delete();
-        // }
+        foreach ($karyawan as $row) {
+            $row->delete();
+        }
 
         // foreach ($distribusi as $row) {
         //     $row->delete();

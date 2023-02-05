@@ -142,14 +142,7 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <a href="{{ route('grooming.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Grooming
-              </p>
-            </a>
-          </li>
+        
           {{-- <li class="nav-item">
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>
@@ -211,12 +204,12 @@
 
           
 
-          <li class="nav-item">
+          {{-- <li class="nav-item">
             <a href="{{ route('user.index') }}" class="nav-link">
               <i class="nav-icon far fa-circle text-dark"></i>
               <p>Hak Akses</p>
             </a>
-          </li>
+          </li> --}}
 
 
           @else
@@ -274,14 +267,7 @@
             </a>
           </li>
 
-          <li class="nav-item">
-            <a href="{{ route('grooming.index') }}" class="nav-link">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>
-                Grooming
-              </p>
-            </a>
-          </li>
+         
           {{-- <li class="nav-item">
             <a href="{{ route('distribusi.index') }}" class="nav-link">
               <i class="nav-icon far fa-edit"></i>

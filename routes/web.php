@@ -151,6 +151,10 @@ Route::group(['middleware' => 'auth'], function () {
      Route::get('/penempatan/data', [PenempatanController::class, 'data'])->name('penempatan.data');
      Route::resource('/penempatan',PenempatanController::class);
 
+     Route::get('/penempatan/laporan/{id}', [PenempatanController::class, 'detailOmset'])->name('penempatan.laporan');
+     Route::get('/penempatan/data/{awal}/{akhir}/{id}', [PenempatanController::class, 'dataReport'])->name('penempatan.datareport');
+     Route::get('/penempatan/pdf/{awal}/{akhir}/{id}', [PenempatanController::class, 'exportDaily'])->name('penempatan.export');
+
 
           // //omset
           Route::get('/omset/data', [OmsetController::class, 'data'])->name('omset.data');

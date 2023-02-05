@@ -220,6 +220,7 @@ class KaryawanController extends Controller
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|unique:users',
+            'password' => 'required',
             'jabatan_id' => 'required',
             'kontrak_id' => 'required',
             'penempatan_id' => 'required',
@@ -459,12 +460,13 @@ class KaryawanController extends Controller
     public function edit($id)
     {
         $karyawan = karyawan::findOrfail($id);
+        $user = User::where('karyawan_id',$id)->first();
         $jabatan = Jabatan::all();
         $kontrak = kontrak::all();
         $penempatan = Penempatan::all();
         $shift = Shift::all();
 
-        return view('backend.karyawan.edit',compact('jabatan','kontrak','penempatan','karyawan','shift'));
+        return view('backend.karyawan.edit',compact('jabatan','kontrak','penempatan','karyawan','shift','user'));
     }
 
     /**
@@ -537,6 +539,15 @@ class KaryawanController extends Controller
 
         $karyawan->update();
 
+        $user = User::where('karyawan_id',$id)->first();
+        $user->email = $request->email;
+
+        if($request->has('password') && $request->password != ""){
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->update();
+
         $notif = array(
             'message' => 'Anda Berhasil Update Data Karyawan',
             'alert-type' => 'success'
@@ -554,8 +565,33 @@ class KaryawanController extends Controller
     public function destroy($id)
     {
         $karyawan = karyawan::find($id);
-
+        $user_id = User::where('karyawan_id',$id)->first();
         $akun_user = User::where('karyawan_id',$id)->delete();
+        $absensi = Absensi::where('karyawan_id', $user_id->id)->get();
+        $grooming = grooming::where('karyawan_id', $user_id->id)->get();
+        $omset = Omset::where('karyawan_id', $user_id->id)->get();
+        $briefing = Briefing::where('user_id', $user_id->id)->get();
+        $cleaning = Cleaning::where('user_id', $user_id->id)->get();
+        $cod = Cod::where('karyawan_id', $user_id->id)->get();
+        
+        foreach ($absensi as $row) {
+            $row->delete();
+        }
+        foreach ($grooming as $row) {
+            $row->delete();
+        }
+        foreach ($omset as $row) {
+            $row->delete();
+        }
+        foreach ($briefing as $row) {
+            $row->delete();
+        }
+        foreach ($cleaning as $row) {
+            $row->delete();
+        }
+        foreach ($cod as $row) {
+            $row->delete();
+        }
         if($karyawan->foto != 'img/avatar.png'){
 
             unlink($karyawan->foto);
@@ -577,7 +613,7 @@ class KaryawanController extends Controller
             $row->absen = 0;
             $row->omset = 0;
             $row->grooming = 0;
-            $row->kebersihan = 0;
+            $row->kebersihan = 0; 
             $row->point = 0;
             $row->cod = 0;
             $row->briefing = 0;

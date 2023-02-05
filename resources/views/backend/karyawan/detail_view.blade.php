@@ -62,6 +62,8 @@ Daftar Riwayat ABsent
                               <th width="10%">Foto</th>
                               <th width="5%">Istirahat</th>
                               <th width="10%">Foto</th>
+                              <th width="5%">A.Istirahat</th>
+                              <th width="10%">Foto</th>
                               <th width="5%">Pulang</th>
                               <th width="10%">Foto</th>
                               <th width="5%">Kehadiran</th>
@@ -80,6 +82,8 @@ Daftar Riwayat ABsent
                                 <td><a href="{{ asset($row->foto_masuk) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_masuk) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>{{ $row->jam_istirahat }}</td>
                                 <td><a href="{{ asset($row->foto_istirahat) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_istirahat) }}" width="50" alt="" class="img-fluid"></a> </td>
+                                <td>{{ $row->jam_akhir }}</td>
+                                <td><a href="{{ asset($row->foto_akhir) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_akhir) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>{{ $row->jam_pulang }}</td>
                                 <td><a href="{{ asset($row->foto_pulang) }}" data-toggle="lightbox"><img src="{{ asset($row->foto_pulang) }}" width="50" alt="" class="img-fluid"></a> </td>
                                 <td>

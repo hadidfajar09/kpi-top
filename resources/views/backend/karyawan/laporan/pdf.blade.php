@@ -21,7 +21,6 @@
                     <th width="5%">No</th>
                     <th width="10%">Tanggal</th>
                     <th width="5%">Absen</th>
-                    <th width="5%">Grooming</th>
                     <th width="5%">Kebersihan</th>
                     <th width="5%">Briefing</th>
                     <th width="5%">Omset</th>
@@ -42,15 +41,7 @@
                         @else
                         <span class="badge badge-dark">Kosong</span>
                         @endif</td>
-                        <td>@if ( $row['grooming'] == 0 )
-                            <span class="badge badge-danger">Ditolak</span>
-                        @elseif( $row['grooming'] == 1 )
-                        <span class="badge badge-success">Diterima</span>
-                        @elseif( $row['grooming'] == 2 )
-                        <span class="badge badge-light">Pending</span>
-                        @else
-                        <span class="badge badge-dark">Kosong</span>
-                        @endif</td>
+                       
                         <td>@if ( $row['cleaning'] == 0 )
                             <span class="badge badge-danger">Ditolak</span>
                         @elseif( $row['cleaning'] == 1 )

@@ -107,7 +107,7 @@ a:link {
         </div>
         <!-- Info boxes -->
         <div class="row">
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-4">
             <a href="{{ route('absen.index') }}" class="text-dark">
             <div class="info-box">
               <span class="info-box-icon bg-info elevation-1"><i class="fas fa-user-cog"></i></span>
@@ -127,7 +127,7 @@ a:link {
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-4">
             <a href="{{ route('briefing.index') }}" class="text-dark">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fas fa-luggage-cart"></i></span>
@@ -147,23 +147,8 @@ a:link {
           <!-- fix for small devices only -->
           <div class="clearfix hidden-md-up"></div>
 
-          <div class="col-12 col-sm-6 col-md-3">
-            <a href="{{ route('grooming.index') }}" class="text-dark">
-            <div class="info-box mb-3">
-              <span class="info-box-icon bg-success elevation-1"><i class="fas fa-id-card-alt"></i></span>
-
-              <div class="info-box-content">
-                <span class="info-box-text">Riwayat Grooming</span>
-                <span class="info-box-number">{{ $grooming }}</span>
-               
-              </div>
-              <!-- /.info-box-content -->
-            </div>
-          </a>
-            <!-- /.info-box -->
-          </div>
           <!-- /.col -->
-          <div class="col-12 col-sm-6 col-md-3">
+          <div class="col-12 col-sm-6 col-md-4">
             <a href="{{ route('cleaning.index') }}" class="text-dark">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-warning elevation-1"><i class="fa fa-cart-plus"></i></span>
@@ -187,7 +172,7 @@ a:link {
           <div class="col-md-12">
             <div class="card">
               <div class="card-header">
-                <h5 class="card-title">Grafik Daily Briefing - Grooming Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
+                <h5 class="card-title">Grafik Daily Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
 
                
               </div>
@@ -254,19 +239,7 @@ var salesChartData = {
   labels: {{ json_encode($data_tanggal) }},
   datasets: [
     {
-      label: 'Grooming',
-      backgroundColor: '#fd7e14',
-      borderColor: 'rgba(0, 61, 255, 1)',
-      pointRadius: false,
-      pointColor: 'rgba(0, 61, 255, 1)',
-      pointStrokeColor: 'rgba(0, 61, 255, 1)',
-      pointHighlightFill: 'rgba(0, 61, 255, 1)',
-      pointHighlightStroke: 'rgba(0, 61, 255, 1)',
-      data: {{ json_encode($total_stock_masuk) }}
-    },
-
-    {
-        label: 'Briefing Pagi',
+        label: 'Briefing',
         backgroundColor: 'rgba(157, 0, 0, 0.8)',
         borderColor: 'rgba(210, 214, 222, 1)',
         pointRadius: false,
@@ -278,7 +251,7 @@ var salesChartData = {
       }, 
       
       {
-        label: 'Cleaning Pagi',
+        label: 'Cleaning',
         backgroundColor: '#873e23',
         borderColor: 'rgb(135,62,35,1)',
         pointRadius: false,

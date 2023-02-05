@@ -58,6 +58,8 @@ Daftar Penempatan
                               <th width="5%">No</th>
                               <th width="15%">Penempatan</th>
                               <th>Alamat</th>
+                              <th width="15%">Target</th>
+                              <th width="15%">Pencapaian</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
                             <tbody>
@@ -110,6 +112,8 @@ Daftar Penempatan
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'nama'},
                         {data: 'alamat'},
+                        {data: 'target'},
+                        {data: 'nominal'},
                         {data: 'aksi', searchable: false, sortable: false},
                 ]
             });
@@ -157,6 +161,7 @@ Daftar Penempatan
             $.get(url)
               .done((response) => {
                 $('#modal-agent [name=nama]').val(response.nama);
+                $('#modal-agent [name=target]').val(response.target);
                 $('#modal-agent [name=alamat]').val(response.alamat);
 
               })

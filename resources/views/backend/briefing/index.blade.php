@@ -57,7 +57,7 @@ Daftar Absen Briefing
                               <th width="15%">Tanggal</th>
                               <th width="10%">Lokasi</th>
                               <th width="10%">Leader</th>
-                              <th width="15%">Foto</th>
+                              <th width="10%">Foto</th>
                               <th>Catatan</th>
                               <th width="5%">Status</th>
 

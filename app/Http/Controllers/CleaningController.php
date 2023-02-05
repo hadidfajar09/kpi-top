@@ -42,7 +42,7 @@ class CleaningController extends Controller
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('path_foto', function($cleaning){
                     return ' <a href="'.$cleaning->path_foto.'" data-toggle="lightbox">
-                    <img src="'.$cleaning->path_foto.'" class="img-fluid" alt="" data-(width|height)="[0-9]+">
+                    <img src="'.$cleaning->path_foto.'" class="img-fluid" alt="" style="width: 40px;" data-(width|height)="[0-9]+">
                   </a>';
                 })
                 
@@ -83,7 +83,7 @@ class CleaningController extends Controller
                 ->addIndexColumn() //untuk nomer
                 ->addColumn('path_foto', function($cleaning_karyawan){
                     return ' <a href="'.$cleaning_karyawan->path_foto.'" data-toggle="lightbox">
-                    <img src="'.$cleaning_karyawan->path_foto.'" class="img-fluid" alt="" data-(width|height)="[0-9]+">
+                    <img src="'.$cleaning_karyawan->path_foto.'" class="img-fluid" style="width: 40px;" alt="" data-(width|height)="[0-9]+">
                   </a>';
                 })
                 

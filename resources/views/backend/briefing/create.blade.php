@@ -147,9 +147,9 @@ Tambah Daily Briefing
             facingMode: "environment"
         });
         
-    Webcam.set({
-        width: 490,
-        height: 350,
+        Webcam.set({
+        width: 350,
+        height: 500,
         align:'center',
         image_format: 'jpeg',
         jpeg_quality: 90
