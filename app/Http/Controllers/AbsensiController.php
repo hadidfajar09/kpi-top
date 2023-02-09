@@ -44,7 +44,7 @@ class AbsensiController extends Controller
                     return $result;
                 })
                 ->addColumn('jam_masuk', function($absensi){
-                    $result = '<h1 class="badge badge-success">'.$absensi->jam_masuk.'</h1>';
+                    $result = '<h1 class="badge badge-success">'.$absensi->jam_masuk.'</h1><a href="'.route('absen.edit', $absensi->id).'" class="btn btn-xs btn-warning"><i class="fa fa-cog"></i></a>';
                     return $result;
                 })
                 ->addColumn('foto_masuk', function($absensi){
@@ -126,7 +126,7 @@ class AbsensiController extends Controller
                     return $result;
                 })
                 ->addColumn('jam_masuk', function($absensi_karyawan){
-                    $result = '<h1 class="badge badge-success">'.$absensi_karyawan->jam_masuk.'</h1>';
+                    $result = '<h1 class="badge badge-success">'.$absensi_karyawan->jam_masuk.'</h1><a href="'.route('absen.edit', $absensi_karyawan->id).'" class="btn btn-xs btn-warning"><i class="fa fa-cog"></i></a>';
                     return $result;
                 })
                 ->addColumn('foto_masuk', function($absensi_karyawan){
@@ -650,9 +650,11 @@ class AbsensiController extends Controller
      * @param  \App\Models\Absensi  $absensi
      * @return \Illuminate\Http\Response
      */
-    public function edit(Absensi $absensi)
+    public function edit($id)
     {
-        //
+        $absen = Absensi::find($id);
+
+        return view('backend.absensi.edit', compact('absen'));
     }
 
     /**
@@ -676,6 +678,51 @@ class AbsensiController extends Controller
         $absensi->update();
 
         return response()->json('Status Kehadiran berhasil diubah', 200);
+    }
+    public function updated(Request $request, $id)
+    {
+        $absensi = Absensi::find($id);
+        
+        if($request->path_foto){
+
+            unlink($absensi->foto_masuk);
+            $img = $request->path_foto;
+
+            $folderPath = "masuk/";
+            
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid() . '.png';
+            
+            $file = $folderPath . $fileName;
+            
+            Storage::disk('public_uploads')->put($file, $image_base64);
+    
+            $absensi->foto_masuk = 'uploads/masuk/'.$fileName;
+            $absensi->jam_masuk = date('H:i');
+    
+            $absensi->update();
+
+                   
+            $notif = array(
+                'message' => 'Data Absen Masuk Berhasil di Upload',
+                'alert-type' => 'success'
+            );
+    
+            return redirect()->route('absen.index')->with($notif);
+        }else{
+            $notif = array(
+                'message' => 'Foto Baru Belum Ada',
+                'alert-type' => 'error'
+            );
+
+            return redirect()->back()->with($notif);
+    
+        }
+
     }
 
     /**

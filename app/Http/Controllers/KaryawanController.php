@@ -602,6 +602,7 @@ class KaryawanController extends Controller
         }
 
         $karyawan->delete();
+        $user_id->delete();
 
         return response()->json('data berhasil dihapus');
     }
