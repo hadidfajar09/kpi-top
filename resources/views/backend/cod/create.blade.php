@@ -12,7 +12,7 @@ Tambah Daily COD
         max-height: 80%;
     }
 
-    #results img {
+    .hasil img {
         max-width: 80%;
         max-height: 80%;
 
@@ -61,21 +61,46 @@ Tambah Daily COD
               <div class="card-body">
     
                 <div class="form-group row">
-                  <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Camera</label>
+                  <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Foto Transaksi</label>
                   <div id="my_camera" width="50"></div>
-                  <div class="col-md-8">
-                      <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Preview" onClick="take_snapshot()">
-                      <input type="hidden" name="path_foto" class="image-tag">
+                  <div class="col-md-6" style="margin: auto;"> <br>
+                    <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 1" onClick="take_snapshot()">
+                    <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 2" onClick="take_snapshot2()">
+                    <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 3" onClick="take_snapshot3()">
+                    <input type=button class="btn btn-outline-danger btn-sm" value="Gambar 4" onClick="take_snapshot4()">
+                    <input type="hidden" name="path_foto" class="image-tag">
+                    <input type="hidden" name="path_foto_2" class="image-tag2">
+                    <input type="hidden" name="path_foto_3" class="image-tag3">
+                    <input type="hidden" name="path_foto_4" class="image-tag4">
                   </div>
                   </div>
 
                   <div class="form-group row">
                     <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">HASIL</label>
-                                <div class="col-md-8">
-                        <div id="results"></div>
+                               
                     </div>
+
+
+                    <div class="hasil">
+
+                 
+                      <div class="form-group row">
+                        <div class="col-md-3">
+                          <div id="results"></div>
+                        </div>
+                        <div class="col-md-3">
+                          <div id="results2"></div>
+                        </div>
+                        <div class="col-md-3">
+                          <div id="results3"></div>
+                        </div>
+                        <div class="col-md-3">
+                          <div id="results4"></div>
+                        </div>
+                      </div>
                     </div>
     
+                    <br><br>
                     <div class="form-group row">
                       <label for="deskripsi" class="col-md-4 col-md-offset-1 control-label">Catatan</label>
                       <div class="col-md-8">
@@ -137,7 +162,27 @@ Tambah Daily COD
     function take_snapshot() {
         Webcam.snap( function(data_uri) {
             $(".image-tag").val(data_uri);
-            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" width="450"/>';
+            document.getElementById('results').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+    function take_snapshot2() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag2").val(data_uri);
+            document.getElementById('results2').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+
+    function take_snapshot3() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag3").val(data_uri);
+            document.getElementById('results3').innerHTML = '<img src="'+data_uri+'" width="250"/>';
+        } );
+    }
+
+    function take_snapshot4() {
+        Webcam.snap( function(data_uri) {
+            $(".image-tag4").val(data_uri);
+            document.getElementById('results4').innerHTML = '<img src="'+data_uri+'" width="250"/>';
         } );
     }
 </script>

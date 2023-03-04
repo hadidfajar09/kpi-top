@@ -54,6 +54,14 @@ class KaryawanController extends Controller
                         return '<span class="badge badge-dark">Belum Terisi</span>';
                     }
                 })
+
+                ->addColumn('penempatan', function($karyawan){
+                    if($karyawan->nama){
+                        return '<span class="badge badge-info">'.$karyawan->nama.'</span>';
+                    }else{
+                        return '<span class="badge badge-dark">Belum Bertempat</span>';
+                    }
+                })
                 ->addColumn('end_work', function($karyawan){
                     if($karyawan->end_work){
                         return formatTanggal($karyawan->end_work);
@@ -81,7 +89,7 @@ class KaryawanController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('karyawan.edit', $karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('karyawan.destroy', $karyawan->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button> <a href="'.route('file.download', $karyawan->id).'" class="btn btn-xs btn-warning btn-flat" target="_blank"><i class="fa fa-download"></i></a> <a href="'.route('karyawan.show', $karyawan->id).'" class="btn btn-xs btn-success btn-flat" target="_blank"><i class="fas fa-chart-pie"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','end_work','status','foto','berkas'])//biar kebaca html
+                ->rawColumns(['aksi','end_work','status','foto','berkas','penempatan'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -500,6 +508,7 @@ class KaryawanController extends Controller
 
 
         $karyawan = karyawan::find($id);
+        $user = User::where('karyawan_id',$id)->first();
 
         $karyawan->name = $request->name;
         $karyawan->jabatan_id = $request->jabatan_id;
@@ -535,11 +544,12 @@ class KaryawanController extends Controller
             $image->move(public_path('/foto/'),$nama);
 
             $karyawan->foto = 'foto/'.$nama;
+            $user->profile_photo_path = 'foto/'.$nama;
         }
 
         $karyawan->update();
 
-        $user = User::where('karyawan_id',$id)->first();
+        
         $user->email = $request->email;
 
         if($request->has('password') && $request->password != ""){

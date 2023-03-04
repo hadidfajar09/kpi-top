@@ -161,6 +161,11 @@ class UserController extends Controller
 
         $profile = Auth::user();
 
+        $data_karyawan_id = Auth::user()->karyawan_id;
+
+        $data_karyawan = karyawan::where('id',$data_karyawan_id)->first();
+
+
         $profile->name = $request->name;
       
         
@@ -183,9 +188,12 @@ class UserController extends Controller
             $image->move(public_path('/img/'),$nama);
 
             $profile->profile_photo_path = 'img/'.$nama;
+            $data_karyawan->foto = 'img/'.$nama;
         }
 
+
         $profile->update();
+        $data_karyawan->update();
 
         return response()->json($profile,200);
     }

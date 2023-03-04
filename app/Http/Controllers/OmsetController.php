@@ -198,7 +198,7 @@ class OmsetController extends Controller
     public function decline($id)
     {
         $omset = Omset::findOrFail($id);
-        $user = User::where('id',$omset->user_id)->first(); //ambil user 17
+        $user = User::where('id',$omset->karyawan_id)->first(); //ambil user 17
         $data_karyawan = karyawan::where('id',$user->karyawan_id)->first();
 
         if($omset->status == 1){ //diterima

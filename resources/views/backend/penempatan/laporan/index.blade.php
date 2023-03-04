@@ -44,7 +44,7 @@ Laporan Omset Outlet
             <div class="card-header">
               <h3>Outlet | {{ $penempatan->nama }}</h3><hr>
               <h4>Total Omset : Rp.{{ formatUang($nominal_total) }} dari Target Rp. {{ formatUang($penempatan->target) }}</h4>
-              <h5 class="text-danger">Persentase : {{ $persentase }}%</h5>
+              <h5 class="text-danger">Persentase : {{ round($persentase) }}%</h5>
               <button class="btn btn-outline-warning btn-sm" onclick="updatePeriode('{{ route('penempatan.laporan',$penempatan->id) }}')" ><i class="fa fa-plus-circle"></i> Ubah Periode</button>
 
               <a href="{{ route('penempatan.export',[$tanggalAwal,$tanggalAkhir,$penempatan]) }}" target="_blank" class="btn btn-outline-success btn-sm" onclick="updatePeriode('{{ route('penempatan.laporan',$penempatan->id) }}')"><i class="fa fa-file-excel-o"></i> Export PDF</a>

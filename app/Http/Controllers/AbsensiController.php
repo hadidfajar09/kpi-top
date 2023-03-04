@@ -35,6 +35,9 @@ class AbsensiController extends Controller
                 return datatables()
                 ->of($absensi)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($absensi){
+                    return '<input type="checkbox" name="id_absen[]" value="'.$absensi->id.'">';
+                })
                 ->addColumn('tanggal', function($absensi){
                     $result = formatTanggal($absensi->created_at);
                     return $result;
@@ -111,12 +114,15 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('absen.destroy', $absensi->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('absen.acc', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('absen.decline', $absensi->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
                 ->of($absensi_karyawan)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($absensi_karyawan){
+                    return '<input type="checkbox" name="id_absen[]" value="'.$absensi_karyawan->id.'">';
+                })
                 ->addColumn('tanggal', function($absensi_karyawan){
                     $result = formatTanggal($absensi_karyawan->created_at);
                     return $result;
@@ -193,7 +199,7 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all'])//biar kebaca html
                 ->make(true);
             }
         
@@ -756,5 +762,31 @@ class AbsensiController extends Controller
         $absensi->delete();
 
         return response()->json('data berhasil dihapus');
+    }
+
+    public function acceptSelected(Request $request)
+    {
+        foreach($request->id_absen  as $id){
+            $absen = Absensi::find($id);
+
+            $absen->accept = 1;
+
+            $absen->update();
+        }
+        return response()->json('absen berhasil diterima');
+        
+    }
+
+    public function declineSelected(Request $request)
+    {
+        foreach($request->id_absen  as $id){
+            $absen = Absensi::find($id);
+
+            $absen->accept = 0;
+
+            $absen->update();
+        }
+        return response()->json('absen berhasil ditolak');
+        
     }
 }

@@ -187,6 +187,8 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/absen/updated/{id}', [AbsensiController::class, 'updated'])->name('absen.updated');
    Route::get('/absen/acc/{id}', [AbsensiController::class, 'accept'])->name('absen.acc');
    Route::get('/absen/decline/{id}', [AbsensiController::class, 'decline'])->name('absen.decline');
+   Route::post('/absen/acc-selected', [AbsensiController::class, 'acceptSelected'])->name('absen.accselected');
+   Route::post('/absen/dec-selected', [AbsensiController::class, 'declineSelected'])->name('absen.decselected');
 
 
             // //grooming

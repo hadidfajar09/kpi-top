@@ -35,6 +35,15 @@ Daftar Riwayat ABsent
         <div class="col-md-12">
           <div class="card">
             <div class="card-header">
+              <div class="btn-group">
+            
+                @if (auth()->user()->level == 0)
+                    
+                <button class="btn btn-success xs" onclick="acceptSelected('{{ route('absen.accselected') }}')"> <i class="fa fa-check"></i>   Terima Absen</button>
+               
+                @endif
+             
+              </div>
             </div>
             <!-- /.card-header -->
             <div class="row">
@@ -48,21 +57,26 @@ Daftar Riwayat ABsent
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12 table-responsive">
+                          <form action="" method="post" class="form-absen">
+                            @csrf
                           <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
                             >
                             <thead>
+                              <th width="5%">
+                                <input type="checkbox" name="select_all" id="select_id">
+                            </th>
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Karyawan</th>
                               <th width="5%">Masuk</th>
-                              <th width="10%">Foto</th>
+                              <th width="10%"><i class="fa fa-image"></i></th>
                               <th width="5%">Istirahat</th>
-                              <th width="10%">Foto</th>
+                              <th width="10%"><i class="fa fa-image"></i></th>
                               <th width="5%">A.Istirahat</th>
-                              <th width="10%">Foto</th>
+                              <th width="10%"><i class="fa fa-image"></i></th>
                               <th width="5%">Pulang</th>
-                              <th width="10%">Foto</th>
-                              <th width="5%">Kehadiran</th>
+                              <th width="10%"><i class="fa fa-image"></i></th>
+                              <th style="width: 5px;">Info</th>
                               <th width="5%">Status</th>
                               <th width="10%"><i class="fa fa-cog"></i></th>
                             </thead>
@@ -71,6 +85,7 @@ Daftar Riwayat ABsent
 
                             </tbody>
                           </table>
+                          </form>
                         </div>
                       </div>
                   </div>
@@ -110,12 +125,25 @@ Daftar Riwayat ABsent
         $(function(){
           $('body').addClass('sidebar-collapse')
             table = $('.table-agent').DataTable({
+              dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+             "<'row'<'col-sm-12'B>>" +
+             "<'row'<'col-sm-12'tr>>" +
+             "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        searching: true,
+        search: {
+            "smart": false
+        },
+        
               processing: true,
               autoWidth: false,
                 ajax: {
                     url: '{{ route('absen.data') }}'
                 },
                 columns: [
+                  {data: 'select_all', searchable: false, sortable: false},
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
                         {data: 'karyawan'},
@@ -202,6 +230,27 @@ Daftar Riwayat ABsent
                     return;
               });
           }
+        }
+
+        function acceptSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin terima absen terpilih?')){
+              $.post(url, $('.form-absen').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima absen');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
         }
 </script>
 

@@ -54,6 +54,7 @@ Daftar Karyawan
                               <th width="5%">No</th>
                               <th width="15%">Nama</th>
                               <th width="15%">Foto</th>
+                              <th width="15%">Outlet</th>
                               <th width="10%">Jabatan</th>
                               <th width="10%">Berkas</th>
                               <th width="15%">End Work</th>
@@ -112,6 +113,7 @@ Daftar Karyawan
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'name'},
                         {data: 'foto'},
+                        {data: 'penempatan'},
                         {data: 'jabatan'},
                         {data: 'berkas'},
                         {data: 'end_work'},

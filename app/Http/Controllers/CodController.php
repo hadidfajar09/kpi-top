@@ -58,7 +58,7 @@ class CodController extends Controller
                 })
              
                 ->addColumn('aksi', function($cod){ //untuk aksi
-                    $button = '<div class="btn-group"><a href="'.route('cod.edit', $cod->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('cod.destroy', $cod->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('cod.acc', $cod->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('cod.decline', $cod->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
+                    $button = '<div class="btn-group"><a href="'.route('cod.edit', $cod->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('cod.destroy', $cod->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('cod.acc', $cod->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('cod.decline', $cod->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a><a href="'.route('cod.show', $cod->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a></div>';
                    return $button;
                 })
                 ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
@@ -95,7 +95,7 @@ class CodController extends Controller
                     }
                 })
                 ->addColumn('aksi', function($cod_karyawan){ //untuk aksi
-                    $button = '<a href="'.route('grooming.edit', $cod_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
+                    $button = '<a href="'.route('cod.edit', $cod_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
                    return $button;
                 })
                 ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
@@ -202,58 +202,8 @@ class CodController extends Controller
         // ]);
 
         $karyawan = auth()->user()->id;
-        $data_lama = Cod::where('karyawan_id',$karyawan)->latest()->first();
         $now = Carbon::now();
 
-        if($data_lama){
-            if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
-                $cod = new Cod();
-    
-                $cod->karyawan_id = $karyawan;
-                $cod->catatan = $request->catatan;
-        
-                if($request->path_foto == NULL){
-                    $notif = array(
-                        'message' => 'Anda belum memasukkan foto',
-                        'alert-type' => 'error'
-                    );
-        
-                    return redirect()->back()->with($notif);
-                }else{
-                    $img = $request->path_foto;
-                    $folderPath = "cod/";
-                    
-                    $image_parts = explode(";base64,", $img);
-                    $image_type_aux = explode("image/", $image_parts[0]);
-                    $image_type = $image_type_aux[1];
-                    
-                    $image_base64 = base64_decode($image_parts[1]);
-                    $fileName = uniqid() . '.png';
-                    
-                    $file = $folderPath . $fileName;
-                    
-                    Storage::disk('public_uploads')->put($file, $image_base64);
-        
-                    $cod->path_foto = 'uploads/cod/'.$fileName;
-                    $cod->save();
-                }
-                  
-                $notif = array(
-                    'message' => 'Data COD Berhasil di Upload',
-                    'alert-type' => 'success'
-                );
-        
-                return redirect()->route('cod.index')->with($notif);
-            }else{
-    
-                $notif = array(
-                    'message' => 'Data COD sudah ada',
-                    'alert-type' => 'error'
-                );
-    
-                return redirect()->back()->with($notif);
-            }
-        }else{
             $grooming = new Cod();
     
             $grooming->karyawan_id = $karyawan;
@@ -267,22 +217,73 @@ class CodController extends Controller
     
                 return redirect()->back()->with($notif);
             }else{
-                $img = $request->path_foto;
                 $folderPath = "cod/";
-                
-                $image_parts = explode(";base64,", $img);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-                
-                $image_base64 = base64_decode($image_parts[1]);
-                $fileName = uniqid() . '.png';
-                
-                $file = $folderPath . $fileName;
-                
-                Storage::disk('public_uploads')->put($file, $image_base64);
-    
-                $grooming->path_foto = 'uploads/cod/'.$fileName;
-                $grooming->save();
+                    
+                    if($request->path_foto){
+                        $img = $request->path_foto;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $grooming->path_foto = 'uploads/cod/'.$fileName;
+                    }
+
+                    if($request->path_foto_2){
+                        $img = $request->path_foto_2;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $grooming->path_foto_2 = 'uploads/cod/'.$fileName;
+                    }
+
+                    if($request->path_foto_3){
+                        $img = $request->path_foto_3;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $grooming->path_foto_3 = 'uploads/cod/'.$fileName;
+                    }
+
+                    if($request->path_foto_4){
+                        $img = $request->path_foto_4;
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+            
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+            
+                        $file = $folderPath . $fileName;
+            
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $grooming->path_foto_4 = 'uploads/cod/'.$fileName;
+                    }
+
+                    $grooming->save();
             }
               
             $notif = array(
@@ -291,7 +292,7 @@ class CodController extends Controller
             );
     
             return redirect()->route('cod.index')->with($notif);
-        }
+        
         
 
        
@@ -306,9 +307,11 @@ class CodController extends Controller
      * @param  \App\Models\grooming  $grooming
      * @return \Illuminate\Http\Response
      */
-    public function show(grooming $grooming)
+    public function show($id)
     {
-        //
+        $cod = Cod::findOrFail($id);
+
+        return view('backend.cod.show',compact('cod'));
     }
 
     /**
@@ -340,7 +343,9 @@ class CodController extends Controller
         $cod->catatan = $request->catatan;
 
         if ($request->path_foto) {
-            unlink($cod->path_foto);
+            if($cod->path_foto){
+                unlink($cod->path_foto);
+            }
             $img = $request->path_foto;
             $folderPath = "cod/";
             
@@ -356,6 +361,72 @@ class CodController extends Controller
             Storage::disk('public_uploads')->put($file, $image_base64);
 
             $cod->path_foto = 'uploads/cod/'.$fileName;
+            
+        }
+
+        if ($request->path_foto_2) {
+            if($cod->path_foto_2){
+                unlink($cod->path_foto_2);
+            }
+            $img = $request->path_foto_2;
+            $folderPath = "cod/";
+            
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid() . '.png';
+            
+            $file = $folderPath . $fileName;
+            
+            Storage::disk('public_uploads')->put($file, $image_base64);
+
+            $cod->path_foto_2 = 'uploads/cod/'.$fileName;
+            
+        }
+
+        if ($request->path_foto_3) {
+            if($cod->path_foto_3){
+                unlink($cod->path_foto_3);
+            }
+            $img = $request->path_foto_3;
+            $folderPath = "cod/";
+            
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid() . '.png';
+            
+            $file = $folderPath . $fileName;
+            
+            Storage::disk('public_uploads')->put($file, $image_base64);
+
+            $cod->path_foto_3 = 'uploads/cod/'.$fileName;
+            
+        }
+
+        if ($request->path_foto_4) {
+            if($cod->path_foto_4){
+                unlink($cod->path_foto_4);
+            }
+            $img = $request->path_foto_4;
+            $folderPath = "cod/";
+            
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName = uniqid() . '.png';
+            
+            $file = $folderPath . $fileName;
+            
+            Storage::disk('public_uploads')->put($file, $image_base64);
+
+            $cod->path_foto_4 = 'uploads/cod/'.$fileName;
             
         }
 
@@ -384,9 +455,20 @@ class CodController extends Controller
             $data_karyawan->cod--;
             $data_karyawan->update();   
         }
-    
-        unlink($cod->path_foto);
 
+        if($cod->path_foto){
+            unlink($cod->path_foto);
+        }
+        if($cod->path_foto_2){
+            unlink($cod->path_foto_2);
+        }
+        if($cod->path_foto_3){
+            unlink($cod->path_foto_3);
+        }
+        if($cod->path_foto_4){
+            unlink($cod->path_foto_4);
+        }
+    
         $cod->delete();
 
         return response()->json('data berhasil dihapus');
