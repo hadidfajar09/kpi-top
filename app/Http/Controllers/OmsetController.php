@@ -40,6 +40,9 @@ class OmsetController extends Controller
                 return datatables()
                 ->of($omset)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($omset){
+                    return '<input type="checkbox" name="id_omset[]" value="'.$omset->id.'">';
+                })
                 ->addColumn('sales', function($omset){
                     return '<span class="badge badge-success">'.$omset->user->name.'</span>';
                 })
@@ -72,12 +75,15 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('omset.destroy', $omset->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('omset.acc', $omset->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('omset.decline', $omset->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','status','outlet'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','status','outlet','select_all'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
                 ->of($omset_karyawan)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($omset_karyawan){
+                    return '<input type="checkbox" name="id_omset[]" value="'.$omset_karyawan->id.'">';
+                })
                 ->addColumn('sales', function($omset_karyawan){
                     return '<span class="badge badge-success">'.$omset_karyawan->user->name.'</span>';
                 })
@@ -110,7 +116,7 @@ class OmsetController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('omset.update', $omset_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button> </div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','sales','nominal','omset','status','outlet'])//biar kebaca html
+                ->rawColumns(['aksi','sales','nominal','omset','status','outlet','select_all'])//biar kebaca html
                 ->make(true);
             }
         
@@ -281,5 +287,18 @@ class OmsetController extends Controller
         $omset->delete();
 
 
+    }
+
+    public function acceptSelected(Request $request)
+    {
+        foreach($request->id_omset  as $id){
+            $omset = Omset::find($id);
+
+            $omset->status = 1;
+
+            $omset->update();
+        }
+        return response()->json('omset berhasil diterima');
+        
     }
 }

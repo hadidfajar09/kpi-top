@@ -39,6 +39,9 @@ class BriefingController extends Controller
                 // ->addColumn('path_foto', function($briefing){
                 //     return '<img src="'.$briefing->path_foto.' " width="150">';
                 // })
+                ->addColumn('select_all', function($briefing){
+                    return '<input type="checkbox" name="id_briefing[]" value="'.$briefing->id.'">';
+                })
                 ->addColumn('path_foto', function($briefing){
                     return ' <a href="'.$briefing->path_foto.'" data-toggle="lightbox">
                     <img src="'.$briefing->path_foto.'" class="img-fluid" alt="">
@@ -73,12 +76,15 @@ class BriefingController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('briefing.edit', $briefing->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('briefing.destroy', $briefing->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('briefing.acc', $briefing->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('briefing.decline', $briefing->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status','select_all'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
                 ->of($briefing_karyawan)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($briefing_karyawan){
+                    return '<input type="checkbox" name="id_briefing[]" value="'.$briefing_karyawan->id.'">';
+                })
                 ->addColumn('path_foto', function($briefing_karyawan){
                     return ' <a href="'.$briefing_karyawan->path_foto.'" data-toggle="lightbox" class="col-sm-4">
                     <img src="'.$briefing_karyawan->path_foto.'" class="img-fluid" alt="">
@@ -114,7 +120,7 @@ class BriefingController extends Controller
                     $button = '<a href="'.route('briefing.edit', $briefing_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','user','tanggal','status','penempatan'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status','penempatan','select_all'])//biar kebaca html
                 ->make(true);
             }
         
@@ -391,5 +397,18 @@ class BriefingController extends Controller
         $briefing->delete();
 
         return response()->json('data berhasil dihapus');
+    }
+
+    public function acceptSelected(Request $request)
+    {
+        foreach($request->id_briefing  as $id){
+            $briefing = Briefing::find($id);
+
+            $briefing->status = 1;
+
+            $briefing->update();
+        }
+        return response()->json('briefing berhasil diterima');
+        
     }
 }

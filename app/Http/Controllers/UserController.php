@@ -167,6 +167,7 @@ class UserController extends Controller
 
 
         $profile->name = $request->name;
+        $data_karyawan->name = $request->name;
       
         
         if($request->has('password') && $request->password != ""){

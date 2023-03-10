@@ -37,6 +37,11 @@ Daftar Absen Briefing
             <div class="card-header">
               <a class="btn btn-outline-danger btn-sm" href="{{ route('briefing.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
 
+              @if (auth()->user()->level == 0)
+              <button class="btn btn-success btn-sm" onclick="acceptSelected('{{ route('briefing.accselected') }}')"> <i class="fa fa-check"></i>   Terima Briefing</button>
+              @endif
+             
+
             </div>
             <!-- /.card-header -->
             <div class="row">
@@ -50,9 +55,14 @@ Daftar Absen Briefing
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12 table-responsive">
+                          <form action="" method="post" class="form-briefing">
+                            @csrf
                           <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
                             >
                             <thead>
+                              <th width="5%">
+                                <input type="checkbox" name="select_all" id="select_id">
+                            </th>
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Lokasi</th>
@@ -68,6 +78,7 @@ Daftar Absen Briefing
 
                             </tbody>
                           </table>
+                        </form>
                         </div>
                       </div>
                   </div>
@@ -110,6 +121,7 @@ Daftar Absen Briefing
                     url: '{{ route('briefing.data') }}'
                 },
                 columns: [
+                  {data: 'select_all', searchable: false, sortable: false},
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
                         {data: 'penempatan'},
@@ -190,6 +202,27 @@ Daftar Absen Briefing
                     return;
               });
           }
+        }
+
+        function acceptSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin terima briefing terpilih?')){
+              $.post(url, $('.form-briefing').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima briefing');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
         }
 </script>
 

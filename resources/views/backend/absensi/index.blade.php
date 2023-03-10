@@ -68,6 +68,7 @@ Daftar Riwayat ABsent
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Karyawan</th>
+                              <th width="5%">Jabatan</th>
                               <th width="5%">Masuk</th>
                               <th width="10%"><i class="fa fa-image"></i></th>
                               <th width="5%">Istirahat</th>
@@ -147,6 +148,7 @@ Daftar Riwayat ABsent
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
                         {data: 'karyawan'},
+                        {data: 'jabatan'},
                         {data: 'jam_masuk'},
                         {data: 'foto_masuk'},
                         {data: 'jam_istirahat'},

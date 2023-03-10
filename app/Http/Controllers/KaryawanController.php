@@ -551,6 +551,7 @@ class KaryawanController extends Controller
 
         
         $user->email = $request->email;
+        $user->name = $request->name;
 
         if($request->has('password') && $request->password != ""){
             $user->password = bcrypt($request->password);

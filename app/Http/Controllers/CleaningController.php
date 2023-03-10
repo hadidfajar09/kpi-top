@@ -40,6 +40,9 @@ class CleaningController extends Controller
                 return datatables()
                 ->of($cleaning)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($cleaning){
+                    return '<input type="checkbox" name="id_cleaning[]" value="'.$cleaning->id.'">';
+                })
                 ->addColumn('path_foto', function($cleaning){
                     return ' <a href="'.$cleaning->path_foto.'" data-toggle="lightbox">
                     <img src="'.$cleaning->path_foto.'" class="img-fluid" alt="" style="width: 40px;" data-(width|height)="[0-9]+">
@@ -75,12 +78,15 @@ class CleaningController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('cleaning.edit', $cleaning->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('cleaning.destroy', $cleaning->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('cleaning.acc', $cleaning->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('cleaning.decline', $cleaning->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a><a href="'.route('cleaning.show', $cleaning->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status','select_all'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
                 ->of($cleaning_karyawan)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($cleaning_karyawan){
+                    return '<input type="checkbox" name="id_cleaning[]" value="'.$cleaning_karyawan->id.'">';
+                })
                 ->addColumn('path_foto', function($cleaning_karyawan){
                     return ' <a href="'.$cleaning_karyawan->path_foto.'" data-toggle="lightbox">
                     <img src="'.$cleaning_karyawan->path_foto.'" class="img-fluid" style="width: 40px;" alt="" data-(width|height)="[0-9]+">
@@ -115,7 +121,7 @@ class CleaningController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('cleaning.edit', $cleaning_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><a href="'.route('cleaning.show', $cleaning_karyawan->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','penempatan','user','tanggal','status','select_all'])//biar kebaca html
                 ->make(true);
             }
         
@@ -572,5 +578,18 @@ class CleaningController extends Controller
         $cleaning->delete();
 
         return response()->json('data berhasil dihapus');
+    }
+
+    public function acceptSelected(Request $request)
+    {
+        foreach($request->id_cleaning  as $id){
+            $cleaning = Cleaning::find($id);
+
+            $cleaning->status = 1;
+
+            $cleaning->update();
+        }
+        return response()->json('cleaning berhasil diterima');
+        
     }
 }

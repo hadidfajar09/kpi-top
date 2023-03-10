@@ -37,7 +37,7 @@ Daftar Omset Sales
               <button class="btn btn-outline-danger btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Tambah</button>
 
               @if (auth()->user()->level == 0)
-              <button class="btn btn-outline-success btn-sm" onclick="addForm('{{ route('omset.store') }}')"" ><i class="fa fa-plus-circle"></i> Grafik</button>
+              <button class="btn btn-success btn-sm" onclick="acceptSelected('{{ route('omset.accselected') }}')"> <i class="fa fa-check"></i>   Terima Omset</button>
               @endif
              
 
@@ -54,9 +54,14 @@ Daftar Omset Sales
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12 table-responsive">
+                          <form action="" method="post" class="form-omset">
+                            @csrf
                           <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
                             >
                             <thead>
+                              <th width="5%">
+                                <input type="checkbox" name="select_all" id="select_id">
+                            </th>
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="15%">Outlet</th>
@@ -71,6 +76,7 @@ Daftar Omset Sales
 
                             </tbody>
                           </table>
+                        </form>
                         </div>
                       </div>
                   </div>
@@ -113,6 +119,7 @@ Daftar Omset Sales
                     url: '{{ route('omset.data') }}'
                 },
                 columns: [
+                  {data: 'select_all', searchable: false, sortable: false},
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal_setor'},
                         {data: 'outlet'},
@@ -207,6 +214,27 @@ buttons: [
                     return;
               });
           }
+        }
+
+        function acceptSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin terima omset terpilih?')){
+              $.post(url, $('.form-omset').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima omset');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
         }
     </script>
 @endpush

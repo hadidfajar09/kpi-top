@@ -30,6 +30,9 @@ class CodController extends Controller
                 return datatables()
                 ->of($cod)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($cod){
+                    return '<input type="checkbox" name="id_cod[]" value="'.$cod->id.'">';
+                })
                 ->addColumn('path_foto', function($cod){
                     return ' <a href="'.$cod->path_foto.'" data-toggle="lightbox" class="col-sm-4">
                     <img src="'.$cod->path_foto.'" class="img-fluid" alt="">
@@ -61,12 +64,15 @@ class CodController extends Controller
                     $button = '<div class="btn-group"><a href="'.route('cod.edit', $cod->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a><button type="button" onclick="deleteData(`'.route('cod.destroy', $cod->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('cod.acc', $cod->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('cod.decline', $cod->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a><a href="'.route('cod.show', $cod->id).'" class="btn btn-xs btn-warning btn-flat"><i class="fa fa-eye"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status','select_all'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
                 ->of($cod_karyawan)//source
                 ->addIndexColumn() //untuk nomer
+                ->addColumn('select_all', function($cod_karyawan){
+                    return '<input type="checkbox" name="id_cod[]" value="'.$cod_karyawan->id.'">';
+                })
                 ->addColumn('path_foto', function($cod_karyawan){
                     return ' <a href="'.$cod_karyawan->path_foto.'" data-toggle="lightbox" class="col-sm-4">
                     <img src="'.$cod_karyawan->path_foto.'" class="img-fluid" alt="">
@@ -98,7 +104,7 @@ class CodController extends Controller
                     $button = '<a href="'.route('cod.edit', $cod_karyawan->id).'" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></a>';
                    return $button;
                 })
-                ->rawColumns(['aksi','path_foto','user','tanggal','status'])//biar kebaca html
+                ->rawColumns(['aksi','path_foto','user','tanggal','status','select_all'])//biar kebaca html
                 ->make(true);
             }
         
@@ -472,5 +478,18 @@ class CodController extends Controller
         $cod->delete();
 
         return response()->json('data berhasil dihapus');
+    }
+
+    public function acceptSelected(Request $request)
+    {
+        foreach($request->id_cod  as $id){
+            $cod = Cod::find($id);
+
+            $cod->status = 1;
+
+            $cod->update();
+        }
+        return response()->json('cod berhasil diterima');
+        
     }
 }

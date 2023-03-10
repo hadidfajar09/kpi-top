@@ -68,6 +68,11 @@ border-bottom-right-radius: .3rem;
                             <label class="form-label" for="password">Password</label>
                           <input type="password" name="password" id="password"  class="form-control" />
                         </div>
+
+                         <div class="form-outline mb-4">
+                          <input type="checkbox" name="remember" id="remember" />
+                            <label class="form-label" for="remember">Remember Me</label>
+                        </div>
       
                         <div class="text-center pt-1 mb-5 pb-1">
                           <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="submit">Log

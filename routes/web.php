@@ -161,6 +161,7 @@ Route::group(['middleware' => 'auth'], function () {
           Route::resource('/omset', OmsetController::class);
           Route::get('/omset/acc/{id}', [OmsetController::class, 'accept'])->name('omset.acc');
           Route::get('/omset/decline/{id}', [OmsetController::class, 'decline'])->name('omset.decline');
+          Route::post('/omset/acc-selected', [OmsetController::class, 'acceptSelected'])->name('omset.accselected');
           
           // //shift
           Route::get('/shift/data', [ShiftController::class, 'data'])->name('shift.data');
@@ -172,6 +173,7 @@ Route::group(['middleware' => 'auth'], function () {
    Route::post('/cod/updated/{id}', [CodController::class, 'updated'])->name('cod.updated');
    Route::get('/cod/acc/{id}', [CodController::class, 'accept'])->name('cod.acc');
    Route::get('/cod/decline/{id}', [CodController::class, 'decline'])->name('cod.decline');
+   Route::post('/cod/acc-selected', [CodController::class, 'acceptSelected'])->name('cod.accselected');
 
    // //absen
    Route::get('/absen/masuk', [AbsensiController::class, 'masuk'])->name('absen.masuk');
@@ -204,13 +206,16 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/cleaning/updated/{id}', [CleaningController::class, 'updated'])->name('cleaning.updated');
             Route::get('/cleaning/acc/{id}', [CleaningController::class, 'accept'])->name('cleaning.acc');
             Route::get('/cleaning/decline/{id}', [CleaningController::class, 'decline'])->name('cleaning.decline');
+            Route::post('/cleaning/acc-selected', [CleaningController::class, 'acceptSelected'])->name('cleaning.accselected');
 
               // //breafing
               Route::get('/briefing/data', [BriefingController::class, 'data'])->name('briefing.data');
               Route::resource('/briefing', BriefingController::class);
               Route::post('/briefing/updated/{id}', [BriefingController::class, 'updated'])->name('briefing.updated');
               Route::get('/briefing/acc/{id}', [BriefingController::class, 'accept'])->name('briefing.acc');
-            Route::get('/briefing/decline/{id}', [BriefingController::class, 'decline'])->name('briefing.decline');
+              Route::get('/briefing/decline/{id}', [BriefingController::class, 'decline'])->name('briefing.decline');
+              Route::post('/briefing/acc-selected', [BriefingController::class, 'acceptSelected'])->name('briefing.accselected');
+            
   
             
          //END KPI

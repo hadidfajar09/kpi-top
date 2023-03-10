@@ -36,6 +36,10 @@ Daftar COD
           <div class="card">
             <div class="card-header">
               <a class="btn btn-outline-danger btn-sm" href="{{ route('cod.create') }}"><i class="fa fa-plus-circle"></i> Tambah</a>
+
+              @if (auth()->user()->level == 0)
+              <button class="btn btn-success btn-sm" onclick="acceptSelected('{{ route('cod.accselected') }}')"> <i class="fa fa-check"></i>   Terima COD</button>
+              @endif
              
 
             </div>
@@ -51,9 +55,14 @@ Daftar COD
                   <div class="card-body">
                       <div class="row">
                         <div class="col-sm-12 table-responsive">
+                          <form action="" method="post" class="form-cod">
+                            @csrf
                           <table  class="table table-bordered table-striped dataTable dtr-inline table-agent"
                             >
                             <thead>
+                              <th width="5%">
+                                <input type="checkbox" name="select_all" id="select_id">
+                            </th>
                               <th width="5%">No</th>
                               <th width="15%">Tanggal</th>
                               <th width="10%">Karyawan</th>
@@ -67,6 +76,7 @@ Daftar COD
 
                             </tbody>
                           </table>
+                        </form>
                         </div>
                       </div>
                   </div>
@@ -109,6 +119,7 @@ Daftar COD
                     url: '{{ route('cod.data') }}'
                 },
                 columns: [
+                  {data: 'select_all', searchable: false, sortable: false},
                         {data: 'DT_RowIndex', searchable: false, sortable: false},
                         {data: 'tanggal'},
                         {data: 'user'},
@@ -188,6 +199,27 @@ Daftar COD
                     return;
               });
           }
+        }
+
+        function acceptSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin terima COD terpilih?')){
+              $.post(url, $('.form-cod').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima COD');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
         }
 </script>
 

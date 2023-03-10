@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\karyawan;
+use App\Models\Jabatan;
 use App\Models\User;
 use App\Models\Shift;
 use Carbon\Carbon;
@@ -44,6 +45,12 @@ class AbsensiController extends Controller
                 })
                 ->addColumn('karyawan', function($absensi){
                     $result = '<h1 class="badge badge-light">'.$absensi->karyawan->name.'</h1>';
+                    return $result;
+                })
+                ->addColumn('jabatan', function($absensi){
+                    $karyawan_id = karyawan::where('id',$absensi->karyawan->karyawan_id)->first();
+                    $jabatan = Jabatan::where('id',$karyawan_id->jabatan_id)->first();
+                    $result = '<h1 class="badge badge-info">'.$jabatan->jabatan.'</h1>';
                     return $result;
                 })
                 ->addColumn('jam_masuk', function($absensi){
@@ -98,12 +105,12 @@ class AbsensiController extends Controller
 
                 ->addColumn('status', function($absensi){
                     if($absensi->status == 0){
-                        return '<span class="badge badge-warning">Sakit</span>';
+                        return '<span class="badge badge-warning">Sakit</span>|'.$absensi->keterangan.'';
       
                     }else if($absensi->status == 1){
                       return '<span class="badge badge-success">Hadir</span>';
                     }else if($absensi->status == 3){
-                        return '<span class="badge badge-warning">Izin</span>';
+                        return '<span class="badge badge-warning">Izin</span>|'.$absensi->keterangan.'';
                     }else{
                         return '<span class="badge badge-danger">Telat</span>';
 
@@ -114,7 +121,7 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('absen.destroy', $absensi->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('absen.acc', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('absen.decline', $absensi->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all','jabatan'])//biar kebaca html
                 ->make(true);
             }else{
                 return datatables()
@@ -129,6 +136,12 @@ class AbsensiController extends Controller
                 })
                 ->addColumn('karyawan', function($absensi_karyawan){
                     $result = '<h1 class="badge badge-light">'.$absensi_karyawan->karyawan->name.'</h1>';
+                    return $result;
+                })
+                ->addColumn('jabatan', function($absensi_karyawan){
+                    $karyawan_id = karyawan::where('id',$absensi_karyawan->karyawan->karyawan_id)->first();
+                    $jabatan = Jabatan::where('id',$karyawan_id->jabatan_id)->first();
+                    $result = '<h1 class="badge badge-info">'.$jabatan->jabatan.'</h1>';
                     return $result;
                 })
                 ->addColumn('jam_masuk', function($absensi_karyawan){
@@ -183,12 +196,12 @@ class AbsensiController extends Controller
 
                 ->addColumn('status', function($absensi_karyawan){
                     if($absensi_karyawan->status == 0){
-                        return '<span class="badge badge-warning">Sakit</span>';
+                        return '<span class="badge badge-warning">Sakit</span>|'.$absensi_karyawan->keterangan.'';
       
                     }else if($absensi_karyawan->status == 1){
                       return '<span class="badge badge-success">Hadir</span>';
                     }else if($absensi_karyawan->status == 3){
-                        return '<span class="badge badge-warning">Izin</span>';
+                        return '<span class="badge badge-warning">Izin</span>|'.$absensi_karyawan->keterangan.'';
                     }else{
                         return '<span class="badge badge-danger">Telat</span>';
 
@@ -199,7 +212,7 @@ class AbsensiController extends Controller
                     $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi_karyawan->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button></div>';
                    return $button;
                 })
-                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all'])//biar kebaca html
+                ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all','jabatan'])//biar kebaca html
                 ->make(true);
             }
         
@@ -708,7 +721,6 @@ class AbsensiController extends Controller
             Storage::disk('public_uploads')->put($file, $image_base64);
     
             $absensi->foto_masuk = 'uploads/masuk/'.$fileName;
-            $absensi->jam_masuk = date('H:i');
     
             $absensi->update();
 
