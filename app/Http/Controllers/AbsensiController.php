@@ -112,13 +112,13 @@ class AbsensiController extends Controller
                     }else if($absensi->status == 3){
                         return '<span class="badge badge-warning">Izin</span>|'.$absensi->keterangan.'';
                     }else{
-                        return '<span class="badge badge-danger">Telat</span>';
+                        return '<span class="badge badge-danger">Telat | <a href="'.route('absen.hadir', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a></span>';
 
                     }
                 })
              
                 ->addColumn('aksi', function($absensi){ //untuk aksi
-                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="deleteData(`'.route('absen.destroy', $absensi->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('absen.acc', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('absen.decline', $absensi->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
+                    $button = '<div class="btn-group"><button type="button" onclick="editForm(`'.route('absen.update', $absensi->id).'`)" class="btn btn-xs btn-info btn-flat"><i class="fas fa-edit"></i></button><button type="button" onclick="mapForm(`'.route('map', $absensi->id).'`)" class="btn btn-xs btn-warning btn-flat"><i class="fas fa-map-marker"></i></button><button type="button" onclick="deleteData(`'.route('absen.destroy', $absensi->id).'`)" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-trash"></i></button><a href="'.route('absen.acc', $absensi->id).'" class="btn btn-xs btn-success btn-flat"><i class="fa fa-check"></i></a><a href="'.route('absen.decline', $absensi->id).'" class="btn btn-xs btn-danger btn-flat"><i class="fa fa-times"></i></a></div>';
                    return $button;
                 })
                 ->rawColumns(['aksi','karyawan','jam_masuk','foto_masuk','jam_istirahat','foto_istirahat','jam_akhir','foto_akhir','jam_pulang','foto_pulang','tanggal','status','accept','select_all','jabatan'])//biar kebaca html
@@ -220,7 +220,10 @@ class AbsensiController extends Controller
 
     public function masuk()
     {
-        return view('backend.absensi.create_masuk');
+        $latitude = -5.180279078027943;
+        $longitude = 119.4099911313132;
+
+        return view('backend.absensi.create_masuk', compact('latitude','longitude'));
     }
 
     public function absenLogin(Request $request)
@@ -230,9 +233,97 @@ class AbsensiController extends Controller
         $data_shift = karyawan::where('id',auth()->user()->karyawan_id)->first();
         $shift = Shift::where('id',$data_shift->shift_id)->first();
         $now = Carbon::now();
-
+        $latitude_kantor = -5.180279078027943;
+        $longitude_kantor = 119.4099911313132;
         if($data_lama){
             if($data_lama->created_at->format('Y-m-d') < date('Y-m-d')){
+
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
+                
+                $jarak = $this->distance($latitude_kantor, $longitude_kantor, $latitude, $longitude);
+                $radius = round($jarak["meters"]);
+
+                if($radius > 10000){
+                    $notif = array(
+                        'message' => 'Anda berada '.$radius.' meter dari kantor',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }
+                    $masuk = new Absensi();
+
+                    if($shift->masuk >= date('H:i')){
+                        $masuk->status = 1; //hadir
+                    }else{
+                        $masuk->status = 2; //telat
+                    }
+                   
+                    $masuk->karyawan_id = $karyawan;
+                    $masuk->latitude = $request->latitude;
+                    $masuk->longitude = $request->longitude;
+                    $masuk->jam_masuk = date('H:i');
+    
+            
+                    if($request->foto_masuk == NULL){
+                        $notif = array(
+                            'message' => 'Anda belum memasukkan foto',
+                            'alert-type' => 'error'
+                        );
+            
+                        return redirect()->back()->with($notif);
+                    }else{
+                        $img = $request->foto_masuk;
+                        $folderPath = "masuk/";
+                        
+                        $image_parts = explode(";base64,", $img);
+                        $image_type_aux = explode("image/", $image_parts[0]);
+                        $image_type = $image_type_aux[1];
+                        
+                        $image_base64 = base64_decode($image_parts[1]);
+                        $fileName = uniqid() . '.png';
+                        
+                        $file = $folderPath . $fileName;
+                        
+                        Storage::disk('public_uploads')->put($file, $image_base64);
+            
+                        $masuk->foto_masuk = 'uploads/masuk/'.$fileName;
+                        $masuk->save();
+                    }
+                      
+                    $notif = array(
+                        'message' => 'Data Absen Berhasil di Upload',
+                        'alert-type' => 'success'
+                    );
+            
+                    return redirect()->route('absen.index')->with($notif);
+                }else{
+        
+                    $notif = array(
+                        'message' => 'Data Absen sudah ada',
+                        'alert-type' => 'error'
+                    );
+        
+                    return redirect()->back()->with($notif);
+                }
+               
+             
+        }else{
+            $latitude = $request->latitude;
+            $longitude = $request->longitude;
+
+            $jarak = $this->distance($latitude_kantor, $longitude_kantor, $latitude, $longitude);
+            $radius = round($jarak["meters"]);
+
+            if($radius > 5){
+                $notif = array(
+                    'message' => 'Anda berada '.$radius.' meter dari kantor',
+                    'alert-type' => 'error'
+                );
+    
+                return redirect()->back()->with($notif);
+            }
                 $masuk = new Absensi();
 
                 if($shift->masuk >= date('H:i')){
@@ -240,8 +331,13 @@ class AbsensiController extends Controller
                 }else{
                     $masuk->status = 2; //telat
                 }
+              
                 $masuk->karyawan_id = $karyawan;
+                $masuk->latitude = $request->latitude;
+                $masuk->longitude = $request->longitude;
                 $masuk->jam_masuk = date('H:i');
+    
+               
         
                 if($request->foto_masuk == NULL){
                     $notif = array(
@@ -268,58 +364,6 @@ class AbsensiController extends Controller
                     $masuk->foto_masuk = 'uploads/masuk/'.$fileName;
                     $masuk->save();
                 }
-                  
-                $notif = array(
-                    'message' => 'Data Absen Berhasil di Upload',
-                    'alert-type' => 'success'
-                );
-        
-                return redirect()->route('absen.index')->with($notif);
-            }else{
-    
-                $notif = array(
-                    'message' => 'Data Absen sudah ada',
-                    'alert-type' => 'error'
-                );
-    
-                return redirect()->back()->with($notif);
-            }
-        }else{
-            $masuk = new Absensi();
-
-            if($shift->masuk >= date('H:i')){
-                $masuk->status = 1; //hadir
-            }else{
-                $masuk->status = 2; //telat
-            }
-            $masuk->karyawan_id = $karyawan;
-            $masuk->jam_masuk = date('H:i');
-    
-            if($request->foto_masuk == NULL){
-                $notif = array(
-                    'message' => 'Anda belum memasukkan foto',
-                    'alert-type' => 'error'
-                );
-    
-                return redirect()->back()->with($notif);
-            }else{
-                $img = $request->foto_masuk;
-                $folderPath = "masuk/";
-                
-                $image_parts = explode(";base64,", $img);
-                $image_type_aux = explode("image/", $image_parts[0]);
-                $image_type = $image_type_aux[1];
-                
-                $image_base64 = base64_decode($image_parts[1]);
-                $fileName = uniqid() . '.png';
-                
-                $file = $folderPath . $fileName;
-                
-                Storage::disk('public_uploads')->put($file, $image_base64);
-    
-                $masuk->foto_masuk = 'uploads/masuk/'.$fileName;
-                $masuk->save();
-            }
               
             $notif = array(
                 'message' => 'Data Absen Berhasil di Upload',
@@ -328,6 +372,20 @@ class AbsensiController extends Controller
     
             return redirect()->route('absen.index')->with($notif);
         }
+    }
+
+    function distance($lat1, $lon1, $lat2, $lon2)
+    {
+        $theta = $lon1 - $lon2;
+        $miles = (sin(deg2rad($lat1)) * sin(deg2rad($lat2))) + (cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)));
+        $miles = acos($miles);
+        $miles = rad2deg($miles);
+        $miles = $miles * 60 * 1.1515;
+        $feet = $miles * 5280;
+        $yards = $feet / 3;
+        $kilometers = $miles * 1.609344;
+        $meters = $kilometers * 1000;
+        return compact('meters');
     }
 
     public function istirahat()
@@ -651,6 +709,24 @@ class AbsensiController extends Controller
        return redirect()->back()->with($notif);
     }
 
+    public function statusHadir($id)
+    {
+        $absen = Absensi::findOrFail($id);
+
+
+        Absensi::findOrFail($id)->update([
+            'status' => 1
+        ]);
+
+        $notif = array(
+            'message' => 'Data Absen Berhasil diubah',
+            'alert-type' => 'info'
+        );
+
+      
+       return redirect()->back()->with($notif);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -658,6 +734,12 @@ class AbsensiController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        $absen = Absensi::find($id);
+        return response()->json($absen);
+    }
+
+    public function mapShow($id)
     {
         $absen = Absensi::find($id);
         return response()->json($absen);
@@ -675,6 +757,8 @@ class AbsensiController extends Controller
 
         return view('backend.absensi.edit', compact('absen'));
     }
+
+
 
     /**
      * Update the specified resource in storage.
@@ -789,7 +873,20 @@ class AbsensiController extends Controller
         
     }
 
-    public function declineSelected(Request $request)
+    public function hadirSelected(Request $request)
+    {
+        foreach($request->id_absen  as $id){
+            $absen = Absensi::find($id);
+
+            $absen->status = 1;
+
+            $absen->update();
+        }
+        return response()->json('Data menjadi hadir semua');
+        
+    }
+
+    public function tolakSelected(Request $request)
     {
         foreach($request->id_absen  as $id){
             $absen = Absensi::find($id);

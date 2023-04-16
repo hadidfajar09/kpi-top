@@ -5,20 +5,33 @@ Absen Masuk
 @endsection
 
 @push('css')
+
 <style>
   @media (max-width: 576px) {
     #my_camera video {
-        max-width: 80%;
-        max-height: 80%;
+        display: inline-block;
+        width: 100% !important;
+        margin: auto;
+        height: auto !important;
+        border-radius: 15px;
     }
 
     #results img {
-        max-width: 80%;
-        max-height: 80%;
-
+        display: inline-block;
+        width: 100% !important;
+        margin: auto;
+        border-radius: 15px;
     }
+
+    
 }
+
+#map { height: 380px; }
 </style>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+
 @endpush
 
 @section('content')
@@ -61,15 +74,19 @@ Absen Masuk
               <div class="card-body ">
                 <div class="card card-danger col-lg-2 mb-3" style="margin: auto;">
                   <div class="card-header">
-                  <h1 class="card-title text-center"></h1>
                   <h1 class="card-title text-center"  id="clock"></h1>
                   </div>
                   
                   </div>
     
+                      <div id="map"></div>
+                   
                 <div class="form-group row">
                   <label for="path_slider" class="col-md-4 col-md-offset-1 control-label">Camera</label>
-                  <div id="my_camera" width="50"></div>
+                  <input type="hidden" id="latitude" name="latitude">
+                  <input type="hidden" id="longitude" name="longitude">
+                  
+                  <div id="my_camera"></div>
                   <div class="col-md-8">
                       <input type=button class="btn btn-outline-danger btn-sm" style="display: block;" value="Preview" onClick="take_snapshot()">
                       <input type="hidden" name="foto_masuk" class="image-tag">
@@ -122,8 +139,42 @@ Absen Masuk
 
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
 <script language="JavaScript">
+
+  var latitude = document.getElementById('latitude');
+  var longitude = document.getElementById('longitude');
+
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  }
+
+  function successCallback(position){
+    latitude.value = position.coords.latitude;
+    longitude.value = position.coords.longitude;
+    var map = L.map('map').setView([position.coords.latitude, position.coords.longitude], 18);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">Zeronine</a>'
+}).addTo(map);
+    var marker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+
+    //titik kordinat kantor
+    var circle = L.circle([{{ json_encode($latitude) }}, {{ json_encode($longitude) }}], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(map);
+    
+
+  }
+
+
+
+  function errorCallback(){
+
+  }
          
     Webcam.set({
         width: 350,

@@ -140,6 +140,7 @@ Route::group(['middleware' => 'auth'], function () {
       Route::get('/karyawan/laporan/{id}', [KaryawanController::class, 'laporan'])->name('karyawan.laporan');
       Route::get('/karyawan/data/{awal}/{akhir}/{id}', [KaryawanController::class, 'dataReport'])->name('report.data');
       Route::get('/karyawan/pdf/{awal}/{akhir}/{id}', [KaryawanController::class, 'exportDaily'])->name('report.export');
+      Route::get('/karyawan/pdf/grafik/{id}', [KaryawanController::class, 'exportGrafik'])->name('grafik.export');
       // Route::get('karyawan/reset', [KaryawanController::class, 'resetPoint'])->name('karyawan.reset');
     //   Route::post('/pelanggan/cetak-qrcode', [PelangganController::class, 'cetakQrcode'])->name('pelanggan.qrcode');
     //   Route::post('/pelanggan/cetak-jpg', [PelangganController::class, 'cetakJPG'])->name('pelanggan.jpg');
@@ -187,10 +188,13 @@ Route::group(['middleware' => 'auth'], function () {
    Route::get('/absen/data', [AbsensiController::class, 'data'])->name('absen.data');
    Route::resource('/absen', AbsensiController::class);
    Route::post('/absen/updated/{id}', [AbsensiController::class, 'updated'])->name('absen.updated');
+   Route::get('/map/form/{id}', [AbsensiController::class, 'mapShow'])->name('map');
    Route::get('/absen/acc/{id}', [AbsensiController::class, 'accept'])->name('absen.acc');
    Route::get('/absen/decline/{id}', [AbsensiController::class, 'decline'])->name('absen.decline');
+   Route::get('/absen/hadir/{id}', [AbsensiController::class, 'statusHadir'])->name('absen.hadir');
    Route::post('/absen/acc-selected', [AbsensiController::class, 'acceptSelected'])->name('absen.accselected');
-   Route::post('/absen/dec-selected', [AbsensiController::class, 'declineSelected'])->name('absen.decselected');
+   Route::post('/absen/hadir-selected', [AbsensiController::class, 'hadirSelected'])->name('absen.hadirselected');
+   Route::post('/absen/tolak-selected', [AbsensiController::class, 'tolakSelected'])->name('absen.tolakselected');
 
 
             // //grooming

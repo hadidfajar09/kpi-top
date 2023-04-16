@@ -4,6 +4,53 @@
 Daftar Riwayat ABsent
 @endsection
 
+@push('css')
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
+    <style>
+       @media print {
+        html, body {
+          height: 100%;
+          margin: 0;
+        }
+        #content {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          margin: 0;
+          padding: 0;
+          /* tambahkan margin-bottom jika Anda ingin menghindari konten terpotong di bagian bawah halaman */
+          /* margin-bottom: 1cm; */
+        }
+      }
+
+      @media (max-width: 576px) {
+    #my_camera video {
+        display: inline-block;
+        width: 100% !important;
+        margin: auto;
+        height: auto !important;
+        border-radius: 15px;
+    }
+
+    #results img {
+        display: inline-block;
+        width: 100% !important;
+        margin: auto;
+        border-radius: 15px;
+    }
+}
+
+#map { height: 480px; }
+
+     
+    </style>
+
+    
+    
+@endpush
+
 @section('content')
 
 <div class="content-wrapper">
@@ -39,7 +86,10 @@ Daftar Riwayat ABsent
             
                 @if (auth()->user()->level == 0)
                     
-                <button class="btn btn-success xs" onclick="acceptSelected('{{ route('absen.accselected') }}')"> <i class="fa fa-check"></i>   Terima Absen</button>
+                <button class="btn btn-success xs" onclick="acceptSelected('{{ route('absen.accselected') }}')"> <i class="fa fa-check"></i>   Terima</button>
+                <button class="btn btn-info xs" onclick="hadirSelected('{{ route('absen.hadirselected') }}')"> <i class="fa fa-check"></i>   Hadir</button>
+                <button class="btn btn-danger xs" onclick="tolakSelected('{{ route('absen.tolakselected') }}')"> <i class="fa fa-times"></i>   Tolak</button>
+                
                
                 @endif
              
@@ -114,13 +164,15 @@ Daftar Riwayat ABsent
 </div>
 
 @include('backend.absensi.form')
+@include('backend.absensi.form_map')
 
 @endsection
 
 
 @push('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
-    <script>
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+<script language="JavaScript">
+
 
       let table;
         $(function(){
@@ -216,6 +268,22 @@ Daftar Riwayat ABsent
               })
         }
 
+        function mapForm(url){
+            $('#modal-map').modal('show');
+            $('#modal-map .modal-title').text('LOKASI');
+
+            $.get(url)
+              .done((response) => {
+                $('#modal-map [name=latitude]').val(response.latitude);
+                $('#modal-map [name=longitude]').val(response.longitude);
+              })
+
+              .fail((errors) => {
+                alert('Data tidak ditemukan');
+                return;
+              })
+        }
+
         function deleteData(url) {
           if(confirm('Yakin Ingin Hapus Absensi Ini?')){
             
@@ -237,6 +305,48 @@ Daftar Riwayat ABsent
         function acceptSelected(url){
           if ($('input:checked').length > 1) {
             if(confirm('Yakin ingin terima absen terpilih?')){
+              $.post(url, $('.form-absen').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima absen');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
+        }
+
+        function hadirSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin ubah status hadir?')){
+              $.post(url, $('.form-absen').serialize())
+              .done((response) => {
+                  table.ajax.reload();
+              })
+  
+              .fail((response) => {
+                alert('tidak dapat terima absen');
+                return;
+              });
+
+            }
+          } else {
+            alert('Pilih data yang ingin diterima');
+            return;
+          }
+          
+        }
+
+        function tolakSelected(url){
+          if ($('input:checked').length > 1) {
+            if(confirm('Yakin ingin ubah status hadir?')){
               $.post(url, $('.form-absen').serialize())
               .done((response) => {
                   table.ajax.reload();

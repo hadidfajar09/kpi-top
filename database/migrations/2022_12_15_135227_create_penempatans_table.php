@@ -17,6 +17,8 @@ class CreatePenempatansTable extends Migration
             $table->id();
             $table->string('nama');
             $table->string('target');
+            $table->string('lat_kantor')->nullable();
+            $table->string('long_kantor')->nullable();
             $table->string('persentase');
             $table->string('alamat');
             $table->timestamps();

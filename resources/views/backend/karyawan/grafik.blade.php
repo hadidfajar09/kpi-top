@@ -5,11 +5,33 @@
 @endsection
 
 @push('css')
-a:link {
+<style>
+  a:link {
   
   text-decoration: none;
   
 }
+body {
+			margin: 0;
+			padding: 0;
+		}
+
+		.content {
+			width: 100%;
+			max-width: 100%;
+			margin: 0 auto;
+			padding: 0;
+		}
+
+		@media print {
+			header, footer, nav {
+				display: none;
+        
+			}
+		}
+</style>
+
+
 @endpush
 @section('content')
 <div class="content-wrapper">
@@ -20,6 +42,7 @@ a:link {
           <div class="col-sm-6">
             <h1 class="m-0">{{ $karyawan->name }} | {{ $karyawan->jabatan->jabatan }}</h1>
             <h4 class="m-0">Grafik Statistik Bulan ini</h4>
+            <button class="btn btn-warning btn-sm" onclick="window.print('printer')">EXPORT</button>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -42,8 +65,8 @@ a:link {
             <div class="col-md-12">
               <div class="card">
                 <div class="card-header">
-                  <h5 class="card-title">Grafik Daily Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5>
-  
+                  <h5 class="card-title">Grafik Daily Report {{ formatTanggal($tanggal_awal,false) }} s/d {{ formatTanggal($tanggal_akhir,false) }}</h5> <br>
+                  <b>{{ $karyawan->name }} | {{ $karyawan->jabatan->jabatan }}</b>
                  
                 </div>
                 <!-- /.card-header -->
