@@ -274,8 +274,18 @@ Daftar Riwayat ABsent
 
             $.get(url)
               .done((response) => {
+               
                 $('#modal-map [name=latitude]').val(response.latitude);
                 $('#modal-map [name=longitude]').val(response.longitude);
+    var map = L.map('map').setView([ response.latitude, response.longitude], 18);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">Zeronine</a>'
+}).addTo(map);
+    var marker = L.marker([ response.latitude, response.longitude]).addTo(map);
+    //titik kordinat kantor
+    
+
               })
 
               .fail((errors) => {
